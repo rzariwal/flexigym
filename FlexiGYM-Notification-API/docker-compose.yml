@@ -1,0 +1,28 @@
+version: '3'
+
+volumes:
+  flexigym-notification-api-db-data:
+
+services:
+  flexigym-notification-api-db:
+    image: mysql:5.7.29
+    volumes:
+      - flexigym-notification-api-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=notification
+    restart: always
+
+  flexigym-notification-api:
+    build:
+      context: .
+    ports:
+      - 80:5000
+    links:
+      - flexigym-notification-api-db
+    depends_on:
+      - flexigym-notification-api-db
+
+networks:
+   default:
+      driver: "bridge"

@@ -1,0 +1,203 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FlexiGYM Notification API",
+    "description": "FlexiGYM Notification API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://34.87.6.16/api",
+      "description": "Docker - FlexiGYM Notification API"
+    },
+    {
+      "url": "http://34.87.6.16/api",
+      "description": "Kubernetes - FlexiGYM Notification API"
+    }
+  ],
+  "paths": {
+    "/sms/send_sms": {
+      "post": {
+        "tags": [
+          "Send SMS"
+        ],
+        "summary": "Send SMS Message",
+        "operationId": "send_sms",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SMSRequest"
+        },
+        "responses": {
+          "200": {
+            "description": "SMS Sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Could not send SMS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sms/list_sms": {
+      "post": {
+        "tags": [
+          "List of SMS sent to a Mobile number"
+        ],
+        "summary": "List the SMS Messages sent to a Mobile Number",
+        "operationId": "list_sms",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ListSMS"
+        },
+        "responses":
+        {
+          "200":
+          {
+            "description": "List of SMS",
+            "content":
+            {
+              "application/json":
+              {
+                "schema":
+                {
+                    "$ref": "#/components/schemas/ListSMSResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application has not sent any SMS to the given Phone number"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SMSRequest": {
+        "required": [
+          "content",
+          "to_number"
+        ],
+        "type": "object",
+        "properties": {
+          "to_number": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "requestor_service": {
+            "type": "string"
+          },
+          "requestor_service_event": {
+            "type": "string"
+          }
+        }
+      },
+      "SMSResponse": {
+        "required": [
+          "error_message",
+          "message_sid",
+          "message_status"
+        ],
+        "type": "object",
+        "properties": {
+          "message_sid": {
+            "type": "string"
+          },
+          "message_status": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSMS": {
+        "required": [
+          "to_number"
+        ],
+        "type": "object",
+        "properties": {
+          "to_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSMSResponse": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "integer"
+          },
+          "requested_time": {
+            "type": "string"
+          },
+          "requestor_service": {
+            "type": "string"
+          },
+          "requestor_service_event": {
+            "type": "string"
+          },
+          "from_number": {
+            "type": "string"
+          },
+          "to_number": {
+            "type": "string"
+          },
+          "sms_message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message_sid": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "updated_time": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "SMSRequest": {
+        "description": "SMS to send",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SMSRequest"
+            }
+          }
+        },
+        "required": true
+      },
+      "ListSMS": {
+        "description": "List of SMS sent",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListSMS"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}
