@@ -124,4 +124,3 @@ jobs:
           --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/payment-api -n flask-jwt-auth-web
-        Kubectl delete pods --all -n flask-jwt-auth-web
