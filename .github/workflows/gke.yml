@@ -103,7 +103,7 @@ jobs:
       # Build the flexigym-payment-service API Docker image
     - name: Build flexigym-payment-service
       run: |
-        cd flexigym-payment-service/payment-service
+        cd flexigym-payment-service/payment-service/target
         docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:latest .
       # Push the flexigym-payment-service Docker image to Google Container Registry
     - name: Publish flexigym-payment-service
