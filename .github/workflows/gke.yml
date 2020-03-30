@@ -23,6 +23,7 @@ env:
   IMAGEDB: db
   IMAGEWEB: authentication-api
   IMAGENotificationAPI: notification-api
+  IMAGEPaymentAPI: payment-api
 
 jobs:
   setup-build-publish-deploy:
@@ -99,3 +100,28 @@ jobs:
         kubectl rollout status deployment/flexigym-notification-api-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-notification-api -n flask-jwt-auth-web
 
+      # Build the flexigym-payment-service API Docker image
+    - name: Build flexigym-payment-service
+      run: |
+        cd flexigym-payment-service/payment-service
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:latest .
+      # Push the flexigym-payment-service Docker image to Google Container Registry
+    - name: Publish flexigym-payment-service
+      run: |
+        cd flexigym-payment-service/payment-service
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:latest
+      # Set up kustomize for flexigym-payment-service
+    - name: Set up Kustomize flexigym-payment-service
+      run: |
+        cd flexigym-payment-service/payment-service
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the flexigym-payment-service API Docker image to the GKE cluster
+    - name: Deploy flexigym-payment-service
+      run: |
+        cd flexigym-payment-service/payment-service
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/payment-api -n flask-jwt-auth-web
+        Kubectl delete pods --all -n flask-jwt-auth-web
