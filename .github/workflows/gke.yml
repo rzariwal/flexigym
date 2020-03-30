@@ -100,26 +100,26 @@ jobs:
         kubectl rollout status deployment/flexigym-notification-api-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-notification-api -n flask-jwt-auth-web
 
-      # Build the flexigym-payment-service API Docker image
-    - name: Build flexigym-payment-service
+      # Build the FlexiGYM-payment-service API Docker image
+    - name: Build FlexiGYM-payment-service
       run: |
-        cd flexigym-payment-service/payment-service/target
+        cd FlexiGYM-payment-service/payment-service/target
         docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:latest .
-      # Push the flexigym-payment-service Docker image to Google Container Registry
-    - name: Publish flexigym-payment-service
+      # Push the FlexiGYM-payment-service Docker image to Google Container Registry
+    - name: Publish FlexiGYM-payment-service
       run: |
-        cd flexigym-payment-service/payment-service
+        cd FlexiGYM-payment-service/payment-service
         docker push asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:latest
-      # Set up kustomize for flexigym-payment-service
-    - name: Set up Kustomize flexigym-payment-service
+      # Set up kustomize for FlexiGYM-payment-service
+    - name: Set up Kustomize FlexiGYM-payment-service
       run: |
-        cd flexigym-payment-service/payment-service
+        cd FlexiGYM-payment-service/payment-service
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-      # Deploy the flexigym-payment-service API Docker image to the GKE cluster
-    - name: Deploy flexigym-payment-service
+      # Deploy the FlexiGYM-payment-service API Docker image to the GKE cluster
+    - name: Deploy FlexiGYM-payment-service
       run: |
-        cd flexigym-payment-service/payment-service
+        cd FlexiGYM-payment-service/payment-service
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize build . | kubectl apply -f -
