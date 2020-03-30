@@ -13,7 +13,7 @@ name: Build, Deploy to GKE and TEST.
 on:
   push:
     branches:
-    - jwt-auth
+    - develop
 
 # Environment variables available to all jobs and steps in this workflow
 env:
