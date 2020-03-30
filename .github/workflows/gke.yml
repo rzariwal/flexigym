@@ -22,6 +22,7 @@ env:
   GKE_ZONE: asia-southeast1-a
   IMAGEDB: db
   IMAGEWEB: authentication-api
+  IMAGEFlexiGYM-Notification-API: notification-api
 
 jobs:
   setup-build-publish-deploy:
@@ -42,34 +43,25 @@ jobs:
     # Configure docker to use the gcloud command-line tool as a credential helper
     - run: |
         gcloud auth configure-docker
-    # Build the DB Docker image
-    #- name: Build DB
-    #  run: |
-    #    docker build -f Dockerfile.postgres -t asia.gcr.io/$GKE_PROJECT/$IMAGEDB:latest .
 
-    # Push the Docker image to Google Container Registry
-    #- name: Publish DB
-    #  run: |
-    #    docker push asia.gcr.io/$GKE_PROJECT/$IMAGEDB:latest
-
-      # Build the DB Docker image
-    - name: Build WEB
+      # Build the Authentication API Docker image
+    - name: Build Authentication API
       run: |
         cd jwt-authentication
         docker build -f Dockerfile.prod -t asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:latest .
-      # Push the Docker image to Google Container Registry
-    - name: Publish WEB
+      # Push the Authentication API Docker image to Google Container Registry
+    - name: Publish Authentication API
       run: |
         cd jwt-authentication
         docker push asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:latest
-    # Set up kustomize
-    - name: Set up Kustomize
+    # Set up kustomize for Authentication API
+    - name: Set up Kustomize Authentication API
       run: |
         cd jwt-authentication
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-    # Deploy the Docker image to the GKE cluster
-    - name: Deploy
+    # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy Authentication API
       run: |
         cd jwt-authentication
         gcloud container clusters get-credentials $GKE_CLUSTER \
@@ -80,3 +72,30 @@ jobs:
         kubectl get services -o wide -n flask-jwt-auth-web
         POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
         kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py create_db
+
+      # Build the FlexiGYM-Notification-API API Docker image
+    - name: Build FlexiGYM-Notification-API
+      run: |
+        cd FlexiGYM-Notification-API
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEFlexiGYM-Notification-API:latest .
+      # Push the FlexiGYM-Notification-API Docker image to Google Container Registry
+    - name: Publish FlexiGYM-Notification-API
+      run: |
+        cd FlexiGYM-Notification-API
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEFlexiGYM-Notification-API:latest
+      # Set up kustomize for FlexiGYM-Notification-API
+    - name: Set up Kustomize FlexiGYM-Notification-API
+      run: |
+        cd FlexiGYM-Notification-API
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy FlexiGYM-Notification-API
+      run: |
+        cd FlexiGYM-Notification-API
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-notification-api-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-notification-api -n flask-jwt-auth-web
+
