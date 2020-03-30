@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  POSTGRES_DB: hello_flask_prod
+  POSTGRES_PASSWORD: hello_flask
+  POSTGRES_USER: hello_flask
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db-env-prod-db
+  name: env-prod-db
