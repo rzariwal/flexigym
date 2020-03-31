@@ -1,4 +1,7 @@
 **/.idea/*
 *.class
 **/.DS_store/
+*.DS_Store
 **/.iml/
+**/.jar/
+**/*.class
