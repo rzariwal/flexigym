@@ -7,7 +7,6 @@ from flask_testing import TestCase
 
 from project.server import app
 
-
 class TestDevelopmentConfig(TestCase):
     def create_app(self):
         app.config.from_object('project.server.config.DevelopmentConfig')
