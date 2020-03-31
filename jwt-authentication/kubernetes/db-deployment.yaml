@@ -42,7 +42,7 @@ spec:
               key: POSTGRES_USER
               name: env-prod-db
         image: postgres:12-alpine
-        imagePullPolicy: ""
+        imagePullPolicy: "Always"
         name: db
         resources: {}
         volumeMounts:

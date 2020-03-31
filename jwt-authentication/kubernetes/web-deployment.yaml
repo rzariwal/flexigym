@@ -61,7 +61,7 @@ spec:
               key: SQL_PORT
               name: env-prod
         image: asia.gcr.io/flexigym/authentication-api:latest
-        imagePullPolicy: "IfNotPresent"
+        imagePullPolicy: "Always"
         name: web
         ports:
         - containerPort: 5000
