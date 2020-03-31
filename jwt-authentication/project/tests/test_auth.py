@@ -176,7 +176,7 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(resp_login.content_type == 'application/json')
             self.assertEqual(resp_login.status_code, 200)
             # invalid token logout
-            time.sleep(6)
+            time.sleep(61)
             response = self.token_logout(resp_login)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
