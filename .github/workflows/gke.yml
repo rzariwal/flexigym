@@ -13,7 +13,7 @@ name: Build, Deploy to GKE and TEST.
 on:
   push:
     branches:
-    - develop
+    - master
 
 # Environment variables available to all jobs and steps in this workflow
 env:
