@@ -13,11 +13,6 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: payment-api
-  strategy: 
-      type: RollingUpdate
-      rollingUpdate:
-         maxSurge: 1
-         maxUnavailable: 0
   template:
     metadata:
       annotations:
