@@ -24,7 +24,7 @@ spec:
         io.kompose.service: payment-api
     spec:
       containers:
-        - image: asia.gcr.io/flexigym/payment-api:latest
+        - image: asia.gcr.io/flexigym/payment-api:${{ github.sha }}
           imagePullPolicy: "Always"
           name: payment-api
           ports:
