@@ -9,7 +9,6 @@ from project.server.models import User
 from project.tests.base import BaseTestCase
 from project.server.models import User, BlacklistToken
 
-
 def register_user(self, email, password, mobile):
     return self.client.post(
         '/auth/register',
