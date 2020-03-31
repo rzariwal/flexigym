@@ -1,8 +1,14 @@
 package com.flexigym.paymentservice.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+
+@ApiModel(description = "All details about the user bill. ")
 public class UserBillInfo {
-	
+	@ApiModelProperty(notes="user email ID")
 	private String userEmailId;
+	@ApiModelProperty(notes="user bill amount")
 	private int amount;
 	
 	
