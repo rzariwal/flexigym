@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - image: asia.gcr.io/flexigym/payment-api:latest
-          imagePullPolicy: "IfNotPresent"
+          imagePullPolicy: "Always"
           name: payment-api
           ports:
           - containerPort: 8080
