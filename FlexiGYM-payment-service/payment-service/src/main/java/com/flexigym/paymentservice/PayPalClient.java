@@ -1,31 +1,25 @@
 package com.flexigym.paymentservice;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.paypal.api.payments.Amount;
-import com.paypal.api.payments.Links;
-import com.paypal.api.payments.Payer;
-import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.PaymentExecution;
-import com.paypal.api.payments.RedirectUrls;
-import com.paypal.api.payments.Transaction;
+import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class PayPalClient {
 	
-	String clientId = "Ad2B9OIlW4CcxQDBChki_fxyL_674wRQ02BKZexs808ZewMbZVSEh8Y1QTgx7E8iiNQULzNTAW-7MKe2";
-	String clientSecret = "EOkqwmJcSx5HHhZnHmiNtm8ZK_CO6y3NVotWbCOB2Sa5RFolYehmEZYSikrEowYv4aV6ZqEBZo9AEtoL";
-	
+	//String clientId = "Ad2B9OIlW4CcxQDBChki_fxyL_674wRQ02BKZexs808ZewMbZVSEh8Y1QTgx7E8iiNQULzNTAW-7MKe2";
+	String clientId = "AS7GA_K71C4Uht_6wSXvzfAyp0c0TihSy_cHU_XFhROlxvNHDZbDuTpyIVp5-la9_A26bq7hUMM9q8xd";
+
+	//String clientSecret = "EOkqwmJcSx5HHhZnHmiNtm8ZK_CO6y3NVotWbCOB2Sa5RFolYehmEZYSikrEowYv4aV6ZqEBZo9AEtoL";
+	String clientSecret = "EHU1IKl6kqQdrFivDxsTeValURdA-cZtelehTbsnifb6UDkUJNApYPlA4zOp_RnNB3qfszOsPW39rhuu";
 	public Map<String, Object> createPayment(String sum){
 	    Map<String, Object> response = new HashMap<String, Object>();
 	    Amount amount = new Amount();
-	    amount.setCurrency("USD");
+	    amount.setCurrency("SGD");
 	    amount.setTotal(sum);
 	    Transaction transaction = new Transaction();
 	    transaction.setAmount(amount);
@@ -42,7 +36,7 @@ public class PayPalClient {
 
 	    RedirectUrls redirectUrls = new RedirectUrls();
 	    redirectUrls.setCancelUrl("http://localhost:4200/cancel");
-	    redirectUrls.setReturnUrl("http://localhost:4200/");
+	    redirectUrls.setReturnUrl("http://localhost:8000/api/complete");
 	    payment.setRedirectUrls(redirectUrls);
 	    Payment createdPayment;
 	    try {
@@ -65,17 +59,19 @@ public class PayPalClient {
 	    }
 	    return response;
 	}
-	
-	public Map<String, Object> completePayment(HttpServletRequest req){
+	//public Map<String, Object> completePayment(HttpServletRequest req){
+	public Map<String, Object> completePayment(String paymentId, String payerId){
 	    Map<String, Object> response = new HashMap();
 	    Payment payment = new Payment();
-	    payment.setId(req.getParameter("paymentId"));
-
+	    //payment.setId(req.getParameter("paymentId"));
+		payment.setId(paymentId);
 	    PaymentExecution paymentExecution = new PaymentExecution();
-	    paymentExecution.setPayerId(req.getParameter("PayerID"));
+		//paymentExecution.setPayerId(req.getParameter("PayerID"));
+		paymentExecution.setPayerId(payerId);
 	    try {
 	        APIContext context = new APIContext(clientId, clientSecret, "sandbox");
 	        Payment createdPayment = payment.execute(context, paymentExecution);
+	        //createdPayment.getState();
 	        if(createdPayment!=null){
 	            response.put("status", "success");
 	            response.put("payment", createdPayment);
