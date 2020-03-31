@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - image: asia.gcr.io/flexigym/notification-api:latest
-        imagePullPolicy: ""
+        imagePullPolicy: "Always"
         name: flexigym-notification-api
         ports:
         - containerPort: 5000
