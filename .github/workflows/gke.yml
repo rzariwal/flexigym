@@ -61,7 +61,7 @@ jobs:
         cd jwt-authentication
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-    # Deploy the Authentication API Docker image to the GKE cluster
+    # Deploy the Authentication API Docker image to the GKE cluster and TEST
     - name: Deploy Authentication API
       run: |
         cd jwt-authentication
