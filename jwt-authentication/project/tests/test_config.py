@@ -17,7 +17,7 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['DEBUG'] is True)
         self.assertFalse(current_app is None)
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql://hello_flask:hello_flask@db:5432/hello_flask_prod'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql+pg8000://postgres:postgres@localhost:5432/postgres-authentication'
     )
 
 class TestTestingConfig(TestCase):
@@ -29,7 +29,7 @@ class TestTestingConfig(TestCase):
         self.assertFalse(app.config['SECRET_KEY'] is '\xd15\xfe%\x98\xd9\x13\xbaC|\xe6\xe0\x18\x82\x11\xce\x84\xe4R\xf56a\xb5o')
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql://hello_flask:hello_flask@db:5432/hello_flask_prod'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql+pg8000://postgres:postgres@localhost:5432/postgres-authentication'
         )
 
 class TestProductionConfig(TestCase):
