@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: "Always"
           ports:
             - containerPort: 5000
-          - args:
+          args:
             - gunicorn
             - --bind
             - 0.0.0.0:5000
@@ -71,14 +71,15 @@ spec:
                 name: cloudsql-db-credentials
                 key: username
           - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: cloudsql-db-credentials
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: password
           - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: cloudsql-db-credentials
-                  key: dbname
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: dbname
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
