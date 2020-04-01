@@ -68,12 +68,12 @@ jobs:
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/db -n flask-jwt-auth-web
+
         kubectl rollout status deployment/web -n flask-jwt-auth-web
         kubectl get services -o wide -n flask-jwt-auth-web
         POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
         kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
-        kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py create_db
+
       # Build the FlexiGYM-Notification-API API Docker image
     - name: Build FlexiGYM-Notification-API
       run: |
