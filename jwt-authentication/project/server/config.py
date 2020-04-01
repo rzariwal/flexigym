@@ -4,8 +4,8 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 # postgres_local_base = 'postgresql://postgres:@localhost/'
 # database_name = 'flask_jwt_auth'
-postgres_local_base = 'postgresql://hello_flask:hello_flask@db:5432/'
-database_name = 'hello_flask_prod'
+postgres_local_base = 'postgresql://hello_flask:hello_flask@'
+database_name = 'flexigym:asia-southeast1:postgres-authentication'
 SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
 
 print(SECRET_KEY)
