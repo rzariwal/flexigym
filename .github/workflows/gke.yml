@@ -123,5 +123,6 @@ jobs:
         cd FlexiGYM-payment-service/payment-service
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/payment-api -n flask-jwt-auth-web
