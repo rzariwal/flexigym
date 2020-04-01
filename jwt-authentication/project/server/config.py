@@ -8,7 +8,6 @@ postgres_local_base = 'postgresql://postgres:postgres@flexigym:asia-southeast1:p
 database_name = 'postgres-authentication'
 SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
 
-print(SECRET_KEY)
 
 class BaseConfig:
     """Base configuration."""
