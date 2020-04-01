@@ -72,7 +72,6 @@ jobs:
         kubectl rollout status deployment/web -n flask-jwt-auth-web
         kubectl get services -o wide -n flask-jwt-auth-web
         POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
-      # kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py create_db
         kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
 
       # Build the FlexiGYM-Notification-API API Docker image
