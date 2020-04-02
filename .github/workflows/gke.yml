@@ -29,6 +29,7 @@ jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
+    #add no-ci in commit message to skip workflow triggering
     if: "!contains(github.event.head_commit.message, 'no-ci')"
     steps:
 
@@ -107,22 +108,26 @@ jobs:
 
       # Build the FlexiGYM-payment-service API Docker image
     - name: Build FlexiGYM-payment-service
+      if: "!contains(github.event.head_commit.message, 'payment')"
       run: |
         cd FlexiGYM-payment-service/p*
         docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }} .
       # Push the FlexiGYM-payment-service Docker image to Google Container Registry
     - name: Publish FlexiGYM-payment-service
+      if: "!contains(github.event.head_commit.message, 'payment')"
       run: |
         cd FlexiGYM-payment-service/payment-service
         docker push asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }}
       # Set up kustomize for FlexiGYM-payment-service
     - name: Set up Kustomize FlexiGYM-payment-service
+      if: "!contains(github.event.head_commit.message, 'payment')"
       run: |
         cd FlexiGYM-payment-service/payment-service
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
       # Deploy the FlexiGYM-payment-service API Docker image to the GKE cluster
     - name: Deploy FlexiGYM-payment-service
+      if: "!contains(github.event.head_commit.message, 'payment')"
       run: |
         cd FlexiGYM-payment-service/payment-service
         gcloud container clusters get-credentials $GKE_CLUSTER \
