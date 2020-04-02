@@ -13,6 +13,7 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: payment-api
+  strategy: {}
   template:
     metadata:
       annotations:
@@ -23,9 +24,9 @@ spec:
         io.kompose.service: payment-api
     spec:
       containers:
-        - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
-          #imagePullPolicy: "Always"
-          name: payment-api
+        - name: payment-api
+          image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
+          imagePullPolicy: "Always"
           ports:
           - containerPort: 8000
           resources: {}
