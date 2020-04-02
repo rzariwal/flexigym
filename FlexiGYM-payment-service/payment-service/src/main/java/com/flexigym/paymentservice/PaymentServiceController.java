@@ -64,7 +64,7 @@ public class PaymentServiceController {
 		return payPalClient.createPayment(amount);
 	}
 	
-	@PostMapping(value = "/api/complete")
+	@RequestMapping(value = "/api/complete", method = {RequestMethod.GET, RequestMethod.PUT})
 	@ApiOperation(value = "complete payment via PayPal")
 	@ResponseBody
 	public String completePayment(@RequestParam("paymentId") String paymentId,
