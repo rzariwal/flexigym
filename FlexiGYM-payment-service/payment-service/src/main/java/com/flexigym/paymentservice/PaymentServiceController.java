@@ -33,10 +33,10 @@ public class PaymentServiceController {
 		//actual case -> the caller of this service has to pass the user_token
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);	    
-	    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	        headers.setContentType(MediaType.APPLICATION_JSON);	    
+	        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-	    // request body parameters
+	        // request body parameters
 		Map<String, Object> map = new HashMap<>();
 		map.put("email", "danyjacob45@gmail.com");
 		map.put("password", "password");
@@ -57,7 +57,7 @@ public class PaymentServiceController {
 		//final String auth_status = "http://34.87.6.16:5000/auth/status";
 		//UserBillInfo userInfo = restTemplate.getForObject(auth_status, UserBillInfo.class);
 	     
-	    //System.out.println(userInfo.toString());
+	        //System.out.println(userInfo.toString());
 
 		
 		//if valid, proceed to payment using PayPal
@@ -70,8 +70,8 @@ public class PaymentServiceController {
 	@ApiOperation(value = "complete payment via PayPal")
 	@ResponseBody
 	public String completePayment(@RequestParam("paymentId") String paymentId,
-								  @RequestParam("token")     String token,
-								  @RequestParam("PayerID")   String payerId)
+				      @RequestParam("token")     String token,
+				      @RequestParam("PayerID")   String payerId)
 	{
 		/*
 		public Map<String, Object> completePayment(HttpServletRequest request)
@@ -91,7 +91,8 @@ public class PaymentServiceController {
 	}
 	
 	@PostMapping("/api/cancel")
-	@ApiOperation(value = "cancel payment")
+	@RequestMapping(value = "/api/cancel", method = {RequestMethod.GET, RequestMethod.POST})
+	@ApiOperation(value = "cancel payment for testing")
 	@ResponseBody
 	String cancel() {
 		return "cancel Payment";
