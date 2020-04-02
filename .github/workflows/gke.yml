@@ -73,10 +73,10 @@ jobs:
         kubectl get services -o wide -n flask-jwt-auth-web
 
       # TEST Authentication deployment
-    - name: Test Authentication API
-      run: |
-        POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
-        kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
+#    - name: Test Authentication API
+#      run: |
+#        POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
+#        kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
 
       # Build the FlexiGYM-Notification-API API Docker image
     - name: Build FlexiGYM-Notification-API
