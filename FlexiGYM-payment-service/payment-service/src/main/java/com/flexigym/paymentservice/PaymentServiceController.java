@@ -83,11 +83,11 @@ public class PaymentServiceController {
 		return payPalClient.completePayment(paymentId,payerId).toString();
 	}
 	
-	@PostMapping("/")
+	@RequestMapping(value = "/",method = RequestMethod.GET)
 	@ApiOperation(value = "home")
 	@ResponseBody
 	String home() {
-		return "Payment Service Home";
+		return "Payment Service Home\nPlease try \n /api/create\n /api/complete\n /api/cancel\n /api/notify";					 
 	}
 	
 	@PostMapping("/api/cancel")
