@@ -26,7 +26,7 @@ public class PaymentServiceController {
 	PayPalClient payPalClient = new PayPalClient();
     	
 	@PostMapping("/api/create")
-	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login and make payment")
+	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
 	Map<String, Object> createPayment(@RequestParam("amount") String amount, @RequestParam("user_token") String token) {
 		//for test purpose - sign in first -> to generate a token
@@ -66,8 +66,8 @@ public class PaymentServiceController {
 		return payPalClient.createPayment(amount);
 	}
 	
-	@RequestMapping(value = "/api/complete", method = {RequestMethod.GET, RequestMethod.PUT})
-	@ApiOperation(value = "complete payment via PayPal")
+	@RequestMapping(value = "/api/complete", method = RequestMethod.GET)
+	@ApiOperation(value = "complete payment via PayPal; Paypal will call this api if payment is successfull")
 	@ResponseBody
 	public String completePayment(@RequestParam("paymentId") String paymentId,
 				      @RequestParam("token")     String token,
@@ -91,8 +91,8 @@ public class PaymentServiceController {
 	}
 	
 	@PostMapping("/api/cancel")
-	@RequestMapping(value = "/api/cancel", method = {RequestMethod.GET, RequestMethod.POST})
-	@ApiOperation(value = "cancel payment for testing")
+	@RequestMapping(value = "/api/cancel", method = RequestMethod.GET)
+	@ApiOperation(value = "cancel payment called by PayPal")
 	@ResponseBody
 	String cancel() {
 		return "cancel Payment";
