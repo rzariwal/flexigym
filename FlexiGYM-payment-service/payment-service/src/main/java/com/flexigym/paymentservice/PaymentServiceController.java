@@ -45,7 +45,7 @@ public class PaymentServiceController {
 		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
 		
 		
-		System.out.println("\nDebug................");
+		System.out.println("\nDebug..");
 		System.out.println(entity.toString());
 		// send POST request
 		final String auth_login = "http://34.87.6.16:5000/auth/login";
