@@ -91,13 +91,13 @@ jobs:
       if: "contains(github.event.head_commit.message, 'notif')"
       run: |
         cd FlexiGYM-Notification-API
-        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:latest .
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }} .
       # Push the FlexiGYM-Notification-API Docker image to Google Container Registry
     - name: Publish FlexiGYM-Notification-API
       if: "contains(github.event.head_commit.message, 'notif')"
       run: |
         cd FlexiGYM-Notification-API
-        docker push asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:latest
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }}
       # Set up kustomize for FlexiGYM-Notification-API
     - name: Set up Kustomize FlexiGYM-Notification-API
       if: "contains(github.event.head_commit.message, 'notif')"
@@ -112,6 +112,7 @@ jobs:
         cd FlexiGYM-Notification-API
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-notification-api-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-notification-api -n flask-jwt-auth-web

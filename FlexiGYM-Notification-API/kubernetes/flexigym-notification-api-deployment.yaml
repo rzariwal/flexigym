@@ -24,7 +24,7 @@ spec:
         io.kompose.service: flexigym-notification-api
     spec:
       containers:
-      - image: asia.gcr.io/flexigym/notification-api:latest
+      - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
         imagePullPolicy: "Always"
         name: flexigym-notification-api
         ports:
