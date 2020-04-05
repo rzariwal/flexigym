@@ -24,46 +24,74 @@ spec:
         io.kompose.service: web
     spec:
       containers:
-      - args:
-        - gunicorn
-        - --bind
-        - 0.0.0.0:5000
-        - manage:app
-        env:
-        - name: DATABASE
-          valueFrom:
-            configMapKeyRef:
-              key: DATABASE
-              name: env-prod
-        - name: DATABASE_URL
-          valueFrom:
-            configMapKeyRef:
-              key: DATABASE_URL
-              name: env-prod
-        - name: FLASK_APP
-          valueFrom:
-            configMapKeyRef:
-              key: FLASK_APP
-              name: env-prod
-        - name: FLASK_ENV
-          valueFrom:
-            configMapKeyRef:
-              key: FLASK_ENV
-              name: env-prod
-        - name: SQL_HOST
-          valueFrom:
-            configMapKeyRef:
-              key: SQL_HOST
-              name: env-prod
-        - name: SQL_PORT
-          valueFrom:
-            configMapKeyRef:
-              key: SQL_PORT
-              name: env-prod
-        image: asia.gcr.io/flexigym/authentication-api:latest
-        imagePullPolicy: "Always"
-        name: web
-        ports:
-        - containerPort: 5000
-        resources: {}
+        - name: web
+          image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 5000
+          args:
+            - gunicorn
+            - --bind
+            - 0.0.0.0:5000
+            - manage:app
+          env:
+          - name: DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: DATABASE
+                name: env-prod
+          - name: DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                key: DATABASE_URL
+                name: env-prod
+          - name: FLASK_APP
+            valueFrom:
+              configMapKeyRef:
+                key: FLASK_APP
+                name: env-prod
+          - name: FLASK_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: FLASK_ENV
+                name: env-prod
+          - name: SQL_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: SQL_HOST
+                name: env-prod
+          - name: SQL_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: SQL_PORT
+                name: env-prod
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: username
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: password
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: dbname
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=flexigym:asia-southeast1:postgres-authentication=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: my-secrets-volume
+              mountPath: /secrets/cloudsql
+              readOnly: true
+          resources: {}
+      volumes:
+        - name: my-secrets-volume
+          secret:
+            secretName: cloudsql-instance-credentials
 status: {}
