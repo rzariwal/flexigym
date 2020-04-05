@@ -8,10 +8,6 @@
   "servers": [
     {
       "url": "http://34.87.6.16:7000/api",
-      "description": "Docker - FlexiGYM Notification API"
-    },
-    {
-      "url": "http://34.87.6.16:7000/api",
       "description": "Kubernetes - FlexiGYM Notification API"
     }
   ],
@@ -199,5 +195,6 @@
         "required": true
       }
     }
-  }
+  },
+  "swagger": "2.0"
 }
