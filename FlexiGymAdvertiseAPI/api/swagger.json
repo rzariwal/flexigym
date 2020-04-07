@@ -1,0 +1,173 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FlexiGYM Advertise API",
+    "description": "FlexiGYM Advertise API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.99.100/api",
+      "description": "Docker - FlexiGYM Advertise API"
+    }
+  ],
+  "paths": {
+    "/gympackage/packagesApi": {
+      "post": {
+         "tags": [
+          "Add new package"
+        ],
+        "package_name": "package name",
+        "package_description": "package_description",
+        "price": "package_description",
+        "available_qty": "available_qty"
+        ,
+        "responses": {
+          "200": {
+            "description": "Add package success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackageRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to add package ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gympackage/packagesApi": {
+      "get": {
+         "tags": [
+          "List all packages"
+        ],
+        "summary": "List all packages",
+        "operationId": "List_packages",
+        "responses": {
+          "200": {
+            "description": "All packages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed load packages ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/packagesApi/<int:id>": {
+      "get": {
+        "tags": [
+          "Get by id"
+        ],
+        "summary": "Get package by id",
+        "operationId": "get_package_by_id",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PackageRequest"
+        },
+        "responses":
+        {
+          "200":
+          {
+            "description": "Get package by id",
+            "content":
+            {
+              "application/json":
+              {
+                "schema":
+                {
+                    "$ref": "#/components/schemas/PackageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to load data"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PackageRequest": {
+        "required": [
+          "package_name",
+          "package_description",
+          "price",
+          "available_qty"
+        ],
+        "type": "object",
+        "properties": {
+          "package_name": {
+            "type": "string"
+          },
+          "package_description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "available_qty": {
+            "type": "string"
+          }
+        }
+      },
+      "PackageResponse": {
+        "required": [
+          "error_message",
+          "package_name",
+          "package_description"
+        ],
+        "type": "object",
+        "properties": {
+          "package_name": {
+            "type": "string"
+          },
+          "message_status": {
+            "type": "string"
+          },
+          "package_description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "PackageRequest": {
+        "description": "Request Package",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PackageRequest"
+            }
+          }
+        },
+        "required": true
+      }
+
+    }
+  }
+}

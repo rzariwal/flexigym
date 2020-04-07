@@ -1,0 +1,7 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "dependencies": {
+    "swagger-ui-dist": "~3.5.0"
+  }
+}
