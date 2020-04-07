@@ -84,7 +84,6 @@ class Item(db.Model):
 
 # respresent a shopping cart -> includes 1 or more items with varying quantities
 class ShoppingCart(object):
-
     def __init__(self):
         self.content = dict()
 

@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from app import app
-from service.model import ShoppingCart, Item
+from service.model.model import ShoppingCart, Item
 
 # api-endpoint 
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
@@ -14,7 +14,7 @@ def addToCart():
         product_id =  request.json['product_id']
         count = request.json['count']
         #get all information about the item
-        r = requests.get(url = ADVERTISE_URL + "/" + product_id)
+        r = request.get(url = ADVERTISE_URL + "/" + product_id)
         if (count > int(r.available_qty)):
             return jsonify(message = "Sorry, we don't have that many sessions!" ), 201
         else:
