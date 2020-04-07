@@ -19,7 +19,7 @@ def create_app():
         WTF_CSRF_SECRET_KEY="subscribe csrf secret key",
         #SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root:1234@localhost:3306/subscribe',
         #SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:1234@flexigym-subscribe-api-db/subscribe',
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-subscribe.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         JSON_SORT_KEYS=False
         )
