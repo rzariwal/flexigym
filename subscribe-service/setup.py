@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from service import subscribe_api_blueprint
 import service.model.model as model
 
 SWAGGER_URL = '/api/docs'
@@ -17,7 +17,9 @@ def create_app():
         dict(
         SECRET_KEY="subscribe secretkey",
         WTF_CSRF_SECRET_KEY="subscribe csrf secret key",
-        SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-subscribe-api-db/subscribe',
+        #SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root:1234@localhost:3306/subscribe',
+        #SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:1234@flexigym-subscribe-api-db/subscribe',
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         JSON_SORT_KEYS=False
         )
@@ -25,4 +27,6 @@ def create_app():
 
     model.init_app(app)
     model.create_tables(app)
+
+    app.register_blueprint(subscribe_api_blueprint)
     return app

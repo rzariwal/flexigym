@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Column, Integer, String, DateTime, func, Boolean
 
 from sqlalchemy import create_engine
 
@@ -76,12 +76,14 @@ class Cart(db.Model):
 class Item(db.Model):
     __tablename__ = 'item'
     unq_id = Column(Integer, nullable=False, primary_key=True)
+    cart_id = Column(Integer)
 
     def __init__(self, unq_id, name, price, qty):
         self.unq_id = unq_id
         self.product_name = name
         self.price = price
         self.qty = qty
+        self.cart_id = 0
 
 
 # respresent a shopping cart -> includes 1 or more items with varying quantities
@@ -90,9 +92,9 @@ class ShoppingCart(db.Model):
     cart_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, foreign_key=True, nullable=False)
     total = Column(Integer)
-    paid = Column(bool, nullable=False)
+    paid = Column(Boolean, unique=False, default=False)
     created_date = Column(DateTime(timezone=True), server_default=func.now())
-    content = Column(dict())
+    content = Column(String(100))
 
     def __init__(self, user, cartId):
         self.content = dict()
@@ -115,6 +117,7 @@ class ShoppingCart(db.Model):
                 self.remove_item(k)
             else:
                 v[k] = item[k]
+
 
     def get_total(self):
         return sum([v.price * v.qty for _, v in self.content.iteritems()])

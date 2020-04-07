@@ -1,11 +1,12 @@
-from flask import request, jsonify
 import uuid
+from . import subscribe_api_blueprint
+from flask import request, jsonify
 from sqlalchemy import engine
-from app import app
-from service.model.model import ShoppingCart, Item
 from sqlalchemy.orm import sessionmaker
+from service.model.model import ShoppingCart, Item
 
-# api-endpoint 
+
+# api-endpoint
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -16,7 +17,7 @@ def generateCartId():
 
 
 # add an item to cart
-@app.route("/add", methods=['POST'])
+@subscribe_api_blueprint.route("/add", methods=['POST'])
 def addToCart():
     try:
         # parse request
@@ -56,11 +57,12 @@ def addToCart():
         )"""
         pass
     except Exception as e:
+        return jsonify(message="Sorry, we don't have that many packages available!"), 201
         print(e)
 
 
 # delete an item from cart
-@app.route("/delete", methods=['POST'])
+@subscribe_api_blueprint.route("/delete", methods=['POST'])
 def deleteFromCart():
     try:
         # parse request
@@ -71,10 +73,14 @@ def deleteFromCart():
 
 
 # get cart content
-@app.route("/get", methods=['GET'])
+@subscribe_api_blueprint.route("/get", methods=['GET'])
 def getCartItems():
     try:
 
         pass
     except Exception as e:
         print(e)
+
+@subscribe_api_blueprint.route('/test')
+def hello_world():
+    return 'test!'
