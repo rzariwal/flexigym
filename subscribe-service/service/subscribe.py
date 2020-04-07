@@ -1,7 +1,7 @@
-from flask import Flask, request, redirect, url_for, session, json, jsonify
-from service.model import Order, ShoppingCart, Item
+from flask import request, jsonify
 
 from app import app
+from service.model import ShoppingCart, Item
 
 # api-endpoint 
 ADVERTISE_URL = "http://localhost:4996/packagesApi"

@@ -42,9 +42,12 @@ class Order(db.Model):
             'updates_time': self.updated_time
         }
 
+
 # Database Models
 class Cart(db.Model):
-    __tablename__ = 'order'
+    __tablename__ = 'cart'
+    cart_id = Column(Integer, primary_key=True)
+
     order_id = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     description = Column(String(100))
@@ -65,18 +68,12 @@ class Cart(db.Model):
             'updates_time': self.updated_time
         }
 
-#respresent each item -> should aligned with advertise-api
-class Item(db.Model): 
-    
-    __tablename__ = 'item'
-    order_id = Column(Integer, nullable=False)
-    count = Column(Integer, nullable=False)
-    description = Column(String(100))
-    name = Column(String(100), nullable=False)
-    price = Column(db.Numeric(10, 2), nullable=False)
-    requested_time = Column(DateTime(timezone=True), server_default=func.now())
-    updated_time = Column(DateTime(timezone=True), onupdate=func.now())
 
+# respresent each item -> should aligned with advertise-api
+class Item(db.Model):
+
+    __tablename__ = 'item'
+    unq_id = Column(Integer, nullable=False, primary_key=True)
 
     def __init__(self, unq_id, name, price, qty):
         self.unq_id = unq_id
@@ -84,9 +81,10 @@ class Item(db.Model):
         self.price = price
         self.qty = qty
 
-#respresent a shopping cart -> includes 1 or more items with varying quantities
+
+# respresent a shopping cart -> includes 1 or more items with varying quantities
 class ShoppingCart(object):
-    
+
     def __init__(self):
         self.content = dict()
 
@@ -114,6 +112,7 @@ class ShoppingCart(object):
 
     def remove_item(self, key):
         self.content.pop(key)
+
 
 '''
     item1 = Item(1, "Banana", 1., 1)
