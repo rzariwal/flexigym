@@ -42,8 +42,42 @@ class Order(db.Model):
             'updates_time': self.updated_time
         }
 
+# Database Models
+class Cart(db.Model):
+    __tablename__ = 'order'
+    order_id = Column(Integer, nullable=False)
+    count = Column(Integer, nullable=False)
+    description = Column(String(100))
+    name = Column(String(100), nullable=False)
+    price = Column(db.Numeric(10, 2), nullable=False)
+    requested_time = Column(DateTime(timezone=True), server_default=func.now())
+    updated_time = Column(DateTime(timezone=True), onupdate=func.now())
+
+    def to_json(self):
+        return {
+            'user_id': self.order_id,
+            'order_id': self.order_id,
+            'count': self.count,
+            'description': self.description,
+            'name': self.name,
+            'price': self.price,
+            'requested_time': self.requested_time,
+            'updates_time': self.updated_time
+        }
+
 #respresent each item -> should aligned with advertise-api
-class Item(object): 
+class Item(db.Model): 
+    
+    __tablename__ = 'item'
+    order_id = Column(Integer, nullable=False)
+    count = Column(Integer, nullable=False)
+    description = Column(String(100))
+    name = Column(String(100), nullable=False)
+    price = Column(db.Numeric(10, 2), nullable=False)
+    requested_time = Column(DateTime(timezone=True), server_default=func.now())
+    updated_time = Column(DateTime(timezone=True), onupdate=func.now())
+
+
     def __init__(self, unq_id, name, price, qty):
         self.unq_id = unq_id
         self.product_name = name

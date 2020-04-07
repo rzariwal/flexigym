@@ -1,6 +1,6 @@
 import os
 
-import model as models
+import service.model as models
 from flask import Flask
 
 SWAGGER_URL = '/api/docs'
