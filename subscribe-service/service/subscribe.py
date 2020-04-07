@@ -1,28 +1,48 @@
 from flask import request, jsonify
-
+import uuid
+from sqlalchemy import engine
 from app import app
 from service.model.model import ShoppingCart, Item
+from sqlalchemy.orm import sessionmaker
 
 # api-endpoint 
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
+Session = sessionmaker(bind=engine)
+session = Session()
 
-#add an item to cart
+def generateCartId():
+    cart_Id = uuid.uuid1()
+    return cart_Id
+
+
+# add an item to cart
 @app.route("/add", methods=['POST'])
 def addToCart():
     try:
-        #parse request
-        product_id =  request.json['product_id']
+        # parse request
+        user = request.json['user_id']
+        product_id = request.json['product_id']
         count = request.json['count']
-        #get all information about the item
-        r = request.get(url = ADVERTISE_URL + "/" + product_id)
+        # get all information about the item
+        r = request.get(url=ADVERTISE_URL + "/" + product_id)
         if (count > int(r.available_qty)):
-            return jsonify(message = "Sorry, we don't have that many sessions!" ), 201
+            return jsonify(message="Sorry, we don't have that many packages available!"), 201
         else:
-            #try to add the item to cart
-            item = Item(product_id, r.package_name, count)
-            ShoppingCart.update(item)
-            ShoppingCart.add()
-            ShoppingCart.commit()
+            # create the item object to be added to cart
+            item = Item(product_id, r.package_name, r.price, count)
+
+            #create a cart if doesn't exist in db.
+            #query cart db and get get all cart of user and check cartId;
+            #if cartId exists, don't create one...
+            #session.query(ShoppingCart).filter_by(user=user).first()
+
+            cart = ShoppingCart(user, generateCartId())
+            cart.update(item)
+            cart.add()
+            cart.commit()
+
+            #return cartId if add to cart is success.
+            return jsonify(message=ShoppingCart.cart_id), 200
             pass
         """
         #advertise_api return
@@ -38,17 +58,19 @@ def addToCart():
     except Exception as e:
         print(e)
 
-#delete an item from cart
+
+# delete an item from cart
 @app.route("/delete", methods=['POST'])
 def deleteFromCart():
     try:
-       #parse request
-        product_id =  request.json['product_id']
+        # parse request
+        product_id = request.json['product_id']
         pass
     except Exception as e:
         print(e)
 
-#get cart content
+
+# get cart content
 @app.route("/get", methods=['GET'])
 def getCartItems():
     try:
