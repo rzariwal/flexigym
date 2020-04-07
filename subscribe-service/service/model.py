@@ -42,37 +42,54 @@ class Order(db.Model):
             'updates_time': self.updated_time
         }
 
+#respresent each item -> should aligned with advertise-api
+class Item(object): 
+    def __init__(self, unq_id, name, price, qty):
+        self.unq_id = unq_id
+        self.product_name = name
+        self.price = price
+        self.qty = qty
 
+#respresent a shopping cart -> includes 1 or more items with varying quantities
 class ShoppingCart(object):
-
+    
     def __init__(self):
-        self.total = 0
-        self.items = {}
+        self.content = dict()
 
-    def add_item(self, item_name, quantity, price):
-        self.total += (quantity * price)
-        self.items = {item_name: quantity}
+    def update(self, item):
+        if item.unq_id not in self.content:
+            self.content.update({item.unq_id: item})
+            return
+        for k, v in self.content.get(item.unq_id).iteritems():
+            if k == 'unq_id':
+                continue
+            elif k == 'qty':
+                total_qty = v.qty + item.qty
+                if total_qty:
+                    v.qty = total_qty
+                    continue
+                self.remove_item(k)
+            else:
+                v[k] = item[k]
 
-    def remove_item(self, item_name, quantity, price):
-        self.total -= (quantity * price)
-        if quantity > self.items[item_name]:
-            del self.items[item_name]
-        self.items[item_name] -= quantity
+    def get_total(self):
+        return sum([v.price * v.qty for _, v in self.content.iteritems()])
 
-    def checkout(self, cash_paid):
-        balance = 0
-        if cash_paid < self.total:
-            return "Cash paid not enough"
-        balance = cash_paid - self.total
-        return balance
+    def get_num_items(self):
+        return sum([v.qty for _, v in self.content.iteritems()])
+
+    def remove_item(self, key):
+        self.content.pop(key)
 
 '''
-class Shop(ShoppingCart):
-
-    def __init__(self):
-        ShoppingCart.__init__(self)
-        self.quantity = 100
-
-    def remove_item(self):
-        self.quantity -= 1
+    item1 = Item(1, "Banana", 1., 1)
+    item2 = Item(2, "Eggs", 1., 2)
+    item3 = Item(3, "Donut", 1., 5)
+    cart = ShoppingCart()
+    cart.update(item1)
+    cart.update(item2)
+    cart.update(item3)
+    print "You have %i items in your cart for a total of $%.02f" % (cart.get_num_items(), cart.get_total())
+    cart.remove_item(1)
+    print "You have %i items in your cart for a total of $%.02f" % (cart.get_num_items(), cart.get_total())
 '''
