@@ -18,6 +18,7 @@ def create_tables(app):
     return engine
 
 
+'''
 # Database Models
 class Order(db.Model):
     __tablename__ = 'order'
@@ -41,6 +42,7 @@ class Order(db.Model):
             'requested_time': self.requested_time,
             'updates_time': self.updated_time
         }
+
 
 
 # Database Models
@@ -67,11 +69,11 @@ class Cart(db.Model):
             'requested_time': self.requested_time,
             'updates_time': self.updated_time
         }
+'''
 
 
-# respresent each item -> should aligned with advertise-api
+# represent each item -> should aligned with advertise-api
 class Item(db.Model):
-
     __tablename__ = 'item'
     unq_id = Column(Integer, nullable=False, primary_key=True)
 
@@ -83,9 +85,20 @@ class Item(db.Model):
 
 
 # respresent a shopping cart -> includes 1 or more items with varying quantities
-class ShoppingCart(object):
-    def __init__(self):
+class ShoppingCart(db.Model):
+    __tablename__ = 'shopping-cart'
+    cart_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, foreign_key=True, nullable=False)
+    total = Column(Integer)
+    paid = Column(bool, nullable=False)
+    created_date = Column(DateTime(timezone=True), server_default=func.now())
+    content = Column(dict())
+
+    def __init__(self, user, cartId):
         self.content = dict()
+        self.user = user
+        self.cart_id = cartId
+        self.paid = False
 
     def update(self, item):
         if item.unq_id not in self.content:
