@@ -1,5 +1,5 @@
-subscribe-service/.idea
-subscribe-service/*/.DS_Store
-subscribe-service/__pycache__/
-subscribe-service/service/model/__pycache__/
-subscribe-service/venv/
+.idea/*
+*/.DS_Store
+__pycache__/*
+**/__pycache__/*
+venv/*
