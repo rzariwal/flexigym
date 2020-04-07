@@ -1,26 +1,57 @@
-from flask import Flask, request, redirect, url_for, session
-from model import Order
+from flask import Flask, request, redirect, url_for, session, json, jsonify
+from model import Order, ShoppingCart, Item
+
 from app import app
 
-def getUserStatus():
+# api-endpoint 
+ADVERTISE_URL = "http://localhost:4996/packagesApi"
 
-    if 'auth_token' not in session:
-        loggedIn = False
-        firstName = ''
-        noOfItems = 0
-
-
-@app.route("/addtocart", methods=['POST'])
+#add an item to cart
+@app.route("/add", methods=['POST'])
 def addToCart():
     try:
         #parse request
-        product_id = request.form.get('id')
-        name = request.form.get('name')
-        price = request.form.get('price')
-        count = request.form.get('count')
+        product_id =  request.json['product_id']
+        count = request.json['count']
+        #get all information about the item
+        r = requests.get(url = ADVERTISE_URL + "/" + product_id)
+        if (count > int(r.available_qty)):
+            return jsonify(message = "Sorry, we don't have that many sessions!" ), 201
+        else:
+            #try to add the item to cart
+            item = Item(product_id, r.package_name, count)
+            ShoppingCart.update(item)
+            ShoppingCart.add()
+            ShoppingCart.commit()
+            pass
+        """
+        #advertise_api return
+        'id': self.id,
+            'package_name': self.package_name,
+            'package_description': self.package_description,
+            'price': self.price,
+            'available_qty': self.available_qty,
+            'created_by': self.created_by,
+            'updated_by': self.updated_by
+        )"""
+        pass
+    except Exception as e:
+        print(e)
 
+#delete an item from cart
+@app.route("/delete", methods=['POST'])
+def deleteFromCart():
+    try:
+       #parse request
+        product_id =  request.json['product_id']
+        pass
+    except Exception as e:
+        print(e)
 
-        Order.addToOrder()
+#get cart content
+@app.route("/get", methods=['GET'])
+def getCartItems():
+    try:
 
         pass
     except Exception as e:
