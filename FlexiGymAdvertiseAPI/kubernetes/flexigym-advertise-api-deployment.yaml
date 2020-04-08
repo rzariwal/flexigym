@@ -24,12 +24,12 @@ spec:
         io.kompose.service: flexigym-advertise-api
     spec:
       containers:
-        - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
-          imagePullPolicy: "Always"
-          name: flexigym-advertise-api
-          ports:
-            - containerPort: 5000
-          resources: {}
+      - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
+        imagePullPolicy: "Always"
+        name: flexigym-advertise-api
+        ports:
+        - containerPort: 5000
+        resources: {}
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null

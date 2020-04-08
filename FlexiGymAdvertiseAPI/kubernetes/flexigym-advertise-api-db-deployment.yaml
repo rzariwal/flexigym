@@ -35,13 +35,13 @@ spec:
         name: flexigym-advertise-api-db
         resources: {}
         volumeMounts:
-          - mountPath: /var/lib/mysql
-            subPath: mysql
-            name: flexigym-advertise-api-db-data
+        - mountPath: /var/lib/mysql
+          subPath: mysql
+          name: flexigym-advertise-api-db-data
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-        - name: flexigym-advertise-api-db-data
-          persistentVolumeClaim:
-            claimName: flexigym-advertise-api-db-data
+      - name: flexigym-advertise-api-db-data
+        persistentVolumeClaim:
+          claimName: flexigym-advertise-api-db-data
 status: {}

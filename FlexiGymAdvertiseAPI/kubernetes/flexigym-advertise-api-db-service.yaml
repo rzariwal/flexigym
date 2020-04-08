@@ -7,12 +7,12 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: flexigym-advertise-api-db
-  name: flexigym-advertise-api-db
+  name: flexigym-advertise-api-db  
 spec:
   ports:
-    - name: "3306"
-      port: 3306
-      targetPort: 3306
+  - name: "3306"
+    port: 3306
+    targetPort: 3306
   selector:
     io.kompose.service: flexigym-advertise-api-db
 status:
