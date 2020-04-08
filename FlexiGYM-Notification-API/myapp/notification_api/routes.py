@@ -129,4 +129,4 @@ def list_email(email: str):
 
         return response, 200
     else:
-        return jsonify(message='Application has not sent any Email to the given Email Id'), 404
+        return jsonify(message='Application has not sent any Email to the given Email Id.'), 404
