@@ -112,15 +112,20 @@
         }
       }
     },
-    "/email/list_email/<string:email>": {
+    "/email/list_email/{email}": {
       "get": {
         "tags": [
           "List of EMails sent to an EMail Id"
         ],
         "summary": "List the EMail Messages sent to an EMail Id",
         "operationId": "send_email",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/ListEMail"
+        "parameters":
+        {
+          "name": "email",
+          "in": "path",
+          "description": "EMail Id",
+          "required": "true",
+          "type": "string"
         },
         "responses":
         {
