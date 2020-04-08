@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: "Always"
         name: flexigym-advertise-api
         ports:
-        - containerPort: 5000
+        - containerPort: 4996
         resources: {}
       restartPolicy: Always
       serviceAccountName: ""
