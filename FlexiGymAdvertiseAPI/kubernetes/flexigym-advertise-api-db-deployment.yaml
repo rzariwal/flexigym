@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.21.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: flexigym-advertise-api-db
+  name: flexigym-advertise-api-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: flexigym-advertise-api-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.21.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: flexigym-advertise-api-db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: flexigym-advertise-api-db 
+        - name: MYSQL_ROOT_PASSWORD
+          value: 1234
+        image: mysql:5.7.29
+        imagePullPolicy: "Always"
+        name: flexigym-advertise-api-db
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          subPath: mysql
+          name: flexigym-advertise-api-db-data
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: flexigym-advertise-api-db-data
+        persistentVolumeClaim:
+          claimName: flexigym-advertise-api-db-data
+status: {}
