@@ -176,7 +176,7 @@ jobs:
         cd FlexiGymAdvertiseAPI
         gcloud container clusters get-credentials $GKE_CLUSTER \
           --zone $GKE_ZONE --project $GKE_PROJECT
-        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }}
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPIAPI:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-advertise-api-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-advertise-api -n flask-jwt-auth-web
