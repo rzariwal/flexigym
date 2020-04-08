@@ -1,8 +1,12 @@
 from flask import json, jsonify, request
 from . import notification_api_blueprint
-from models import db, SMSRequest
+from models import db, SMSRequest, EmailRequest
 import logging
 from twilio_client import TwilioClient, from_number
+from gmail_client import GmailClient, sender_email
+
+from smtplib import SMTPException
+
 
 
 @notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
@@ -36,23 +40,24 @@ def send_sms():
         pass
     finally:
         sms_message_model_object = SMSRequest(from_number=from_number,
-                                          to_number=to_number,
-                                          sms_message=content,
-                                          status=message_status,
-                                          message_sid=message_sid,
-                                          requestor_service="test",
-                                          requestor_service_event="test-event",
-                                          error_message=error_message)
+                                              to_number=to_number,
+                                              sms_message=content,
+                                              status=message_status,
+                                              message_sid=message_sid,
+                                              requestor_service="test",
+                                              requestor_service_event="test-event",
+                                              error_message=error_message)
 
         db.session.add(sms_message_model_object)
         db.session.commit()
         logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
-    return jsonify(message_sid=message_sid, message_status=message_status, error_message=error_message), http_status_code
+    return jsonify(message_sid=message_sid, message_status=message_status,
+                   error_message=error_message), http_status_code
 
 
-@notification_api_blueprint.route('/api/sms/list_sms', methods=['POST'])
-def list_sms():
-    to_number = request.json['to_number']
+@notification_api_blueprint.route('/api/sms/list_sms/<string:to_number>', methods=['GET'])
+def list_sms(to_number: str):
+    #to_number = request.json['to_number']
 
     record = SMSRequest.query.filter_by(to_number=to_number).first()
 
@@ -62,22 +67,66 @@ def list_sms():
             records.append(record.to_json())
 
         response = jsonify({
-            'results' : records
+            'results': records
         })
 
         return response, 200
     else:
         return jsonify(message='Application has not sent any SMS to the given Phone number'), 404
 
-"""
-@notification_api_blueprint.route('/api/sms/sms_status', methods=['GET'])
-def sms_status():
-    message = twilio_client.messages(sid="SM9c764c2ec22f44e9a2a8e1dbc7472d75").fetch()
 
-    message_sid = message.sid
-    message_status = message.status
+@notification_api_blueprint.route('/api/email/send_email', methods=['POST'])
+def send_email():
+    to_email = request.json['to_email']
+    email_subject = request.json['email_subject']
+    email_content = request.json['email_content']
 
-    logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
-    return jsonify(message_sid=message_sid, message_status=message_status)
-"""
+    email_text = 'Subject: {}\n\n{}'.format(email_subject, email_content)
+    http_status_code = 200
+    error_message = None
 
+    try:
+        gmail_client = GmailClient()
+        gmail_client.send_email(to_email, email_text)
+
+    except SMTPException as exception:
+        http_status_code = 400
+        error_message = str(exception.args[0])
+        pass
+    finally:
+        if http_status_code == 200:
+            message = "Email Sent."
+        else:
+            message = "Error in Sending Email."
+
+        email_message_model_object = EmailRequest(to_email=to_email,
+                                                  from_email=sender_email,
+                                                  email_body=email_content,
+                                                  email_subject=email_subject,
+                                                  status=message,
+                                                  error_message=error_message)
+
+        db.session.add(email_message_model_object)
+        db.session.commit()
+        # logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
+
+    return jsonify(message=message), http_status_code
+
+
+@notification_api_blueprint.route('/api/email/list_email/<string:email>', methods=['GET'])
+def list_email(email: str):
+
+    record = EmailRequest.query.filter_by(to_email=email).first()
+
+    if record:
+        records = []
+        for record in EmailRequest.query.filter_by(to_email=email).all():
+            records.append(record.to_json())
+
+        response = jsonify({
+            'results': records
+        })
+
+        return response, 200
+    else:
+        return jsonify(message='Application has not sent any Email to the given Email Id'), 404
