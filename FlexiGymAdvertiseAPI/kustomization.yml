@@ -6,4 +6,4 @@ resources:
 - kubernetes/flexigym-advertise-api-db-deployment.yaml
 - kubernetes/flexigym-advertise-api-deployment.yaml
 - kubernetes/flexigym-advertise-api-service.yaml
-- kubernetes/flexigym-advertise-api-service-db.yaml
+- kubernetes/flexigym-advertise-service-db.yaml
