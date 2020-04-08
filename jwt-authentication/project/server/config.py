@@ -4,7 +4,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 # postgres_local_base = 'postgresql://postgres:@localhost/'
 # database_name = 'flask_jwt_auth'
-postgres_local_base = 'postgresql+pg8000//{}:{}@{}/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'), os.getenv('DB_NAME'))
+postgres_local_base = 'postgresql+pg8000//{}:{}@localhost:5432/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'))
 database_name = 'postgres-authentication'
 SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
 
