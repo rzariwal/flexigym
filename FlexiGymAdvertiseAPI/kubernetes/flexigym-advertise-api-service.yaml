@@ -10,11 +10,11 @@ metadata:
   name: flexigym-advertise-api
 spec:
   ports:
-  - name: "9000"
-    port: 9000 
-    targetPort: 4996 
+    - name: "7000"
+      port: 7000
+      targetPort: 5000
   type: LoadBalancer
-  loadBalancerIP: 34.87.6.16 
+  loadBalancerIP: 34.87.6.16
   selector:
     io.kompose.service: flexigym-advertise-api
 status:

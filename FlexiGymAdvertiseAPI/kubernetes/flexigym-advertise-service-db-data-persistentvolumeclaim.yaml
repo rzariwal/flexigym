@@ -3,11 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: flexigym-advertise-service-db-data
-  name: flexigym-advertise-service-db-data
+    io.kompose.service: flexigym-advertise-api-db-data
+  name: flexigym-advertise-api-db-data
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi
