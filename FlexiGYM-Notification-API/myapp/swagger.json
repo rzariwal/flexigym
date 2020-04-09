@@ -53,9 +53,17 @@
         ],
         "summary": "List the SMS Messages sent to a Mobile Number",
         "operationId": "list_sms",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/ListSMS"
-        },
+        "parameters": [
+          {
+            "name": "to_number",
+            "in": "path",
+            "description": "Mobile Number with country code ex:+6598765432",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            }
+          }
+         ],
         "responses":
         {
           "200":
@@ -112,7 +120,7 @@
         }
       }
     },
-    "/email/list_email/{email}": {
+    "/email/list_email/<string:email>": {
       "get": {
         "tags": [
           "List of EMails sent to an EMail Id"
