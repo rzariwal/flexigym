@@ -119,16 +119,17 @@
         ],
         "summary": "List the EMail Messages sent to an EMail Id",
         "operationId": "list_email",
-        "parameters":
-        {
-          "name": "email",
-          "in": "path",
-          "description": "EMail Id",
-          "required": "true",
-          "schema": {
-            "type": "string"
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "EMail Id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            }
           }
-        },
+         ],
         "responses":
         {
           "200":
