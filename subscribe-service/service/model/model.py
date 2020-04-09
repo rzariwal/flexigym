@@ -100,15 +100,3 @@ class Product(object):
         self.qty = qty
         self.name = name
         self.price = price
-'''
-    item1 = Item(1, "Banana", 1., 1)
-    item2 = Item(2, "Eggs", 1., 2)
-    item3 = Item(3, "Donut", 1., 5)
-    cart = ShoppingCart()
-    cart.update(item1)
-    cart.update(item2)
-    cart.update(item3)
-    print "You have %i items in your cart for a total of $%.02f" % (cart.get_num_items(), cart.get_total())
-    cart.remove_item(1)
-    print "You have %i items in your cart for a total of $%.02f" % (cart.get_num_items(), cart.get_total())
-'''

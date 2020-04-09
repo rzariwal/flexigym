@@ -45,7 +45,7 @@ def addToCart():
             if cart_id == -1:
                 # create a new cart
                 cart = ShoppingCart(user)
-                #cart.update(item)
+                cart.update(item)
                 cart.total = r.price
                 cart.paid = False
                 db.session.add(cart)
@@ -63,7 +63,7 @@ def addToCart():
 
             responseObject =  {
                 'status': 'success',
-                'cart_id': cart.cart_id
+                'cart_info': cart.to_json()
             }
             return make_response(jsonify(responseObject)), 200
             pass
