@@ -56,21 +56,11 @@ class ShoppingCart(db.Model):
         self.cart_status = "OPEN"
 
     def update(self, item):
-        if item.unq_id not in self.content:
-            self.content.update({item.unq_id: item})
+        if item.package_id not in self.content:
+            self.content.update({item.package_id: item})
             return
         try:
-            for k, v in self.content.get(item.unq_id).items():
-                if k == 'unq_id':
-                    continue
-                elif k == 'qty':
-                    total_qty = v.qty + item.qty
-                    if total_qty:
-                        v.qty = total_qty
-                        continue
-                    self.remove_item(k)
-                else:
-                    v[k] = item[k]
+            self.content[item.package_id].qty = self.content[item.package_id].qty + item.qty
         except AttributeError:
             pass
 
