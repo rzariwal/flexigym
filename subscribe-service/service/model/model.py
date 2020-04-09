@@ -67,7 +67,7 @@ class ShoppingCart(db.Model):
     def init_on_load(self):
         self.content = dict()  # content of cart
 
-    def update(self, item):
+    def update(self,item):
         if item.package_id not in self.content:
             self.content.update({item.package_id: item})
             return

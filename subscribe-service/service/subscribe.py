@@ -25,7 +25,7 @@ def populateCart(id):
     userCart = ShoppingCart('current')
     for each in cartItems:
         userCart.update(each)
-    #return cartItems.__dict__
+    # return cartItems.__dict__
 
 
 # add an item to cart
@@ -35,8 +35,8 @@ def addToCart():
         # parse request
         post_data = request.get_json()
         user = request.json['user_id']
-        product_id = request.json['product_id']
-        count = request.json['count']
+        package_id = request.json['product_id']
+        count = request.json['qty']
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
             cart_id = request.json['cart_id']
@@ -44,7 +44,7 @@ def addToCart():
             cart_id = -1
         # get all information about the item
         if ADVERTISE_API_OK:
-            r = request.get(url=ADVERTISE_URL + "/" + product_id)
+            r = request.get(url=ADVERTISE_URL + "/" + package_id)
         else:
             r = Product(1, "p1", 100, 100)
         if count > int(r.qty):
@@ -55,7 +55,8 @@ def addToCart():
             return jsonify(responseObject), 201
         else:
             # create the item object to be added to cart
-            item = Item(product_id, r.price, count)
+            item = Item(package_id, 100, count)
+            itemToCommit = Item(package_id, 100, count)
 
             if cart_id == -1:
                 # create a new cart
@@ -64,28 +65,36 @@ def addToCart():
                 cart.created_time = datetime.now()
                 cart.payment_status = False
                 cart.cart_status = 'OPEN'
-
                 db.session.add(cart)
                 db.session.commit()
+                item.updateCartId(cart.cart_id)
+                db.session.add(item)
+                db.session.commit()
+
             else:
                 # look into ShoppingCart db to get cart and use the same cart to add items
                 cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-                # calculate cart total
-                cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
-                for each in cartItems:
-                    cart.update(each)
-                cart.total = cart.get_total()
-                cart.updated_time = datetime.now()
-                cart.payment_status = False
-                cart.cart_status = 'OPEN'
+                # confirm if the cart is OPEN
+                if cart.cart_status == 'OPEN':
+                    # get cartItems from Item table.
+                    cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
+                    for each in cartItems:
+                        i = Item(each.package_id,each.price,each.qty)
+                        cart.update(i)
+                    # calculate cart total
+                    cart.update(itemToCommit)
+                    cart.total = cart.get_total()
+                    cart.updated_time = datetime.now()
+                    cart.payment_status = False
+                    cart.cart_status = 'OPEN'
+                    db.session.add(cart)
+                    db.session.commit()
 
-                db.session.add(cart)
-                db.session.commit()
-
-            # commit item with respective cart_ids to database
-            item.updateCartId(cart.cart_id)
-            db.session.add(item)
-            db.session.commit()
+                    # commit item to db first.
+                    # commit item with respective cart_ids to database
+                    itemToCommit.updateCartId(cart_id)
+                    db.session.add(itemToCommit)
+                    db.session.commit()
 
             # return cartId if add to cart is success.
             responseObject = {
