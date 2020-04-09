@@ -1,31 +1,15 @@
-import uuid
 from datetime import datetime
-
-from . import subscribe_api_blueprint
 from flask import request, jsonify, make_response
 from sqlalchemy import engine
 from sqlalchemy.orm import sessionmaker
 from service.model.model import ShoppingCart, Item, Product, db
+from . import subscribe_api_blueprint
 
 # api-endpoint
 ADVERTISE_API_OK = False
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
 Session = sessionmaker(bind=engine)
 session = Session()
-
-
-def generateCartId():
-    cart_Id = uuid.uuid1()
-    return str(cart_Id)
-
-
-def populateCart(id):
-    # get all rows with this cartid from Item
-    cartItems = Item.query.filter_by(cart_id=id).all()
-    userCart = ShoppingCart('current')
-    for each in cartItems:
-        userCart.update(each)
-    # return cartItems.__dict__
 
 
 # add an item to cart
@@ -79,7 +63,7 @@ def addToCart():
                     # get cartItems from Item table.
                     cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
                     for each in cartItems:
-                        i = Item(each.package_id,each.price,each.qty)
+                        i = Item(each.package_id, each.price, each.qty)
                         cart.update(i)
                     # calculate cart total
                     cart.update(itemToCommit)
@@ -108,21 +92,22 @@ def addToCart():
 
 
 # delete an item from cart
-@subscribe_api_blueprint.route("/delete", methods=['POST'])
+@subscribe_api_blueprint.route("/delete", methods=['POST', 'GET'])
 def deleteFromCart():
     try:
-        # parse request
-        product_id = request.json['product_id']
+        # parse request -> get cart_id from which and product_id to be deleted.
+        package_id = request.json['product_id']
+        cart_id = request.json['cart_id']
         pass
     except Exception as e:
         print(e)
 
 
 # get cart content
-@subscribe_api_blueprint.route("/get", methods=['GET'])
+@subscribe_api_blueprint.route("/get", methods=['GET', "POST"])
 def getCartItems():
     try:
-
+        # get cart_Id and return all items in cart!
         pass
     except Exception as e:
         print(e)
