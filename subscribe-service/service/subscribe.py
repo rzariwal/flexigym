@@ -1,4 +1,6 @@
 import uuid
+from datetime import datetime
+
 from . import subscribe_api_blueprint
 from flask import request, jsonify, make_response
 from sqlalchemy import engine
@@ -17,8 +19,17 @@ def generateCartId():
     return str(cart_Id)
 
 
+def populateCart(id):
+    # get all rows with this cartid from Item
+    cartItems = Item.query.filter_by(cart_id=id).all()
+    userCart = ShoppingCart('current')
+    for each in cartItems:
+        userCart.update(each)
+    #return cartItems.__dict__
+
+
 # add an item to cart
-@subscribe_api_blueprint.route("/add", methods=['POST',"GET"])
+@subscribe_api_blueprint.route("/add", methods=['POST', "GET"])
 def addToCart():
     try:
         # parse request
@@ -35,9 +46,13 @@ def addToCart():
         if ADVERTISE_API_OK:
             r = request.get(url=ADVERTISE_URL + "/" + product_id)
         else:
-            r = Product(1,"p1",100, 100)
+            r = Product(1, "p1", 100, 100)
         if count > int(r.qty):
-            return jsonify(message="Sorry, we don't have that many packages available!"), 201
+            responseObject = {
+                'status': 'fail',
+                'message': 'Item requested is more than available quantity'
+            }
+            return jsonify(responseObject), 201
         else:
             # create the item object to be added to cart
             item = Item(product_id, r.price, count)
@@ -45,29 +60,39 @@ def addToCart():
             if cart_id == -1:
                 # create a new cart
                 cart = ShoppingCart(user)
-                cart.update(item)
                 cart.total = r.price
-                cart.paid = False
+                cart.created_time = datetime.now()
+                cart.payment_status = False
+                cart.cart_status = 'OPEN'
+
                 db.session.add(cart)
                 db.session.commit()
             else:
-                # look into ShopingCart db to get cart and use the same cart to add items
-                cart = ShoppingCart.query.filter_by(cart_id=cart_id)
-                cart.update(item)
-                cart.total = 100
-                cart.paid = False
+                # look into ShoppingCart db to get cart and use the same cart to add items
+                cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
+                # calculate cart total
+                cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
+                for each in cartItems:
+                    cart.update(each)
+                cart.total = cart.get_total()
+                cart.updated_time = datetime.now()
+                cart.payment_status = False
+                cart.cart_status = 'OPEN'
+
                 db.session.add(cart)
                 db.session.commit()
 
-            # return cartId if add to cart is success.
+            # commit item with respective cart_ids to database
+            item.updateCartId(cart.cart_id)
+            db.session.add(item)
+            db.session.commit()
 
-            responseObject =  {
+            # return cartId if add to cart is success.
+            responseObject = {
                 'status': 'success',
-                'cart_info': cart.to_json()
+                'cart_Info': cart.to_json()
             }
             return make_response(jsonify(responseObject)), 200
-            pass
-        pass
     except Exception as e:
         print(e)
         return jsonify(message="Sorry, exception"), 201
