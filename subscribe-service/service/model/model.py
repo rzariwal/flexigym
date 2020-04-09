@@ -35,6 +35,15 @@ class Item(db.Model):
 
     def updateCartId(self, id):
         self.cart_id = id
+       
+    def to_json(self):
+        return {
+            'item_id' : self.item_id,
+            'cart_id' : self.user_id,
+            'package_id' : self.package_id,
+            'qty' : self.qty,
+            'price' : self.price
+        }
 
 
 # represent a shopping cart -> includes 1 or more items with varying quantities
@@ -72,6 +81,17 @@ class ShoppingCart(db.Model):
 
     def remove_item(self, key):
         self.content.pop(key)
+        
+    def to_json(self):
+        return {
+            'cart_id' : self.cart_id,
+            'user_id' : self.user_id,
+            'cart_status' : self.cart_status,
+            'created_time' : self.created_time,
+            'updated_time' : self.updated_time,
+            'total' : self.total,
+            'payment_status' : self.payment_status
+        }
 
 class Product(object):
 
