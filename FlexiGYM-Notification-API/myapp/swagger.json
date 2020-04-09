@@ -125,7 +125,9 @@
           "in": "path",
           "description": "EMail Id",
           "required": "true",
-          "type": "string"
+          "schema": {
+            "type": "string"
+          }
         },
         "responses":
         {
