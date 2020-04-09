@@ -46,7 +46,7 @@
         }
       }
     },
-    "/sms/list_sms/<string:to_number>": {
+    "/sms/list_sms/{to_number}": {
       "get": {
         "tags": [
           "List of SMS sent to a Mobile number"
@@ -120,7 +120,7 @@
         }
       }
     },
-    "/email/list_email/<string:email>": {
+    "/email/list_email/{email}": {
       "get": {
         "tags": [
           "List of EMails sent to an EMail Id"
