@@ -15,7 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    mobile = db.Column(db.Integer, nullable=False)
+    mobile = db.Column(db.String(255), nullable=False)
 
     def __init__(self, email, password, mobile, admin=False):
         self.email = email
