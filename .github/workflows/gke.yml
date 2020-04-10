@@ -24,6 +24,7 @@ env:
   IMAGEWEB: authentication-api
   IMAGENotificationAPI: notification-api
   IMAGEPaymentAPI: payment-api
+  IMAGEAdvertiseAPI: advertise-api
 
 jobs:
   setup-build-publish-deploy:
@@ -53,6 +54,14 @@ jobs:
       run: |
         cd jwt-authentication
         docker build -f Dockerfile.prod -t asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }} .
+        docker tag asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }} localbuild/testimage:latest
+
+      # Scan Authentication API Docker image
+    - name: Scan image Authentication API
+      uses: anchore/scan-action@master
+      with:
+        image-reference: "localbuild/testimage:latest"
+        fail-build: true
 
       # Push the Authentication API Docker image to Google Container Registry
     - name: Publish Authentication API
@@ -60,6 +69,7 @@ jobs:
       run: |
         cd jwt-authentication
         docker push asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}
+
     # Set up kustomize for Authentication API
     - name: Set up Kustomize Authentication API
       if: "contains(github.event.head_commit.message, 'auth')"
@@ -148,3 +158,35 @@ jobs:
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/payment-api -n flask-jwt-auth-web
         kubectl get services -o wide -n flask-jwt-auth-web
+
+      # Build the FlexiGYM-advertise-API API Docker image
+    - name: Build FlexiGymAdvertiseAPI-API
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }} .
+      # Push the FlexiGymAdvertiseAPI Docker image to Google Container Registry
+    - name: Publish FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }}
+      # Set up kustomize for FlexiGymAdvertiseAPI
+    - name: Set up Kustomize FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-advertise-service-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-advertise-api -n flask-jwt-auth-web
+

@@ -100,8 +100,7 @@ components:
         password:
           type: string
         mobile:
-          type: integer
-          format: int32
+          type: string
     login:
       type: object
       properties:

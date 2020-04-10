@@ -1,7 +1,9 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask
+
 import setup
 
-app = Flask(__name__)
+# from project setup reference
+app = setup.create_app()
 
 
 @app.route('/')
@@ -9,8 +11,5 @@ def hello_world():
     return 'Hello World!'
 
 
-# from project setup reference
-app = setup.create_app()
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=5005)
