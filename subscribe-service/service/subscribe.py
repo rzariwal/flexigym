@@ -163,3 +163,27 @@ def getCartItems():
 @subscribe_api_blueprint.route('/test')
 def hello_world():
     return 'test!'
+
+
+# get cart id and proceed to call payment api
+@subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    try:
+        cart_id = request.json['cart_id']
+        #get user id
+        cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
+
+        responseObject = {
+            'status': 'success',
+            'user_id': cart.user_id,
+            'total_amount': cart.total
+        }
+        return make_response(jsonify(responseObject)), 200
+
+    except Exception as e:
+        print(e)
+        responseObject = {
+            'status': 'fail',
+            'message': 'Something went wrong!'
+        }
+        return make_response(jsonify(responseObject)), 500
