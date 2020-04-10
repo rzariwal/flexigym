@@ -61,6 +61,7 @@ jobs:
       run: |
         cd jwt-authentication
         docker push asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}
+
     # Set up kustomize for Authentication API
     - name: Set up Kustomize Authentication API
       if: "contains(github.event.head_commit.message, 'auth')"
