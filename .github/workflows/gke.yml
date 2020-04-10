@@ -59,7 +59,7 @@ jobs:
     - name: Scan image Authentication API
       uses: anchore/scan-action@master
       with:
-        image-reference: asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}
+        image-reference: "asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}"
         fail-build: true
 
       # Push the Authentication API Docker image to Google Container Registry
