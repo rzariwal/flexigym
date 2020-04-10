@@ -38,7 +38,7 @@ class Item(db.Model):
 
     def to_json(self):
         return {
-            #'cart_id': self.cart_id,
+            # 'cart_id': self.cart_id,
             'package_id': self.package_id,
             'qty': self.qty,
             'price': self.price
@@ -56,7 +56,6 @@ class ShoppingCart(db.Model):
     total = Column(Integer)
     payment_status = Column(Boolean, default=False)
 
-
     def __init__(self, user_id):
         self.content = dict()  # content of cart
         self.user_id = user_id
@@ -67,7 +66,7 @@ class ShoppingCart(db.Model):
     def init_on_load(self):
         self.content = dict()  # content of cart
 
-    def update(self,item):
+    def update(self, item):
         if item.package_id not in self.content:
             self.content.update({item.package_id: item})
             return
@@ -87,8 +86,7 @@ class ShoppingCart(db.Model):
     def remove_item(self, key):
         self.content.pop(key)
 
-    #def getContent(self):
-
+    # def getContent(self):
 
     def to_json(self):
         return {

@@ -50,8 +50,8 @@ def addToCart():
             return jsonify(responseObject), 201
         else:
             # create the item object to be added to cart
-            item = Item(package_id, 50, count)
-            itemToCommit = Item(package_id, 50, count)
+            item = Item(package_id, r.price, count)
+            itemToCommit = Item(package_id, r.price, count)
 
             if cart_id == -1:
                 # create a new cart
