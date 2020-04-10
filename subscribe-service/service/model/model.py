@@ -38,8 +38,7 @@ class Item(db.Model):
 
     def to_json(self):
         return {
-            'item_id': self.item_id,
-            'cart_id': self.user_id,
+            #'cart_id': self.cart_id,
             'package_id': self.package_id,
             'qty': self.qty,
             'price': self.price
@@ -87,6 +86,9 @@ class ShoppingCart(db.Model):
 
     def remove_item(self, key):
         self.content.pop(key)
+
+    #def getContent(self):
+
 
     def to_json(self):
         return {

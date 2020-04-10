@@ -11,8 +11,18 @@ ADVERTISE_URL = "http://localhost:4996/packagesApi"
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
 # add an item to cart
+'''
+{
+    "user_id": "ekl",
+    "product_id": 5,
+    "qty": 1,
+    "cart_id": 1
+}
+"cart_id" field is not for the first time.
+'''
+
+
 @subscribe_api_blueprint.route("/add", methods=['POST', "GET"])
 def addToCart():
     try:
@@ -31,6 +41,7 @@ def addToCart():
             r = request.get(url=ADVERTISE_URL + "/" + package_id)
         else:
             r = Product(1, "p1", 100, 100)
+
         if count > int(r.qty):
             responseObject = {
                 'status': 'fail',
@@ -39,8 +50,8 @@ def addToCart():
             return jsonify(responseObject), 201
         else:
             # create the item object to be added to cart
-            item = Item(package_id, 100, count)
-            itemToCommit = Item(package_id, 100, count)
+            item = Item(package_id, 50, count)
+            itemToCommit = Item(package_id, 50, count)
 
             if cart_id == -1:
                 # create a new cart
@@ -88,7 +99,11 @@ def addToCart():
             return make_response(jsonify(responseObject)), 200
     except Exception as e:
         print(e)
-        return jsonify(message="Sorry, exception"), 201
+        responseObject = {
+            'status': 'fail',
+            'message': 'Something went wrong!'
+        }
+        return make_response(jsonify(responseObject)), 500
 
 
 # delete an item from cart
@@ -104,13 +119,45 @@ def deleteFromCart():
 
 
 # get cart content
+'''
+example
+{
+   "cart_id": 1
+}
+'''
+
+
 @subscribe_api_blueprint.route("/get", methods=['GET', "POST"])
 def getCartItems():
     try:
         # get cart_Id and return all items in cart!
-        pass
+        cart_id = request.json['cart_id']
+        # get cartItems from Item table.
+        cart = ShoppingCart('current_user')
+        cartItems = Item.query.filter_by(cart_id=cart_id).all()
+        userCartObject = []
+        for each in cartItems:
+            i = Item(each.package_id, each.price, each.qty)
+            cart.update(i)
+        for k, v in cart.content.items():
+            print(k, '->', v.to_json())
+            userCartObject.append(v.to_json())
+        # print(userCartObject)
+        # return cartId if add to cart is success.
+        responseObject = {
+            'status': 'success',
+            'cart_Info': userCartObject,
+            'total': cart.get_total()
+        }
+        return make_response(jsonify(responseObject)), 200
+
     except Exception as e:
         print(e)
+        responseObject = {
+            'status': 'fail',
+            'message': 'Something went wrong!'
+        }
+        return make_response(jsonify(responseObject)), 500
 
 
 @subscribe_api_blueprint.route('/test')
