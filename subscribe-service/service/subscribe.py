@@ -133,7 +133,7 @@ def getCartItems():
         # get cart_Id and return all items in cart!
         cart_id = request.json['cart_id']
         # get cartItems from Item table.
-        cart = ShoppingCart('current_user')
+        cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
         cartItems = Item.query.filter_by(cart_id=cart_id).all()
         userCartObject = []
         for each in cartItems:
@@ -146,8 +146,8 @@ def getCartItems():
         # return cartId if add to cart is success.
         responseObject = {
             'status': 'success',
-            'cart_Info': userCartObject,
-            'total': cart.get_total()
+            'cartInfo': cart.to_json(),
+            'cart_Items': userCartObject
         }
         return make_response(jsonify(responseObject)), 200
 
