@@ -26,7 +26,7 @@ app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 # Connect to Database and create database session
 # engine = create_engine('sqlite:///books-collection.db?check_same_thread=False')
 # engine = create_engine('mysql+mysqlconnector://root:1234@localhost:3306/flexigym_advertise_service')
-engine = create_engine('mysql+mysqlconnector://root:1234@flexigym-advertise-service-db/flexigym_advertise_service')
+engine = create_engine('mysql+mysqlconnector://root:1234@flexigym-advertise-service-db/flexigym-advertise-service')
 
 Base.metadata.bind = engine
 
