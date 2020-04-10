@@ -49,7 +49,8 @@ class GymPackageModel(Base):
 
 
 # creates a create_engine instance at the bottom of the fil
-# engine = create_engine('mysql+mysqlconnector://root:1234@localhost:3306/flexigym-advertise-service')
-engine = create_engine('mysql+mysqlconnector://root:1234@flexigym-advertise-service-db/flexigym_advertise_service')
-# engine = create_engine('sqlite:///books-collection.db')
+# engine = create_engine('mysql+mysqlconnector://root:1234@localhost:3306/advertise_service')
+# engine = create_engine('sqlite:///advertise-service.db')
+engine = create_engine('mysql+mysqlconnector://root:1234@flexigym-advertise-service2-db/advertise-service')
+
 Base.metadata.create_all(engine)

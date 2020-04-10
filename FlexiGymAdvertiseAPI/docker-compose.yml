@@ -1,16 +1,16 @@
 version: '3'
 
 volumes:
-  flexigym-advertise-service-db-data:
+  flexigym-advertise-service2-db-data:
 
 services:
-  flexigym-advertise-service-db:
+  flexigym-advertise-service2-db:
     image: mysql:5.7.29
     volumes:
-      - flexigym-advertise-service-db-data:/var/lib/mysql
+      - flexigym-advertise-service2-db-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=flexigym-advertise-service
+      - MYSQL_DATABASE=advertise-service
     restart: always
 
   flexigym-advertise-api:
@@ -19,9 +19,9 @@ services:
     ports:
       - 80:4996
     links:
-      - flexigym-advertise-service-db
+      - flexigym-advertise-service2-db
     depends_on:
-      - flexigym-advertise-service-db
+      - flexigym-advertise-service2-db
 
 networks:
    default:
