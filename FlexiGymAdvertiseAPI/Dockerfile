@@ -2,9 +2,9 @@ FROM python:3-alpine
 
 MAINTAINER Ehkalu
 
-COPY ./api/requirements.txt /api/requirements.txt
+COPY ./myapp/requirements.txt /myapp/requirements.txt
 
-WORKDIR /api
+WORKDIR /myapp
 
 RUN apk add --update \
     py3-mysqlclient \
@@ -17,10 +17,10 @@ RUN apk add --update \
     && pip install -r requirements.txt \
     && rm -rf /var/cache/apk/*
 
-COPY ./api/package.json /api/package.json
+COPY ./myapp/package.json /myapp/package.json
 
 RUN npm install
 
-COPY ./api /api
+COPY ./myapp /myapp
 
 CMD ["python", "app.py"]

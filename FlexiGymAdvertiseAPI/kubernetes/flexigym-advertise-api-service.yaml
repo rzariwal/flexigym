@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.21.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: flexigym-advertise-api
-  name: flexigym-advertise-api
+    io.kompose.service: flexigym-advertise-service
+  name: flexigym-advertise-service
 spec:
   ports:
   - name: "9000"
@@ -16,6 +16,6 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 34.87.6.16 
   selector:
-    io.kompose.service: flexigym-advertise-api
+    io.kompose.service: flexigym-advertise-service
 status:
   loadBalancer: {}
