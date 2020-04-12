@@ -27,7 +27,7 @@ spec:
       containers:
       - env:
         - name: MYSQL_DATABASE
-          value: flexigym-advertise-service
+          value: flexigym_advertise_service
         - name: MYSQL_ROOT_PASSWORD
           value: "1234"
         image: mysql:5.7.29
