@@ -7,8 +7,8 @@ from . import advertise_api_blueprint
 
 
 # service-endpoint
-Session = sessionmaker(bind=engine)
-session = Session()
+#Session = sessionmaker(bind=engine)
+#session = Session()
 
 @advertise_api_blueprint.route('/test')
 def hello_world():
