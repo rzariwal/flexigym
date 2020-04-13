@@ -1,9 +1,7 @@
 from datetime import datetime
 from flask import request, jsonify, make_response
-from sqlalchemy import engine
-from sqlalchemy.orm import sessionmaker
-from service.models import GymPackageModel, db
-from . import advertise_api_blueprint
+from .models import GymPackageModel, db
+from service import advertise_api_blueprint
 
 
 # service-endpoint
