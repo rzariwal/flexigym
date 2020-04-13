@@ -27,7 +27,7 @@ spec:
       containers:
       - env:
         - name: MYSQL_DATABASE
-          value: advertise-service
+          value: advertise
         - name: MYSQL_ROOT_PASSWORD
           value: test
         image: mysql:5.7.29
