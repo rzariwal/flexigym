@@ -9,7 +9,7 @@ services:
     volumes:
       - flexigym-advertise-service1-db-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_ROOT_PASSWORD=test
       - MYSQL_DATABASE= advertise-service
     restart: always
 
