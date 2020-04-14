@@ -29,7 +29,7 @@ spec:
         - name: MYSQL_DATABASE
           value: advertise
         - name: MYSQL_ROOT_PASSWORD
-          value: 1234
+          value: test
         image: mysql:5.7.29
         imagePullPolicy: "Always"
         name: flexigym-advertise-service1-db

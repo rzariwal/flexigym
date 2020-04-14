@@ -19,7 +19,7 @@ def create_app():
             WTF_CSRF_SECRET_KEY="advertise csrf secret key",
             #SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:1234@localhost:3306/flexigym-advertise-service',
             #SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir) + 'advertise-service.db',
-            SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:1234@flexigym-advertise-service1-db/advertise',
+            SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-advertise-service1-db/advertise',
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JSON_SORT_KEYS=False
         )

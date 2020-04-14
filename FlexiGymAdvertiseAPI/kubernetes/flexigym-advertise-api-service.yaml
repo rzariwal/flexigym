@@ -14,7 +14,7 @@ spec:
     port: 9000
     targetPort: 5000
   type: LoadBalancer
-  loadBalancerIP: 34.87.6.16 
+  loadBalancerIP: 34.87.6.16
   selector:
     io.kompose.service: flexigym-advertise-service
 status:
