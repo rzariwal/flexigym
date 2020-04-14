@@ -188,6 +188,6 @@ jobs:
           --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/flexigym-advertise-service1-db -n flask-jwt-auth-web
-        kubectl rollout status deployment/flexigym-advertise-service -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-advertise-service2-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-advertise-service2 -n flask-jwt-auth-web
 
