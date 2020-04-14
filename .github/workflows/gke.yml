@@ -21,10 +21,10 @@ env:
   GKE_CLUSTER: flexigym-cluster1
   GKE_ZONE: asia-southeast1-a
   IMAGEDB: db
-  IMAGEWEB: authentication-api
-  IMAGENotificationAPI: notification-api
-  IMAGEPaymentAPI: payment-api
-  IMAGEAdvertiseAPI: advertise-api
+  IMAGEWEB: authentication-service
+  IMAGENotificationAPI: notification-service
+  IMAGEPaymentAPI: payment-service
+  IMAGEAdvertiseAPI: advertise-service
 
 jobs:
   setup-build-publish-deploy:

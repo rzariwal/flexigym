@@ -6,14 +6,14 @@ metadata:
     kompose.version: 1.21.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: flexigym-notification-api-db
-  name: flexigym-notification-api-db  
+    io.kompose.service: flexigym-notification-service-db
+  name: flexigym-notification-service-db
 spec:
   ports:
   - name: "3306"
     port: 3306
     targetPort: 3306
   selector:
-    io.kompose.service: flexigym-notification-api-db
+    io.kompose.service: flexigym-notification-service-db
 status:
   loadBalancer: {}

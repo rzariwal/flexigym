@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from service.model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 
-# api-endpoint
+# service-endpoint
 ADVERTISE_API_OK = False
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
 Session = sessionmaker(bind=engine)
@@ -165,7 +165,7 @@ def hello_world():
     return 'test!'
 
 
-# get cart id and proceed to call payment api
+# get cart id and proceed to call payment service
 @subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     try:

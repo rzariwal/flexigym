@@ -19,7 +19,7 @@ def create_tables(app):
     return engine
 
 
-# represent each item -> should aligned with advertise-api
+# represent each item -> should aligned with advertise-service
 class Item(db.Model):
     __tablename__ = 'item'
     item_id = Column(Integer, primary_key=True, autoincrement=True)

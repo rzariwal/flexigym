@@ -11,7 +11,7 @@ env:
   GKE_CLUSTER: flexigym-cluster1
   GKE_ZONE: asia-southeast1-a
   IMAGEDB: db
-  IMAGEWEB: authentication-api
+  IMAGEWEB: authentication-service
 
 jobs:
   setup-build-publish-deploy:

@@ -1,13 +1,13 @@
 version: '3'
 
 volumes:
-  flexigym-notification-api-db-data:
+  flexigym-notification-service-db-data:
 
 services:
   flexigym-notification-api-db:
     image: mysql:5.7.29
     volumes:
-      - flexigym-notification-api-db-data:/var/lib/mysql
+      - flexigym-notification-service-db-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
       - MYSQL_DATABASE=notification
