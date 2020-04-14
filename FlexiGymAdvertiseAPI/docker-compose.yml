@@ -17,7 +17,7 @@ services:
     build:
       context: .
     ports:
-      - 80:5000
+      - 5000:5000
     links:
       - flexigym-advertise-service1-db
     depends_on:

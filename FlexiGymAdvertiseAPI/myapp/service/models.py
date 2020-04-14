@@ -1,10 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, func
+import sqlalchemy
 
 from sqlalchemy import create_engine
 
 db = SQLAlchemy()
-
 
 def init_app(app):
     db.app = app
@@ -20,17 +19,17 @@ def create_tables(app):
 # Database Models
 class GymPackageModel(db.Model):
     __tablename__ = 'gym_package'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    package_name = Column(String(50))
-    package_description = Column(String(500))
-    price = Column(Integer)
-    available_qty = Column(Integer)
-    created_by = Column(String(300))
-    updated_by = Column(String(300))
-    valid_from = Column(DateTime(timezone=True))
-    valid_to = Column(DateTime(timezone=True))
-    created_date = Column(DateTime(timezone=True), server_default=func.now())
-    updated_date = Column(DateTime(timezone=True), onupdate=func.now())
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    package_name = sqlalchemy.Column(sqlalchemy.String(50))
+    package_description = sqlalchemy.Column(sqlalchemy.String(500))
+    price = sqlalchemy.Column(sqlalchemy.Integer)
+    available_qty = sqlalchemy.Column(sqlalchemy.Integer)
+    created_by = sqlalchemy.Column(sqlalchemy.String(300))
+    updated_by = sqlalchemy.Column(sqlalchemy.String(300))
+    valid_from = sqlalchemy.Column(sqlalchemy.DateTime(timezone=True))
+    valid_to = sqlalchemy.Column(sqlalchemy.DateTime(timezone=True))
+    created_date = sqlalchemy.Column(sqlalchemy.DateTime(timezone=True), server_default=sqlalchemy.func.now())
+    updated_date = sqlalchemy.Column(sqlalchemy.DateTime(timezone=True), onupdate=sqlalchemy.func.now())
 
     @property
     def to_json(self):
