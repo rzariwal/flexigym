@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import request, jsonify, make_response
 from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
-from service.model.model import ShoppingCart, Item, Product, db
+from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 
 # service-endpoint

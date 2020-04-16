@@ -1,5 +1,3 @@
-from flask import Flask
-
 import setup
 
 # from project setup reference
@@ -12,4 +10,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5005)
+    app.run(debug=True, host='0.0.0.0')

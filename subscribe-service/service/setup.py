@@ -1,8 +1,8 @@
 import os
 
 from flask import Flask
-from service import subscribe_api_blueprint
-import service.model.model as model
+from subscribe_api import subscribe_api_blueprint
+import model.model as model
 
 SWAGGER_URL = '/service/docs'
 API_URL = '/service/subscribe/docs.json'

@@ -2,9 +2,9 @@ FROM python:3-alpine
 
 MAINTAINER Sandeep Bogaram
 
-COPY ./requirements.txt /requirements.txt
+COPY ./service/requirements.txt /service/requirements.txt
 
-WORKDIR /
+WORKDIR /service
 
 
 RUN apk add --update \
@@ -13,8 +13,8 @@ RUN apk add --update \
     && pip install -r requirements.txt \
     && rm -rf /var/cache/apk/*
 
-#COPY ./package.json /package.json
+COPY ./service/package.json /service/package.json
 
-COPY ./ /
+COPY ./service /service
 
 CMD ["python", "app.py"]
