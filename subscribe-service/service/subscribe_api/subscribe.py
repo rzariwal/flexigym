@@ -1,11 +1,11 @@
 from datetime import datetime
 from flask import request, jsonify, make_response
-from sqlalchemy import engine
+from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
-from service.model.model import ShoppingCart, Item, Product, db
+from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 
-# api-endpoint
+# service-endpoint
 ADVERTISE_API_OK = False
 ADVERTISE_URL = "http://localhost:4996/packagesApi"
 Session = sessionmaker(bind=engine)
@@ -110,12 +110,41 @@ def addToCart():
 @subscribe_api_blueprint.route("/delete", methods=['POST', 'GET'])
 def deleteFromCart():
     try:
-        # parse request -> get cart_id from which and product_id to be deleted.
-        package_id = request.json['product_id']
+        # parse request -> get cart_id, product_id and quantity to be deleted.
+        package_id = request.json['package_id']
         cart_id = request.json['cart_id']
-        pass
+        # get cart
+        cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
+        # delete the cart item
+        item_to_delete = Item.query.filter_by(package_id = package_id).filter_by(cart_id = cart_id).first()
+        if item_to_delete:
+            db.session.delete(item_to_delete)
+            cart.updated_time = datetime.now()
+            db.session.commit()
+            # get cart items
+            cart_items = Item.query.filter_by(cart_id=cart_id).all()
+            whole_cart = []
+            for item in cart_items:
+                i = Item(item.package_id, item.price, item.qty)
+                cart.update(i)
+            for k, v in cart.content.items():
+                print(k, '->', v.to_json())
+                whole_cart.append(v.to_json())
+
+            response_object = {
+                'status': 'success',
+                'cartInfo': cart.to_json(),
+                'cart_Items': whole_cart
+            }
+            return make_response(jsonify(response_object)), 200
+
     except Exception as e:
         print(e)
+        response_object = {
+            'status': 'fail',
+            'message': 'Delete Operation gone wrong!'
+        }
+    return make_response(jsonify(response_object)), 500
 
 
 # get cart content
@@ -165,7 +194,7 @@ def hello_world():
     return 'test!'
 
 
-# get cart id and proceed to call payment api
+# get cart id and proceed to call payment service
 @subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     try:

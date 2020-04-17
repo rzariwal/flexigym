@@ -5,7 +5,7 @@
 export const environment = {
   production: false
 };
-export const apiUrl = '//localhost:8080/api';
+export const apiUrl = '//localhost:8080/service';
 export const authApiUrl = '//34.87.6.16:5000/auth';
 
 /*

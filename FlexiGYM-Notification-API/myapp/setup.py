@@ -4,8 +4,8 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import models as models
 import os
 
-SWAGGER_URL = '/api/docs'
-API_URL = '/api/sms/docs.json'
+SWAGGER_URL = '/service/docs'
+API_URL = '/service/sms/docs.json'
 
 
 def create_app():
@@ -17,8 +17,8 @@ def create_app():
         SECRET_KEY="powerful secretkey",
         WTF_CSRF_SECRET_KEY="a csrf secret key",
         # SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root:test@notification_db/notification',
-        SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-notification-api-db/notification',
-        # SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
+        #SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-notification-api-db/notification',
+         SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         JSON_SORT_KEYS=False
 

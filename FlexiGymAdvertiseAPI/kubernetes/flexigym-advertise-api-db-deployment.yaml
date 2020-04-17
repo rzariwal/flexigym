@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.21.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: flexigym-advertise-service1-db
-  name: flexigym-advertise-service1-db
+    io.kompose.service: flexigym-advertise-service2-db
+  name: flexigym-advertise-service2-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: flexigym-advertise-service1-db
+      io.kompose.service: flexigym-advertise-service2-db
   strategy:
     type: Recreate
   template:
@@ -22,7 +22,7 @@ spec:
         kompose.version: 1.21.0 ()
       creationTimestamp: null
       labels:
-        io.kompose.service: flexigym-advertise-service1-db
+        io.kompose.service: flexigym-advertise-service2-db
     spec:
       containers:
       - env:
@@ -32,16 +32,16 @@ spec:
           value: test
         image: mysql:5.7.29
         imagePullPolicy: "Always"
-        name: flexigym-advertise-service1-db
+        name: flexigym-advertise-service2-db
         resources: {}
         volumeMounts:
         - mountPath: /var/lib/mysql
           subPath: mysql
-          name: flexigym-advertise-service1-db-data
+          name: flexigym-advertise-service2-db-data
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: flexigym-advertise-service1-db-data
+      - name: flexigym-advertise-service2-db-data
         persistentVolumeClaim:
-          claimName: flexigym-advertise-service1-db-data
+          claimName: flexigym-advertise-service2-db-data
 status: {}

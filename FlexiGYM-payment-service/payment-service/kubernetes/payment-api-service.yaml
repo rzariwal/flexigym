@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.21.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: payment-api
-  name: payment-api
+    io.kompose.service: payment-service
+  name: payment-service
 spec:
   ports:
   - name: "8000"
@@ -16,6 +16,6 @@ spec:
   type: LoadBalancer
   loadBalancerIP: 34.87.6.16
   selector:
-    io.kompose.service: payment-api
+    io.kompose.service: payment-service
 status:
   loadBalancer: {}

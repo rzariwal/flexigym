@@ -6,14 +6,14 @@ metadata:
     kompose.version: 1.21.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: flexigym-advertise-service1-db
-  name: flexigym-advertise-service1-db
+    io.kompose.service: flexigym-advertise-service2-db
+  name: flexigym-advertise-service2-db
 spec:
   ports:
   - name: "3306"
     port: 3306
     targetPort: 3306
   selector:
-    io.kompose.service: flexigym-advertise-service1-db
+    io.kompose.service: flexigym-advertise-service2-db
 status:
   loadBalancer: {}

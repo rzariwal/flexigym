@@ -1,13 +1,13 @@
 version: '3'
 
 volumes:
-  flexigym-subscribe-api-db-data:
+  flexigym-subscribe-service-db-data:
 
 services:
   flexigym-subscribe-api-db:
     image: mysql:5.7.29
     volumes:
-      - flexigym-subscribe-api-db-data:/var/lib/mysql
+      - flexigym-subscribe-service-db-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
       - MYSQL_DATABASE=subscribe
@@ -17,7 +17,7 @@ services:
     build:
       context: .
     ports:
-      - 5005:5005
+      - 6100:5000
     links:
       - flexigym-subscribe-api-db
     depends_on:

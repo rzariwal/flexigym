@@ -1,0 +1,391 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FlexiGYM Notification API",
+    "description": "FlexiGYM Notification API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://34.87.6.16:7000/api",
+      "description": "Kubernetes-FlexiGYM Notification API"
+    }
+  ],
+  "paths": {
+    "/sms/send_sms": {
+      "post": {
+        "tags": [
+          "Send SMS"
+        ],
+        "summary": "Send SMS Message",
+        "operationId": "send_sms",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SMSRequest"
+        },
+        "responses": {
+          "200": {
+            "description": "SMS Sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Could not send SMS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SMSResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sms/list_sms/{to_number}": {
+      "get": {
+        "tags": [
+          "List of SMS sent to a Mobile number"
+        ],
+        "summary": "List the SMS Messages sent to a Mobile Number",
+        "operationId": "list_sms",
+        "parameters": [
+          {
+            "name": "to_number",
+            "in": "path",
+            "description": "Mobile Number with country code ex:+6598765432",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            }
+          }
+         ],
+        "responses":
+        {
+          "200":
+          {
+            "description": "List of SMS",
+            "content":
+            {
+              "application/json":
+              {
+                "schema":
+                {
+                    "$ref": "#/components/schemas/ListSMSResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application has not sent any SMS to the given Phone number"
+          }
+        }
+      }
+    },
+    "/email/send_email": {
+      "post": {
+        "tags": [
+          "Send EMail"
+        ],
+        "summary": "Send EMail Message",
+        "operationId": "send_email",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EMailRequest"
+        },
+        "responses": {
+          "200": {
+            "description": "EMail Sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EMailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error in Sending Email.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EMailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email/list_email/{email}": {
+      "get": {
+        "tags": [
+          "List of EMails sent to an EMail Id"
+        ],
+        "summary": "List the EMail Messages sent to an EMail Id",
+        "operationId": "list_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "EMail Id",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            }
+          }
+         ],
+        "responses":
+        {
+          "200":
+          {
+            "description": "List of Emails",
+            "content":
+            {
+              "application/json":
+              {
+                "schema":
+                {
+                    "$ref": "#/components/schemas/ListEMailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application has not sent any Email to the given Email Id."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SMSRequest": {
+        "required": [
+          "content",
+          "to_number"
+        ],
+        "type": "object",
+        "properties": {
+          "to_number": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "requestor_service": {
+            "type": "string"
+          },
+          "requestor_service_event": {
+            "type": "string"
+          }
+        }
+      },
+      "SMSResponse": {
+        "required": [
+          "error_message",
+          "message_sid",
+          "message_status"
+        ],
+        "type": "object",
+        "properties": {
+          "message_sid": {
+            "type": "string"
+          },
+          "message_status": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSMS": {
+        "required": [
+          "to_number"
+        ],
+        "type": "object",
+        "properties": {
+          "to_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSMSResponse": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "integer"
+          },
+          "requested_time": {
+            "type": "string"
+          },
+          "requestor_service": {
+            "type": "string"
+          },
+          "requestor_service_event": {
+            "type": "string"
+          },
+          "from_number": {
+            "type": "string"
+          },
+          "to_number": {
+            "type": "string"
+          },
+          "sms_message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message_sid": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "updated_time": {
+            "type": "string"
+          }
+        }
+      },
+      "EMailRequest": {
+        "required": [
+          "to_email",
+		  "email_subject",
+		  "email_content"
+        ],
+        "type": "object",
+        "properties": {
+          "to_email": {
+            "type": "string"
+          },
+          "email_subject": {
+            "type": "string"
+          },
+          "email_content": {
+            "type": "string"
+          }
+        }
+      },
+      "EMailResponse": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ListEMail": {
+        "required": [
+          "to_email"
+        ],
+        "type": "object",
+        "properties": {
+          "to_email": {
+            "type": "string"
+          }
+        }
+      },
+      "ListEMailResponse": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "integer"
+          },
+          "requested_time": {
+            "type": "string"
+          },
+          "requestor_service": {
+            "type": "string"
+          },
+          "requestor_service_event": {
+            "type": "string"
+          },
+          "from_email": {
+            "type": "string"
+          },
+          "to_email": {
+            "type": "string"
+          },
+          "cc_email": {
+            "type": "string"
+          },
+          "bcc_email": {
+            "type": "string"
+          },
+          "email_subject": {
+            "type": "string"
+          },
+          "email_body": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "email_sid": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "updated_time": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "SMSRequest": {
+        "description": "SMS to send",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SMSRequest"
+            }
+          }
+        },
+        "required": true
+      },
+      "ListSMS": {
+        "description": "List of SMS sent",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListSMS"
+            }
+          }
+        },
+        "required": true
+      },
+	  "EMailRequest": {
+        "description": "EMail to send",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EMailRequest"
+            }
+          }
+        },
+        "required": true
+      },
+      "ListEMail": {
+        "description": "List of EMails sent",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListEMail"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}
