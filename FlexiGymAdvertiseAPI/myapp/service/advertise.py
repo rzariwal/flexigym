@@ -15,15 +15,13 @@ def hello_world():
 
 def getPackages():
     packages = GymPackageModel.query.all()
-    response = make_response(jsonify(packages=[b.to_json for b in packages])), 200
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response = make_response(jsonify(packages=[b.to_json for b in packages])), 200, {'Access-Control-Allow-Origin':'*'}
     return response
 
 
 def getPackage(package_id):
     packages = GymPackageModel.query.filter_by(id=package_id).one()
-    response = make_response(jsonify(packages=packages.to_json)), 200
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response = make_response(jsonify(packages=packages.to_json)), 200, {'Access-Control-Allow-Origin':'*'}
     return response
 
 
