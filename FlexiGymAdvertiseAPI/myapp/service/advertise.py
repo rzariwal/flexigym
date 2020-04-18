@@ -19,7 +19,9 @@ def getPackages():
 
 def getPackage(package_id):
     packages = GymPackageModel.query.filter_by(id=package_id).one()
-    return make_response(jsonify(packages=packages.to_json)), 200
+    response = make_response(jsonify(packages=packages.to_json)),200
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 def createNewGymPackage(package_name, package_description, price, available_qty, valid_from, valid_to, created_by):
     try:
