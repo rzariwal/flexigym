@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { AdvertiseService } from '../service/advertise.service';
-import { userInfo } from 'os';
 import { User } from '../models/user';
 import { Product } from '../models/product';
 
@@ -13,7 +12,7 @@ import { Product } from '../models/product';
 })
 export class ProductComponent implements OnInit {
   user: User;
-  product: Product;
+  products: Product[];
 
   constructor(private router: Router, private advertiseService: AdvertiseService) { }
 

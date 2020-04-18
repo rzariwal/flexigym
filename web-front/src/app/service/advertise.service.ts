@@ -16,13 +16,13 @@ export class AdvertiseService {
   }
 
 
-  getAllPackages(user:User): Observable<Product>{
+  getAllPackages(user:User): Observable<Product[]>{
     let url = this.advertiseUrl+"/packagesApi"
     let body = JSON.stringify({ "email":user.email,"password":user.password, "mobile":user.mobile });
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
     }
     console.log("Done");
-    return this.http.get<Product>(url);
+    return this.http.get<Product[]>(url);
   }
 }
