@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { AdvertiseService } from '../service/advertise.service';
 import { User } from '../models/user';
@@ -12,15 +11,19 @@ import { Product } from '../models/product';
 })
 export class ProductComponent implements OnInit {
   user: User;
-  products: Product[];
+  products: Product;
 
   constructor(private router: Router, private advertiseService: AdvertiseService) { }
 
   ngOnInit(): void {
     this.user = new User();
-    this.advertiseService.getAllPackages(this.user).subscribe(resp => {
-      console.log(resp[0].id);
-    });
+    this.advertiseService.getAllPackages(this.user).subscribe(
+      resp => {
+        this.products = resp;
+        console.log(this.products.packages);
+        console.log(resp);
+      }
+    );
   }
 
 }

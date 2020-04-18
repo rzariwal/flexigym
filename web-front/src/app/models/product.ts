@@ -1,4 +1,5 @@
 export class Product {
+  packages: []
   id: number;
   package_name: string;
   package_description: string

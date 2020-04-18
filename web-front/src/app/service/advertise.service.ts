@@ -15,14 +15,16 @@ export class AdvertiseService {
 
   }
 
-
-  getAllPackages(user:User): Observable<Product[]>{
+  getAllPackages(user:User): Observable<any>{
     let url = this.advertiseUrl+"/packagesApi"
     let body = JSON.stringify({ "email":user.email,"password":user.password, "mobile":user.mobile });
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
+                                .append('Access-Control-Allow-Origin','*'),
+      mode: 'no-cors'
+
     }
     console.log("Done");
-    return this.http.get<Product[]>(url);
+    return this.http.get<any>(url);
   }
 }
