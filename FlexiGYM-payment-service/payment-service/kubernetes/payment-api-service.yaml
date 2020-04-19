@@ -14,7 +14,7 @@ spec:
     port: 8000
     targetPort: 8000
   type: LoadBalancer
-  loadBalancerIP: 34.87.6.16
+  loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: payment-service
 status:
