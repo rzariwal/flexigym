@@ -58,7 +58,7 @@ jobs:
 
       # Scan Authentication API Docker image
     - name: Scan image Authentication API
-      if: "contains(github.event.head_commit.message, 'auth-scan')"
+      if: "contains(github.event.head_commit.message, 'auth')"
       uses: anchore/scan-action@master
       with:
         image-reference: "localbuild/testimage:latest"
