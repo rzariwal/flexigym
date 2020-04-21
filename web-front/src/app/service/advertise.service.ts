@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AdvertiseService {
 
-  private advertiseUrl = "http://34.87.6.16:9100"
+  private advertiseUrl = "http://35.198.220.113:9100/"
 
   constructor(private http: HttpClient) {
 

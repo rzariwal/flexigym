@@ -11,7 +11,7 @@ import { HttpClientModule, HttpClient, HttpRequest, HttpHeaders, HttpEventType, 
 })
 export class AuthService {
 
-  private authApiUrl = 'http://34.87.6.16:5000/auth';
+  private authApiUrl = 'http://35.198.220.113:5000/auth';
 
   constructor(private http: HttpClient) {
 
