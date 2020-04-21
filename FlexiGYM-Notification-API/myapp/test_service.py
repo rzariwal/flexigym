@@ -13,7 +13,7 @@ class NotificationServiceTestCase(unittest.TestCase):
 
     def test_list_sms(self):
         # Test API can get the list of sms (Get request)
-        res = self.client().get('/service/sms/list_sms')
+        res = self.client().get('/api/sms/list_sms')
         self.assertEqual(res.status_code, 200)
         response = {
             "results": [
@@ -47,7 +47,7 @@ class NotificationServiceTestCase(unittest.TestCase):
 
     def test_product(self):
         # Test API can get a product (Get request)
-        res = self.client().get('/service/product/product-1')
+        res = self.client().get('/api/product/product-1')
         self.assertEqual(res.status_code, 200)
 
         response = {

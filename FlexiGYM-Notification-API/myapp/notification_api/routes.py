@@ -9,7 +9,7 @@ from smtplib import SMTPException
 
 
 
-@notification_api_blueprint.route("/service/sms/docs.json", methods=['GET'])
+@notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
 def swagger_api_docs_yml():
     with open('swagger.json') as fd:
         json_data = json.load(fd)
@@ -17,7 +17,7 @@ def swagger_api_docs_yml():
     return jsonify(json_data)
 
 
-@notification_api_blueprint.route('/service/sms/send_sms', methods=['POST'])
+@notification_api_blueprint.route('/api/sms/send_sms', methods=['POST'])
 def send_sms():
     to_number = request.json['to_number']
     content = request.json['content']
@@ -55,7 +55,7 @@ def send_sms():
                    error_message=error_message), http_status_code
 
 
-@notification_api_blueprint.route('/service/sms/list_sms/<string:to_number>', methods=['GET'])
+@notification_api_blueprint.route('/api/sms/list_sms/<string:to_number>', methods=['GET'])
 def list_sms(to_number: str):
     #to_number = request.json['to_number']
 
@@ -75,7 +75,7 @@ def list_sms(to_number: str):
         return jsonify(message='Application has not sent any SMS to the given Phone number'), 404
 
 
-@notification_api_blueprint.route('/service/email/send_email', methods=['POST'])
+@notification_api_blueprint.route('/api/email/send_email', methods=['POST'])
 def send_email():
     to_email = request.json['to_email']
     email_subject = request.json['email_subject']
@@ -113,7 +113,7 @@ def send_email():
     return jsonify(message=message), http_status_code
 
 
-@notification_api_blueprint.route('/service/email/list_email/<string:email>', methods=['GET'])
+@notification_api_blueprint.route('/api/email/list_email/<string:email>', methods=['GET'])
 def list_email(email: str):
 
     record = EmailRequest.query.filter_by(to_email=email).first()

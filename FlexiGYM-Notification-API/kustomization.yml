@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: flask-jwt-auth-web
 resources:
-- kubernetes/flexigym-notification-service-db-data-persistentvolumeclaim.yaml
-- kubernetes/flexigym-notification-service-db-deployment.yaml
-- kubernetes/flexigym-notification-service-deployment.yaml
-- kubernetes/flexigym-notification-service-db-service.yaml
-- kubernetes/flexigym-notification-service-service.yaml
+- kubernetes/flexigym-notification-api-db-data-persistentvolumeclaim.yaml
+- kubernetes/flexigym-notification-api-db-deployment.yaml
+- kubernetes/flexigym-notification-api-deployment.yaml
+- kubernetes/flexigym-notification-api-db-service.yaml
+- kubernetes/flexigym-notification-api-service.yaml
