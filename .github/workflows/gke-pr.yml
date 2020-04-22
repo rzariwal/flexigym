@@ -1,0 +1,183 @@
+# This workflow will build a docker container, publish it to Google Container Registry, and deploy it to GKE when a release is created
+#
+# To configure this workflow:
+#
+# 1. Ensure that your repository contains the necessary configuration for your Google Kubernetes Engine cluster, including deployment.yml, kustomization.yml, service.yml, etc.
+#
+# 2. Set up secrets in your workspace: GKE_PROJECT with the name of the project, GKE_EMAIL with the service account email, GKE_KEY with the Base64 encoded JSON service account key (https://github.com/GoogleCloudPlatform/github-actions/tree/docs/service-account-key/setup-gcloud#inputs).
+#
+# 3. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, REGISTRY_HOSTNAME and DEPLOYMENT_NAME environment variables (below).
+
+name: Build, Deploy to GKE and TEST.
+
+on:
+  pull_request:
+    branches:
+    - master
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT_NEW }}
+  GKE_CLUSTER: flexigym-cluster1
+  GKE_ZONE: asia-southeast1-a
+  IMAGEDB: db
+  IMAGEWEB: authentication-service
+  IMAGENotificationAPI: notification-service
+  IMAGEPaymentAPI: payment-service
+  IMAGEAdvertiseAPI: advertise-service
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-16.04
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@master
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.SA_EMAIL_NEW }}
+        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_NEW }}
+
+    # Configure docker to use the gcloud command-line tool as a credential helper
+    - run: |
+        gcloud auth configure-docker
+      # Build the Authentication API Docker image
+    - name: Build Authentication API
+      if: "contains(github.event.head_commit.message, 'auth')"
+      run: |
+        cd jwt-authentication
+        docker build -f Dockerfile.prod -t asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }} .
+        docker tag asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }} localbuild/testimage:latest
+      # Scan Authentication API Docker image
+    - name: Scan image Authentication API
+      if: "contains(github.event.head_commit.message, 'auth')"
+      uses: anchore/scan-action@master
+      with:
+        image-reference: "localbuild/testimage:latest"
+        fail-build: true
+
+      # Push the Authentication API Docker image to Google Container Registry
+    - name: Publish Authentication API
+      if: "contains(github.event.head_commit.message, 'auth')"
+      run: |
+        cd jwt-authentication
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}
+    # Set up kustomize for Authentication API
+    - name: Set up Kustomize Authentication API
+      if: "contains(github.event.head_commit.message, 'auth')"
+      run: |
+        cd jwt-authentication
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+    # Deploy the Authentication API Docker image to the GKE cluster and TEST
+    - name: Deploy Authentication API
+      if: "contains(github.event.head_commit.message, 'auth')"
+      run: |
+        cd jwt-authentication
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEWEB:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/web -n flask-jwt-auth-web
+        kubectl get services -o wide -n flask-jwt-auth-web
+        sleep 10
+      # TEST Authentication
+    - name: Test Authentication API
+      if: "contains(github.event.head_commit.message, 'auth-test')"
+      run: |
+        POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
+        kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
+      # Build the FlexiGYM-Notification-API API Docker image
+    - name: Build FlexiGYM-Notification-API
+      if: "contains(github.event.head_commit.message, 'notif')"
+      run: |
+        cd FlexiGYM-Notification-API
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }} .
+      # Push the FlexiGYM-Notification-API Docker image to Google Container Registry
+    - name: Publish FlexiGYM-Notification-API
+      if: "contains(github.event.head_commit.message, 'notif')"
+      run: |
+        cd FlexiGYM-Notification-API
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }}
+      # Set up kustomize for FlexiGYM-Notification-API
+    - name: Set up Kustomize FlexiGYM-Notification-API
+      if: "contains(github.event.head_commit.message, 'notif')"
+      run: |
+        cd FlexiGYM-Notification-API
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy FlexiGYM-Notification-API
+      if: "contains(github.event.head_commit.message, 'notif')"
+      run: |
+        cd FlexiGYM-Notification-API
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGENotificationAPI:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-notification-api-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-notification-api -n flask-jwt-auth-web
+      # Build the FlexiGYM-payment-service API Docker image
+    - name: Build FlexiGYM-payment-service
+      if: "contains(github.event.head_commit.message, 'payment')"
+      run: |
+        cd FlexiGYM-payment-service/p*
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }} .
+      # Push the FlexiGYM-payment-service Docker image to Google Container Registry
+    - name: Publish FlexiGYM-payment-service
+      if: "contains(github.event.head_commit.message, 'payment')"
+      run: |
+        cd FlexiGYM-payment-service/payment-service
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }}
+      # Set up kustomize for FlexiGYM-payment-service
+    - name: Set up Kustomize FlexiGYM-payment-service
+      if: "contains(github.event.head_commit.message, 'payment')"
+      run: |
+        cd FlexiGYM-payment-service/payment-service
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the FlexiGYM-payment-service API Docker image to the GKE cluster
+    - name: Deploy FlexiGYM-payment-service
+      if: "contains(github.event.head_commit.message, 'payment')"
+      run: |
+        cd FlexiGYM-payment-service/payment-service
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEPaymentAPI:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/payment-api -n flask-jwt-auth-web
+        kubectl get services -o wide -n flask-jwt-auth-web
+      # Build the FlexiGYM-advertise-API API Docker image
+    - name: Build FlexiGymAdvertiseAPI-API
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }} .
+      # Push the FlexiGymAdvertiseAPI Docker image to Google Container Registry
+    - name: Publish FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }}
+      # Set up kustomize for FlexiGymAdvertiseAPI
+    - name: Set up Kustomize FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy FlexiGymAdvertiseAPI
+      if: "contains(github.event.head_commit.message, 'adver')"
+      run: |
+        cd FlexiGymAdvertiseAPI
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAdvertiseAPI:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-advertise-service2-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-advertise-service2 -n flask-jwt-auth-web
