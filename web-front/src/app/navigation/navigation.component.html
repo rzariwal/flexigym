@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand navbar-light" style="background-color: #a4e737;">
+  <a class="navbar-brand" [routerLink]="root">
+      <img src="/assets/brand.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      flexiGYM
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+
+          <ng-container *ngIf="currentUser;">
+              <a class="nav-item nav-link " routerLink="/cart">
+                <i class="fas fa-shopping-cart"></i>
+                Cart
+             </a>
+              <a class="nav-item nav-link " routerLink="/order">
+                  <i class="fas fa-list-ul"></i>
+                  Orders
+              </a>
+              <a class="nav-item nav-link " routerLink="/profile">
+                  {{name}}
+              </a>
+
+          </ng-container>
+      </div>
+  </div>
+</nav>

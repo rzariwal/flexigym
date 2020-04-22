@@ -1,0 +1,14 @@
+<h1 align="center" class="display-4 ">Products</h1>
+<div class="list-items">
+  <div class="list-item" *ngFor="let item of products.packages">
+    <li class="list-group-item {{item}}">
+      {{item.id}}
+      {{item.package_name}} <br>
+      {{item.package_description}} <br>
+      S$ {{item.price}}
+      <a  style="color: inherit" routerLink="/product/subscribe" class="float-right mb-3">
+        <i class="fas fa-plus fa-2x">Subscribe</i>
+      </a>
+    </li>
+  </div>
+</div>

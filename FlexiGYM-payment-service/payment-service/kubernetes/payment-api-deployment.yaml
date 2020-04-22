@@ -13,6 +13,11 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: payment-api
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+         maxSurge: 0
+         maxUnavailable: 1
   template:
     metadata:
       annotations:
@@ -23,10 +28,17 @@ spec:
         io.kompose.service: payment-api
     spec:
       containers:
-        - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
-          #imagePullPolicy: "Always"
-          name: payment-api
+        - name: payment-api
+          image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
+          imagePullPolicy: "Always"
           ports:
           - containerPort: 8000
           resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      #dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
 status: {}

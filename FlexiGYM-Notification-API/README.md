@@ -1,6 +1,6 @@
 # flexigym-sms-notification-api
 
-http://34.87.121.252:5000/api/docs/
+http://34.87.6.16:7000/api/docs/
 
 cd /C/Users/sande/PycharmProjects/FlexiGYM-Notification-API
 

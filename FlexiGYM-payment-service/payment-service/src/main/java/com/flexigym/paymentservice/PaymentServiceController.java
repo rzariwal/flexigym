@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +26,17 @@ public class PaymentServiceController {
 	PayPalClient payPalClient = new PayPalClient();
     	
 	@PostMapping("/api/create")
-	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login and make payment")
+	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
 	Map<String, Object> createPayment(@RequestParam("amount") String amount, @RequestParam("user_token") String token) {
 		//for test purpose - sign in first -> to generate a token
 		//actual case -> the caller of this service has to pass the user_token
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);	    
-	    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	        headers.setContentType(MediaType.APPLICATION_JSON);	    
+	        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-	    // request body parameters
+	        // request body parameters
 		Map<String, Object> map = new HashMap<>();
 		map.put("email", "danyjacob45@gmail.com");
 		map.put("password", "password");
@@ -43,7 +45,7 @@ public class PaymentServiceController {
 		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
 		
 		
-		System.out.println("\nDebug................");
+		System.out.println("\nDebug..");
 		System.out.println(entity.toString());
 		// send POST request
 		final String auth_login = "http://34.87.6.16:5000/auth/login";
@@ -55,7 +57,7 @@ public class PaymentServiceController {
 		//final String auth_status = "http://34.87.6.16:5000/auth/status";
 		//UserBillInfo userInfo = restTemplate.getForObject(auth_status, UserBillInfo.class);
 	     
-	    //System.out.println(userInfo.toString());
+	        //System.out.println(userInfo.toString());
 
 		
 		//if valid, proceed to payment using PayPal
@@ -64,12 +66,12 @@ public class PaymentServiceController {
 		return payPalClient.createPayment(amount);
 	}
 	
-	@PostMapping(value = "/api/complete")
-	@ApiOperation(value = "complete payment via PayPal")
+	@RequestMapping(value = "/api/complete", method = RequestMethod.GET)
+	@ApiOperation(value = "complete payment via PayPal; Paypal will call this api if payment is successfull")
 	@ResponseBody
 	public String completePayment(@RequestParam("paymentId") String paymentId,
-								  @RequestParam("token")     String token,
-								  @RequestParam("PayerID")   String payerId)
+				      @RequestParam("token")     String token,
+				      @RequestParam("PayerID")   String payerId)
 	{
 		/*
 		public Map<String, Object> completePayment(HttpServletRequest request)
@@ -81,15 +83,16 @@ public class PaymentServiceController {
 		return payPalClient.completePayment(paymentId,payerId).toString();
 	}
 	
-	@PostMapping("/")
+	@RequestMapping(value = "/",method = RequestMethod.GET)
 	@ApiOperation(value = "home")
 	@ResponseBody
 	String home() {
-		return "Payment Service Home";
+		return "Payment Service Home\nPlease try \n /api/create\n /api/complete\n /api/cancel\n /api/notify";					 
 	}
 	
 	@PostMapping("/api/cancel")
-	@ApiOperation(value = "cancel payment")
+	@RequestMapping(value = "/api/cancel", method = RequestMethod.GET)
+	@ApiOperation(value = "cancel payment called by PayPal")
 	@ResponseBody
 	String cancel() {
 		return "cancel Payment";

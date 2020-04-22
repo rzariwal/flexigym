@@ -18,7 +18,7 @@ def create_app():
         WTF_CSRF_SECRET_KEY="a csrf secret key",
         # SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root:test@notification_db/notification',
         SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-notification-api-db/notification',
-        # SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
+        #SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir + 'flexigym-notification_api.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         JSON_SORT_KEYS=False
 
