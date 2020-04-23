@@ -19,32 +19,6 @@ def create_tables(app):
     return engine
 
 
-# represent each item -> should aligned with advertise-service
-class Item(db.Model):
-    __tablename__ = 'item'
-    item_id = Column(Integer, primary_key=True, autoincrement=True)
-    cart_id = Column(Integer, nullable=False)
-    package_id = Column(Integer, nullable=False)
-    qty = Column(Integer, nullable=False)
-    price = Column(Integer, nullable=False)
-
-    def __init__(self, unq_id, price, qty):
-        self.package_id = unq_id
-        self.price = price
-        self.qty = qty
-
-    def updateCartId(self, id):
-        self.cart_id = id
-
-    def to_json(self):
-        return {
-            # 'cart_id': self.cart_id,
-            'package_id': self.package_id,
-            'qty': self.qty,
-            'price': self.price
-        }
-
-
 # represent a shopping cart -> includes 1 or more items with varying quantities
 class ShoppingCart(db.Model):
     __tablename__ = 'shopping-cart'
@@ -97,6 +71,34 @@ class ShoppingCart(db.Model):
             'updated_time': self.updated_time,
             'total': self.total,
             'payment_status': self.payment_status
+        }
+
+
+# represent each item -> should aligned with advertise-service
+class Item(db.Model):
+    __tablename__ = 'item'
+    # item_id = Column(Integer, primary_key=True, autoincrement=True)
+    # cart_id = Column(Integer, nullable=False)
+    cart_id = Column(Integer, primary_key=True)
+    # package_id = Column(Integer, nullable=False)
+    package_id = Column(Integer, primary_key=True)
+    qty = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
+
+    def __init__(self, unq_id, price, qty):
+        self.package_id = unq_id
+        self.price = price
+        self.qty = qty
+
+    def updateCartId(self, id):
+        self.cart_id = id
+
+    def to_json(self):
+        return {
+            # 'cart_id': self.cart_id,
+            'package_id': self.package_id,
+            'qty': self.qty,
+            'price': self.price
         }
 
 

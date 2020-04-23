@@ -15,7 +15,7 @@ session = Session()
 '''
 {
     "user_id": "ekl",
-    "product_id": 5,
+    "package_id": 5,
     "qty": 1,
     "cart_id": 1
 }
@@ -29,7 +29,7 @@ def addToCart():
         # parse request
         post_data = request.get_json()
         user = request.json['user_id']
-        package_id = request.json['product_id']
+        package_id = request.json['package_id']
         count = request.json['qty']
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
@@ -110,13 +110,13 @@ def addToCart():
 @subscribe_api_blueprint.route("/delete", methods=['POST', 'GET'])
 def deleteFromCart():
     try:
-        # parse request -> get cart_id, product_id and quantity to be deleted.
+        # parse request -> get cart_id, package_id and quantity to be deleted.
         package_id = request.json['package_id']
         cart_id = request.json['cart_id']
         # get cart
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
         # delete the cart item
-        item_to_delete = Item.query.filter_by(package_id = package_id).filter_by(cart_id = cart_id).first()
+        item_to_delete = Item.query.filter_by(package_id=package_id).filter_by(cart_id=cart_id).first()
         if item_to_delete:
             db.session.delete(item_to_delete)
             cart.updated_time = datetime.now()
@@ -216,3 +216,5 @@ def checkout():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
+
+
