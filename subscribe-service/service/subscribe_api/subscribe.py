@@ -4,10 +4,18 @@ from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
+import requests
 
 # service-endpoint
-ADVERTISE_API_OK = False
-ADVERTISE_URL = "http://localhost:4996/packagesApi"
+ADVERTISE_API_OK = True
+ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+
+NOTIFICATION_API_OK = True
+NOTIFICATION_URL = "http://35.198.220.113:7000/packagesApi"
+
+USER_API_OK = True
+USER_URL = "http://35.198.220.113:7000/packagesApi"
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -31,6 +39,7 @@ def addToCart():
         user = request.json['user_id']
         package_id = request.json['package_id']
         count = request.json['qty']
+        #r = None
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
             cart_id = request.json['cart_id']
@@ -38,9 +47,11 @@ def addToCart():
             cart_id = -1
         # get all information about the item
         if ADVERTISE_API_OK:
-            r = request.get(url=ADVERTISE_URL + "/" + package_id)
-        else:
-            r = Product(1, "p1", 100, 100)
+            response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
+            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
+            print(r.to_json())
+        # else:
+        #    r = Product(1, "p1", 100, 100)
 
         if count > int(r.qty):
             responseObject = {
@@ -193,6 +204,19 @@ def getCartItems():
 def hello_world():
     return 'test!'
 
+def notify():
+    '''
+    s = requests.Session()
+    s.auth = ('user', 'pass')
+    s.headers.update({'x-test': 'true'})
+
+    # both 'x-test' and 'x-test2' are sent
+    s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
+    :return:
+    '''
+
+    return "hello"
+
 
 # get cart id and proceed to call payment service
 @subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
@@ -216,5 +240,4 @@ def checkout():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
-
 

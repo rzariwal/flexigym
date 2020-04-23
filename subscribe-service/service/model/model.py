@@ -109,3 +109,11 @@ class Product(object):
         self.qty = qty
         self.name = name
         self.price = price
+
+    def to_json(self):
+        return {
+            'product_id': self.product_id,
+            'name': self.name,
+            'qty': self.qty,
+            'price': self.price
+        }
