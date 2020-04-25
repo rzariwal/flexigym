@@ -1,0 +1,44 @@
+<h1 align="center" class="display-4 mb-5">{{title}}</h1>
+<div class="row text-center justify-content-center">
+  <div class="col-lg-6 ">
+    <div class="card mb-4 ">
+      <!--      <img height="60%" class="card-img-top" src="{{productInfo?.productIcon}}">-->
+      <div class="card-body">
+        <form name="form" #form='ngForm' (ngSubmit)="addToCart()">
+
+            <h4 class="card-title ">{{products.packages.package_name}}</h4>
+            <div class="text-left">
+              <input hidden name="productId" [value]=products.packages.id>
+              <p class="card-test"><strong>Description: </strong>{{products.packages.package_description}}</p>
+              <p class="card-text">
+                <strong>Price: </strong>
+                <label id="price">{{products.packages.price | currency}}</label>
+              </p>
+              <p class="card-text"><strong>Stock: </strong>{{products.packages.available_qty}}</p>
+
+              <label class="card-text">
+                <strong>Quantity: </strong>
+                <input [(ngModel)]=count
+                       type="number"
+                       name="count"
+                       required
+                       min="1"
+                       [max]=products.packages.available_qty
+                >
+              </label>
+
+
+              <p class="card-text"><strong>Subtotal: </strong>
+                <label id="subtotal">{{count * products.packages.price | currency}}</label>
+              </p>
+            </div>
+            <button type="submit" [disabled]="!form.form.valid" *ngIf="products.packages.available_qty > 0; else offBlock"
+                    class="btn btn-primary btn-lg"
+            >Add to Cart
+            </button>
+            <ng-template #offBlock><a class="btn btn-secondary btn-lg disabled">Unavailable</a></ng-template>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
