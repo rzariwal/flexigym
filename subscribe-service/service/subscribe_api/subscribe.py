@@ -244,7 +244,7 @@ def checkout():
 
 
 # update a cart Item; expect cartId, itemId, Qty.
-@subscribe_api_blueprint.route('/update')
+@subscribe_api_blueprint.route('/update', methods=['GET', 'POST'])
 def updateItem():
     try:
         cart_id = request.json['cart_id']
