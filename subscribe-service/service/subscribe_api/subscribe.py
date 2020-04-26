@@ -1,10 +1,9 @@
 from datetime import datetime
 from flask import request, jsonify, make_response
-from sqlalchemy import engine, and_
+from sqlalchemy import engine
 from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
-import requests
 
 # service-endpoint
 ADVERTISE_API_OK = True
@@ -39,7 +38,7 @@ def addToCart():
         user = request.json['user_id']
         package_id = request.json['package_id']
         count = request.json['qty']
-        #r = None
+        # r = None
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
             cart_id = request.json['cart_id']
@@ -48,7 +47,8 @@ def addToCart():
         # get all information about the item
         if ADVERTISE_API_OK:
             response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
-            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
+            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"],
+                        response.json()['packages']["price"], response.json()['packages']["available_qty"])
             print(r.to_json())
         # else:
         #    r = Product(1, "p1", 100, 100)
@@ -204,6 +204,7 @@ def getCartItems():
 def hello_world():
     return 'test!'
 
+
 def notify():
     '''
     s = requests.Session()
@@ -223,7 +224,7 @@ def notify():
 def checkout():
     try:
         cart_id = request.json['cart_id']
-        #get user id
+        # get user id
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
 
         responseObject = {
@@ -241,3 +242,51 @@ def checkout():
         }
         return make_response(jsonify(responseObject)), 500
 
+
+# update a cart Item; expect cartId, itemId, Qty.
+@subscribe_api_blueprint.route('/update')
+def updateItem():
+    try:
+        cart_id = request.json['cart_id']
+        package_id = request.json['package_id']
+        qty = request.json['quantity']
+
+        # get cart
+        cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
+        # delete the cart item
+        item_to_update = Item.query.filter_by(package_id=package_id).filter_by(cart_id=cart_id).first()
+        if item_to_update:
+            item_to_update.qty = qty
+            db.session.add(item_to_update)
+            cart.updated_time = datetime.now()
+            db.session.commit()
+            # get cart items
+            cart_items = Item.query.filter_by(cart_id=cart_id).all()
+            whole_cart = []
+            for item in cart_items:
+                i = Item(item.package_id, item.price, item.qty)
+                cart.update(i)
+            for k, v in cart.content.items():
+                print(k, '->', v.to_json())
+                whole_cart.append(v.to_json())
+
+            response_object = {
+                'status': 'success',
+                'cartInfo': cart.to_json(),
+                'cart_Items': whole_cart
+            }
+            return make_response(jsonify(response_object)), 200
+        responseObject = {
+            'status': 'success',
+            'user_id': cart.user_id,
+            'total_amount': cart.total
+        }
+        return make_response(jsonify(responseObject)), 200
+
+    except Exception as e:
+        print(e)
+        responseObject = {
+            'status': 'fail',
+            'message': 'Something went wrong!'
+        }
+        return make_response(jsonify(responseObject)), 500
