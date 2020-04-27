@@ -29,7 +29,7 @@ env:
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     #add no-ci in commit message to skip workflow triggering
     if: "!contains(github.event.head_commit.message, 'no-ci')"
     steps:
