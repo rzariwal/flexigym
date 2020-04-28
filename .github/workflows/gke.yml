@@ -25,7 +25,7 @@ env:
   IMAGENotificationAPI: notification-service
   IMAGEPaymentAPI: payment-service
   IMAGEAdvertiseAPI: advertise-service
-  IMAGESubsribeAPI: subscribe-service
+  IMAGESubscribeAPI: subscribe-service
 
 jobs:
   setup-build-publish-deploy:
