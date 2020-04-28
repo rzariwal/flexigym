@@ -13,6 +13,8 @@ spec:
   - name: "6100"
     port: 6100
     targetPort: 5000
+  type: LoadBalancer
+  loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: flexigym-subscribe-api
 status:
