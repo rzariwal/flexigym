@@ -25,6 +25,7 @@ env:
   IMAGENotificationAPI: notification-service
   IMAGEPaymentAPI: payment-service
   IMAGEAdvertiseAPI: advertise-service
+  IMAGESubsribeAPI: subscribe-service
 
 jobs:
   setup-build-publish-deploy:
@@ -190,4 +191,36 @@ jobs:
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-advertise-service2-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-advertise-service2 -n flask-jwt-auth-web
+
+      # Build the subscribe-service API Docker image
+    - name: Build subscribe-service
+      if: "contains(github.event.head_commit.message, 'subsc')"
+      run: |
+        cd subscribe-service
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGESubscribeAPI:${{ github.sha }} .
+      # Push the subscribe-service Docker image to Google Container Registry
+    - name: Publish subscribe-service
+      if: "contains(github.event.head_commit.message, 'subsc')"
+      run: |
+        cd subscribe-service
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGESubscribeAPI:${{ github.sha }}
+      # Set up kustomize for subscribe-service
+    - name: Set up Kustomize subscribe-service
+      if: "contains(github.event.head_commit.message, 'subsc')"
+      run: |
+        cd subscribe-service
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the Authentication API Docker image to the GKE cluster
+    - name: Deploy subscribe-service
+      if: "contains(github.event.head_commit.message, 'subsc')"
+      run: |
+        cd subscribe-service
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGESubscribeAPI:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-subscribe-api-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-subscribe-api -n flask-jwt-auth-web
+
 
