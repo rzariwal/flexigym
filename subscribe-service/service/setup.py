@@ -19,8 +19,8 @@ def create_app():
         dict(
             SECRET_KEY="subscribe secretkey",
             WTF_CSRF_SECRET_KEY="subscribe csrf secret key",
-            SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-subscribe-api-db/subscribe',
-            # SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir) + 'flexigym-subscribe.db',
+            # SQLALCHEMY_DATABASE_URI=f'mysql+mysqlconnector://root:test@flexigym-subscribe-api-db/subscribe',
+            SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(basedir) + 'flexigym-subscribe.db',
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JSON_SORT_KEYS=False
         )
