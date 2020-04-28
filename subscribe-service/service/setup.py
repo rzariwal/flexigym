@@ -31,5 +31,4 @@ def create_app():
 
     app.register_blueprint(subscribe_api_blueprint)
 
-
     return app
