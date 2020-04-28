@@ -24,7 +24,7 @@ spec:
         io.kompose.service: flexigym-subscribe-api
     spec:
       containers:
-      - image: flexigym-subscribe-api
+      - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
         imagePullPolicy: ""
         name: flexigym-subscribe-api
         ports:
