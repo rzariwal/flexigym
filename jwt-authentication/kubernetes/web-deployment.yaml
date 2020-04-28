@@ -9,14 +9,14 @@ metadata:
     io.kompose.service: web
   name: web
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: web
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 2
+      maxSurge: 1
       maxUnavailable: 0
   template:
     metadata:
