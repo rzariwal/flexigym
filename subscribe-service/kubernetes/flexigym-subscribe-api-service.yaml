@@ -18,4 +18,6 @@ spec:
   selector:
     io.kompose.service: flexigym-subscribe-api
 status:
-  loadBalancer: {}
+  loadBalancer:
+    ingress:
+    - ip: 35.198.220.113
