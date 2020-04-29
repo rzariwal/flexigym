@@ -37,11 +37,11 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           subPath: mysql
-          name: flexigym-subscribe-service-db-data
+          name: flexigym-subscribe-api-db-data
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: flexigym-subscribe-service-db-data
+      - name: flexigym-subscribe-api-db-data
         persistentVolumeClaim:
-          claimName: flexigym-subscribe-service-db-data
+          claimName: flexigym-subscribe-api-db-data
 status: {}
