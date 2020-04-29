@@ -5,4 +5,5 @@ resources:
 - kubernetes/flexigym-subscribe-service-db-data-persistentvolumeclaim.yaml
 - kubernetes/flexigym-subscribe-api-db-deployment.yaml
 - kubernetes/flexigym-subscribe-api-deployment.yaml
+- kubernetes/flexigym-subscribe-api-db-service.yaml
 - kubernetes/flexigym-subscribe-api-service.yaml
