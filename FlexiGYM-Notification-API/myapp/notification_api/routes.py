@@ -163,4 +163,4 @@ def testCheckout():
             return jsonify(message=response.json)
    except Exception as e:
        print(e)
-       return "testCheckout failed."
+       return jsonify(message=response.json)
