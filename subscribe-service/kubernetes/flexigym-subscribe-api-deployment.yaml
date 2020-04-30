@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
-        imagePullPolicy: ""
+        imagePullPolicy: "Always"
         name: flexigym-subscribe-api
         ports:
         - containerPort: 5000

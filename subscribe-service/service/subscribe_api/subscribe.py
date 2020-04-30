@@ -1,16 +1,18 @@
 from datetime import datetime
 from flask import request, jsonify, make_response
-from sqlalchemy import engine
+from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
+import requests
 
 # service-endpoint
 ADVERTISE_API_OK = True
-ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+# ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+ADVERTISE_URL = "http://flexigym-advertise-service2/packagesApi"
 
 NOTIFICATION_API_OK = True
-NOTIFICATION_URL = "http://35.198.220.113:7000/packagesApi"
+NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
 
 USER_API_OK = True
 USER_URL = "http://35.198.220.113:7000/packagesApi"
@@ -38,7 +40,7 @@ def addToCart():
         user = request.json['user_id']
         package_id = request.json['package_id']
         count = request.json['qty']
-        # r = None
+        #r = None
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
             cart_id = request.json['cart_id']
@@ -47,8 +49,7 @@ def addToCart():
         # get all information about the item
         if ADVERTISE_API_OK:
             response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
-            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"],
-                        response.json()['packages']["price"], response.json()['packages']["available_qty"])
+            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
             print(r.to_json())
         # else:
         #    r = Product(1, "p1", 100, 100)
@@ -205,6 +206,7 @@ def hello_world():
     return 'test!'
 
 
+# def notify(cart_id, user_id):
 def notify():
     '''
     s = requests.Session()
@@ -215,8 +217,16 @@ def notify():
     s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
     :return:
     '''
+    try:
+        user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
+        if NOTIFICATION_API_OK:
+            response = requests.post(url=NOTIFICATION_URL + "/", json=user_detail)
+        if response.status_code == 200:
+            return "SMS Sent."
 
-    return "hello"
+    except Exception as e:
+        print(e)
+        return "SMS Send failed."
 
 
 # get cart id and proceed to call payment service
@@ -224,9 +234,9 @@ def notify():
 def checkout():
     try:
         cart_id = request.json['cart_id']
-        # get user id
+        #get user id
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-
+        notify()
         responseObject = {
             'status': 'success',
             'user_id': cart.user_id,
@@ -241,7 +251,6 @@ def checkout():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
-
 
 # update a cart Item; expect cartId, itemId, Qty.
 @subscribe_api_blueprint.route('/update', methods=['GET', 'POST'])

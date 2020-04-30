@@ -4,9 +4,8 @@ from models import db, SMSRequest, EmailRequest
 import logging
 from twilio_client import TwilioClient, from_number
 from gmail_client import GmailClient, sender_email
-
+import requests
 from smtplib import SMTPException
-
 
 
 @notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
@@ -57,7 +56,7 @@ def send_sms():
 
 @notification_api_blueprint.route('/api/sms/list_sms/<string:to_number>', methods=['GET'])
 def list_sms(to_number: str):
-    #to_number = request.json['to_number']
+    # to_number = request.json['to_number']
 
     record = SMSRequest.query.filter_by(to_number=to_number).first()
 
@@ -115,7 +114,6 @@ def send_email():
 
 @notification_api_blueprint.route('/api/email/list_email/<string:email>', methods=['GET'])
 def list_email(email: str):
-
     record = EmailRequest.query.filter_by(to_email=email).first()
 
     if record:
@@ -130,3 +128,13 @@ def list_email(email: str):
         return response, 200
     else:
         return jsonify(message='Application has not sent any Email to the given Email Id.'), 404
+
+
+@notification_api_blueprint.route('/testProductList', methods=['GET', 'POST'])
+def testProductList():
+    ADVERTISE_API_OK = True
+    # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/1"
+    if ADVERTISE_API_OK:
+        response = requests.get(url=ADVERTISE_URL)
+        return jsonify(message=response.json()['packages']["package_name"])

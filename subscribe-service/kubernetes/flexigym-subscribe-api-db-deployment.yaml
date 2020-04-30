@@ -31,17 +31,17 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: test
         image: mysql:5.7.29
-        imagePullPolicy: ""
+        imagePullPolicy: "Always"
         name: flexigym-subscribe-api-db
         resources: {}
         volumeMounts:
         - mountPath: /var/lib/mysql
           subPath: mysql
-          name: flexigym-subscribe-service-db-data
+          name: flexigym-subscribe-api-db-data
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: flexigym-subscribe-service-db-data
+      - name: flexigym-subscribe-api-db-data
         persistentVolumeClaim:
-          claimName: flexigym-subscribe-service-db-data
+          claimName: flexigym-subscribe-api-db-data
 status: {}
