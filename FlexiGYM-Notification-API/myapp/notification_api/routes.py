@@ -153,7 +153,7 @@ def testProductList():
 
 
 @notification_api_blueprint.route('/testAdd', methods=['GET', 'POST'])
-def testCheckout():
+def testAdd():
    response = None
    try:
         cart = {"user_id": "1", "package_id": "1", "qty": "20"}
