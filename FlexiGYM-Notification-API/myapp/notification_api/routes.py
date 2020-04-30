@@ -134,7 +134,7 @@ def list_email(email: str):
 def testProductList():
     ADVERTISE_API_OK = True
     # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
+    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/1"
     if ADVERTISE_API_OK:
-        response = requests.get(url=ADVERTISE_URL + "/" + str(int(1)))
+        response = requests.get(url=ADVERTISE_URL)
         print(response.json()['packages']["id"] + ":" + response.json()['packages']["package_name"])
