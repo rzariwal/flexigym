@@ -8,7 +8,8 @@ import requests
 
 # service-endpoint
 ADVERTISE_API_OK = True
-ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+# ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+ADVERTISE_URL = "http://flexigym-advertise-service2/packagesApi"
 
 NOTIFICATION_API_OK = True
 NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
