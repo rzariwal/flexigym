@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {User} from '../models/user';
 import {Product} from '../models/product';
 import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 
 
 @Injectable({
@@ -30,11 +30,12 @@ export class AdvertiseService {
     return this.http.get<any>(url);
   }
 
-  getDetail(id: String): Observable<Product> {
+  getDetail(id: String): Observable<any> {
     const url = `${this.advertiseUrl}/packagesApi/${id}`;
 
     // @ts-ignore
     return this.http.get<any>(url).pipe(
+      map(prod => prod.packages),
       catchError(_ => {
         console.log("Get Detail Failed");
         return of(new Product());

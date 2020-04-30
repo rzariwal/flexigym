@@ -9,9 +9,13 @@ import { RegisterComponent } from './register/register.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './service/auth.service';
+import {CookieService} from "ngx-cookie-service";
 import { HomeComponent } from './home/home.component';
 import { ProductComponent } from './product/product.component';
 import { DetailComponent } from "./product-detail/detail.component";
+import { CartComponent } from "./cart/cart.component";
+import {JwtInterceptor} from "../../../frontend/src/app/_interceptors/jwt-interceptor.service";
+import {ErrorInterceptor} from "../../../frontend/src/app/_interceptors/error-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -21,7 +25,8 @@ import { DetailComponent } from "./product-detail/detail.component";
     LoginComponent,
     HomeComponent,
     ProductComponent,
-    DetailComponent
+    DetailComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +34,10 @@ import { DetailComponent } from "./product-detail/detail.component";
     FormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    CookieService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
