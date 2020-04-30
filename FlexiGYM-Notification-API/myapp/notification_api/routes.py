@@ -136,5 +136,5 @@ def testProductList():
     # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
     ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
     if ADVERTISE_API_OK:
-        response = requests.get(url=ADVERTISE_URL + "/" + str(1))
+        response = requests.get(url=ADVERTISE_URL + "/1")
         print(response.json()['packages']["id"] + ":" + response.json()['packages']["package_name"])
