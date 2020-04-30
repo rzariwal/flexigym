@@ -8,7 +8,6 @@ import requests
 from smtplib import SMTPException
 
 
-
 @notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
 def swagger_api_docs_yml():
     with open('swagger.json') as fd:
@@ -57,7 +56,7 @@ def send_sms():
 
 @notification_api_blueprint.route('/api/sms/list_sms/<string:to_number>', methods=['GET'])
 def list_sms(to_number: str):
-    #to_number = request.json['to_number']
+    # to_number = request.json['to_number']
 
     record = SMSRequest.query.filter_by(to_number=to_number).first()
 
@@ -115,7 +114,6 @@ def send_email():
 
 @notification_api_blueprint.route('/api/email/list_email/<string:email>', methods=['GET'])
 def list_email(email: str):
-
     record = EmailRequest.query.filter_by(to_email=email).first()
 
     if record:
@@ -136,7 +134,7 @@ def list_email(email: str):
 def testProductList():
     ADVERTISE_API_OK = True
     # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-    ADVERTISE_URL = "http://flexigym-advertise-service2/packagesApi"
+    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
     if ADVERTISE_API_OK:
-	    response = requests.get(url=ADVERTISE_URL + "/" + str(1))
-	    print(response.json()['packages']["id"] + ":" + response.json()['packages']["package_name"])
+        response = requests.get(url=ADVERTISE_URL + "/" + str(1))
+        print(response.json()['packages']["id"] + ":" + response.json()['packages']["package_name"])
