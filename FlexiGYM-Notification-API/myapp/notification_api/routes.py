@@ -137,4 +137,4 @@ def testProductList():
     ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/1"
     if ADVERTISE_API_OK:
         response = requests.get(url=ADVERTISE_URL)
-        print(response.json()['packages']["package_name"])
+        return jsonify(message=response.json()['packages']["package_name"])
