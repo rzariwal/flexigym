@@ -152,6 +152,20 @@ def testProductList():
         return jsonify(message=response.json()['packages']["package_name"])
 
 
+@notification_api_blueprint.route('/testAdd', methods=['GET', 'POST'])
+def testCheckout():
+   response = None
+   try:
+        cart = {"user_id": "1", "package_id": "1", "qty": "20"}
+        if SUBSCRIBE_API_OK:
+            response = requests.post(url=SUBSCRIBE_URL + "checkout", json=cart)
+        if response.status_code == 200:
+            return jsonify(message=response.json)
+   except Exception as e:
+       print(e)
+       return jsonify(message=response.json)
+
+
 @notification_api_blueprint.route('/testCheckout', methods=['GET', 'POST'])
 def testCheckout():
    response = None
