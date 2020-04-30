@@ -9,13 +9,16 @@ import requests
 # service-endpoint
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-ADVERTISE_URL = "http://flexigym-advertise-service2/packagesApi"
+ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
 NOTIFICATION_API_OK = True
-NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+NOTIFICATION_URL = "http://flexigym-notification-api:7000/api/sms/send_sms"
 
 USER_API_OK = True
-USER_URL = "http://35.198.220.113:7000/packagesApi"
+# USER_URL = "http://35.198.220.113:7000/packagesApi"
+USER_URL = "http://web:5000/packagesApi"
+
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -222,7 +225,7 @@ def notify():
         if NOTIFICATION_API_OK:
             response = requests.post(url=NOTIFICATION_URL + "/", json=user_detail)
         if response.status_code == 200:
-            return "SMS Sent."
+            return jsonify(message="SMS Sent.")
 
     except Exception as e:
         print(e)

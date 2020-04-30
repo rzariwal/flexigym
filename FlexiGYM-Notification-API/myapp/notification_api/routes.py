@@ -7,6 +7,17 @@ from gmail_client import GmailClient, sender_email
 import requests
 from smtplib import SMTPException
 
+ADVERTISE_API_OK = True
+# ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/"
+
+NOTIFICATION_API_OK = True
+# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+NOTIFICATION_URL = "http://flexigym-notification-api:7000/api/sms/send_sms"
+
+SUBSCRIBE_API_OK = True
+# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+SUBSCRIBE_URL = "http://flexigym-subscribe-api:6200/"
 
 @notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
 def swagger_api_docs_yml():
@@ -134,7 +145,21 @@ def list_email(email: str):
 def testProductList():
     ADVERTISE_API_OK = True
     # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/1"
+    ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/"
     if ADVERTISE_API_OK:
-        response = requests.get(url=ADVERTISE_URL)
+        response = requests.get(url=ADVERTISE_URL + "/" + str(1))
         return jsonify(message=response.json()['packages']["package_name"])
+
+
+@notification_api_blueprint.route('/testCheckout', methods=['GET', 'POST'])
+def testCheckout():
+   response = None
+   try:
+        cart = {"cart_id": "1" }
+        if SUBSCRIBE_API_OK:
+            response = requests.post(url=SUBSCRIBE_URL + "/checkout", json=cart)
+        if response.status_code == 200:
+            return jsonify(message=response.json)
+   except Exception as e:
+       print(e)
+       return "testCheckout failed."
