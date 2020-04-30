@@ -4,7 +4,7 @@ from models import db, SMSRequest, EmailRequest
 import logging
 from twilio_client import TwilioClient, from_number
 from gmail_client import GmailClient, sender_email
-
+import requests
 from smtplib import SMTPException
 
 
@@ -130,3 +130,13 @@ def list_email(email: str):
         return response, 200
     else:
         return jsonify(message='Application has not sent any Email to the given Email Id.'), 404
+
+
+@notification_api_blueprint.route('/testProductList', methods=['GET', 'POST'])
+def testProductList():
+    ADVERTISE_API_OK = True
+    # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+    ADVERTISE_URL = "http://flexigym-advertise-service2/packagesApi"
+    if ADVERTISE_API_OK:
+	    response = requests.get(url=ADVERTISE_URL + "/" + str(1))
+	    print(response.json()['packages']["id"] + ":" + response.json()['packages']["package_name"])
