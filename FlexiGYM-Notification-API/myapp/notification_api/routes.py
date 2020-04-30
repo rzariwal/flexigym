@@ -19,6 +19,7 @@ SUBSCRIBE_API_OK = True
 # NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
 SUBSCRIBE_URL = "http://flexigym-subscribe-api:6200/"
 
+
 @notification_api_blueprint.route("/api/sms/docs.json", methods=['GET'])
 def swagger_api_docs_yml():
     with open('swagger.json') as fd:
@@ -155,9 +156,9 @@ def testProductList():
 def testCheckout():
    response = None
    try:
-        cart = {"cart_id": "1" }
+        cart = {"cart_id": "1"}
         if SUBSCRIBE_API_OK:
-            response = requests.post(url=SUBSCRIBE_URL + "/checkout", json=cart)
+            response = requests.post(url=SUBSCRIBE_URL + "checkout", json=cart)
         if response.status_code == 200:
             return jsonify(message=response.json)
    except Exception as e:
