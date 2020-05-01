@@ -156,7 +156,7 @@ def testProductList():
 def testAdd():
    response = None
    try:
-        cart = {"user_id": "1", "package_id": "1", "qty": "20"}
+        cart = {"user_id": 1, "package_id": 1, "qty": 20}
         if SUBSCRIBE_API_OK:
             response = requests.post(url=SUBSCRIBE_URL + "checkout", json=cart)
         if response.status_code == 200:
