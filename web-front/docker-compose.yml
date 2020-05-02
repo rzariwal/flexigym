@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  flexigym-angular-app:
+    container_name: flexigym-angular-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '8080:4200'

@@ -5,5 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class PaymentService {
 
+  private notifUrl = 'http://payment-api:5000/auth';
+
   constructor() { }
 }

@@ -4,7 +4,7 @@ import { AdvertiseService } from '../service/advertise.service';
 import { SubscribeService } from '../service/subscribe.service';
 import { User } from '../models/user';
 import { Product } from '../models/product';
-import { ProductInOrder } from '../models/productInOrder';
+import { ProductInOrder } from '../models/ProductInOrder';
 //import {CookieService} from 'ngx-cookie-service';
 
 

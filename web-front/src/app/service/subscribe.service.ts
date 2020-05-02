@@ -17,7 +17,7 @@ import {catchError, map, tap} from "rxjs/operators";
 export class SubscribeService {
 
   //private subscribeUrl = "http://35.198.220.113:9100/"
-  private subscribeUrl = "http://localhost:5000";
+  private subscribeUrl = "http://flexigym-subscribe-api:5000";
   private authApiUrl = 'http://35.198.220.113:5000/auth';
 
   localMap = {};

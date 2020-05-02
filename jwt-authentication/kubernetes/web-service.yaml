@@ -10,12 +10,9 @@ metadata:
   name: web
 spec:
   ports:
-  - name: "6000"
-    port: 6000
+  - name: "5000"
+    port: 5000
     targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 35.198.220.113
   selector:
+    type: NodePort
     io.kompose.service: web
-status:
-  loadBalancer: {}

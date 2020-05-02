@@ -1,6 +1,7 @@
 from flask import Flask
 from notification_api import notification_api_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS
 import models as models
 import os
 
@@ -10,6 +11,7 @@ API_URL = '/api/sms/docs.json'
 
 def create_app():
     app = Flask(__name__)
+    cors = CORS(app)
 
     basedir = os.path.abspath(__file__)
 
