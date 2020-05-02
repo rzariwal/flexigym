@@ -252,6 +252,5 @@ jobs:
           --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAngularAPP:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/flexigym-subscribe-api-db -n flask-jwt-auth-web
-        kubectl rollout status deployment/flexigym-subscribe-api -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-angular-app -n flask-jwt-auth-web
 
