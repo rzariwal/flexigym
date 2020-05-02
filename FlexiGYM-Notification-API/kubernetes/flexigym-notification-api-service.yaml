@@ -13,8 +13,8 @@ spec:
   - name: "7000"
     port: 7000
     targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 35.198.220.113
+  #type: LoadBalancer
+  #loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: flexigym-notification-api
 status:
