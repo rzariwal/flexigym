@@ -68,46 +68,46 @@ export class CartComponent implements OnInit {
       _ => console.log('Update Item Failed'));
   }
 
-  //
-  // ngOnDestroy() {
-  //     if (!this.currentUser) {
-  //         this.cartService.storeLocalCart();
-  //     }
-  //     this.userSubscription.unsubscribe();
-  // }
-  //
-  // ngAfterContentChecked() {
-  //     this.total = this.productInOrders.reduce(
-  //         (prev, cur) => prev + cur.count * cur.productPrice, 0);
-  // }
-  //
-  // addOne(productInOrder) {
-  //     productInOrder.count++;
-  //     CartComponent.validateCount(productInOrder);
-  //     if (this.currentUser) { this.updateTerms.next(productInOrder); }
-  // }
-  //
-  // minusOne(productInOrder) {
-  //     productInOrder.count--;
-  //     CartComponent.validateCount(productInOrder);
-  //     if (this.currentUser) { this.updateTerms.next(productInOrder); }
-  // }
-  //
-  // onChange(productInOrder) {
-  //     CartComponent.validateCount(productInOrder);
-  //     if (this.currentUser) { this.updateTerms.next(productInOrder); }
-  // }
-  //
-  //
-  // remove(productInOrder: ProductInOrder) {
-  //     this.cartService.remove(productInOrder).subscribe(
-  //         success => {
-  //            this.productInOrders = this.productInOrders.filter(e => e.productId !== productInOrder.productId);
-  //             console.log('Cart: ' + this.productInOrders);
-  //         },
-  //         _ => console.log('Remove Cart Failed'));
-  // }
-  //
+
+  ngOnDestroy() {
+      if (!this.currentUser) {
+          this.subscribeService.storeLocalCart();
+      }
+      this.userSubscription.unsubscribe();
+  }
+
+  ngAfterContentChecked() {
+      this.total = this.productInOrders.reduce(
+          (prev, cur) => prev + cur.count * cur.productPrice, 0);
+  }
+
+  addOne(productInOrder) {
+      productInOrder.count++;
+      CartComponent.validateCount(productInOrder);
+      if (this.currentUser) { this.updateTerms.next(productInOrder); }
+  }
+
+  minusOne(productInOrder) {
+      productInOrder.count--;
+      CartComponent.validateCount(productInOrder);
+      if (this.currentUser) { this.updateTerms.next(productInOrder); }
+  }
+
+  onChange(productInOrder) {
+      CartComponent.validateCount(productInOrder);
+      if (this.currentUser) { this.updateTerms.next(productInOrder); }
+  }
+
+
+  remove(productInOrder: ProductInOrder) {
+      this.subscribeService.remove(productInOrder).subscribe(
+          success => {
+             this.productInOrders = this.productInOrders.filter(e => e.productId !== productInOrder.productId);
+              console.log('Cart: ' + this.productInOrders);
+          },
+          _ => console.log('Remove Cart Failed'));
+  }
+
   checkout() {
       if (!this.currentUser) {
           this.router.navigate(['/login'], {queryParams: {returnUrl: this.router.url}});

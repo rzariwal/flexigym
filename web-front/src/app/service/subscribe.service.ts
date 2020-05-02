@@ -42,29 +42,27 @@ export class SubscribeService {
   //ProductInOrder[]
   getCart(): Observable<any> {
         const localCart = this.getLocalCart();
-        console.log("localCart " + localCart);
+        let url = `${this.subscribeUrl}/get`;
+        let options = {
+                  headers: new HttpHeaders().append('Content-Type', 'application/json')
+                  .append('Access-Control-Allow-Origin', '*')
+                };
         if (this.currentUser) {
           console.log("current user : " + JSON.stringify(this.currentUser));
             if (localCart.length > 0) {
-              console.log("Cart from local : " );
-                let url = `${this.subscribeUrl}/get`;
-                return this.http.post<Cart>(url, localCart).pipe(
-                    tap(_ => {
-                        this.clearLocalCart();
-                    }),
-                    map(cart => cart.products),
-                    catchError(_ => of([]))
-                );
+              console.log("Cart from local : " + JSON.stringify(localCart));;
+              let body1 = JSON.stringify({ "cart_id":"1" });
+              return this.http.post<any>(url,body1,options).pipe(
+                  tap(_ => {
+                      this.clearLocalCart();
+                  }),
+                  map(cart => cart.cart_Items),
+                  catchError(_ => of([]))
+              );
             } else {
               console.log("Cart from server : " );
-                let url = `${this.subscribeUrl}/get`;
                 let body = JSON.stringify({ "cart_id":"1" });
-                let options = {
-                  headers: new HttpHeaders().append('Content-Type', 'application/json')
-                  .append('Access-Control-Allow-Origin', '*')
-                }
-
-                 return this.http.post<any>(url,body,options).pipe(
+                return this.http.post<any>(url,body,options).pipe(
                     map(cart => cart.cart_Items),
                     catchError(_ => of([]))
                 );
@@ -92,15 +90,15 @@ export class SubscribeService {
 
   addItem(productInOrder): Observable<any> {
     // if (!this.currentUser) {
-    //   if (this.cookieService.check('cart')) {
-    //     this.localMap = JSON.parse(this.cookieService.get('cart'));
-    //   }
-    //   if (!this.localMap[productInOrder.package_id]) {
-    //     this.localMap[productInOrder.package_id] = productInOrder;
-    //   } else {
-    //     this.localMap[productInOrder.package_id].qty += productInOrder.qty;
-    //   }
-    //   this.cookieService.set('cart', JSON.stringify(this.localMap));
+      if (this.cookieService.check('cart')) {
+        this.localMap = JSON.parse(this.cookieService.get('cart'));
+      }
+      if (!this.localMap[productInOrder.package_id]) {
+        this.localMap[productInOrder.package_id] = productInOrder;
+      } else {
+        this.localMap[productInOrder.package_id].qty += productInOrder.qty;
+      }
+      this.cookieService.set('cart', JSON.stringify(this.localMap));
     //   return of(true);
     // } else {
 
@@ -143,15 +141,15 @@ export class SubscribeService {
   }
 
 
-  // remove(productInOrder) {
-  //   if (!this.currentUser) {
-  //     delete this.localMap[productInOrder.productId];
-  //     return of(null);
-  //   } else {
-  //     const url = `${this.subscribeUrl}/${productInOrder.productId}`;
-  //     return this.http.delete(url).pipe();
-  //   }
-  // }
+  remove(productInOrder) {
+    if (!this.currentUser) {
+      delete this.localMap[productInOrder.productId];
+      return of(null);
+    } else {
+      const url = `${this.subscribeUrl}/${productInOrder.productId}`;
+      return this.http.delete(url).pipe();
+    }
+  }
 
 
   checkout(): Observable<any> {
