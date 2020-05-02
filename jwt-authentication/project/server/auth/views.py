@@ -74,20 +74,20 @@ class LoginAPI(MethodView):
                         'message': 'Successfully logged in.',
                         'auth_token': auth_token.decode()
                     }
-                    return make_response(jsonify(responseObject)), 200
+                    return make_response(jsonify(responseObject)), 200, {'Access-Control-Allow-Origin':'*'}
             else:
                 responseObject = {
                     'status': 'fail',
                     'message': 'User does not exist.'
                 }
-                return make_response(jsonify(responseObject)), 404
+                return make_response(jsonify(responseObject)), 404, {'Access-Control-Allow-Origin':'*'}
         except Exception as e:
             print(e)
             responseObject = {
                 'status': 'fail',
                 'message': 'Try again'
             }
-            return make_response(jsonify(responseObject)), 500
+            return make_response(jsonify(responseObject)), 500, {'Access-Control-Allow-Origin':'*'}
 
 class UserAPI(MethodView):
     """
