@@ -15,6 +15,7 @@ spec:
     targetPort: 5000
     
   selector:
+    type: NodePort
     io.kompose.service: web
 status:
   loadBalancer: {}
