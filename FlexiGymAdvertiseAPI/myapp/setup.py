@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from service import advertise_api_blueprint
 import service.models as model
+from flask_cors import CORS
 
 SWAGGER_URL = '/service/docs'
 API_URL = '/service/advertise/docs.json'
@@ -10,6 +11,7 @@ API_URL = '/service/advertise/docs.json'
 
 def create_app():
     app = Flask(__name__)
+    cors = CORS(app)
 
     basedir = os.path.abspath(__file__)
 
