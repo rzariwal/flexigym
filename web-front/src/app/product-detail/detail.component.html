@@ -6,15 +6,15 @@
       <div class="card-body">
         <form name="form" #form='ngForm' (ngSubmit)="addToCart()">
 
-            <h4 class="card-title ">{{products.packages.package_name}}</h4>
+            <h4 class="card-title ">{{products.package_name}}</h4>
             <div class="text-left">
-              <input hidden name="productId" [value]=products.packages.id>
-              <p class="card-test"><strong>Description: </strong>{{products.packages.package_description}}</p>
+              <input hidden name="productId" [value]=products.id>
+              <p class="card-test"><strong>Description: </strong>{{products.package_description}}</p>
               <p class="card-text">
                 <strong>Price: </strong>
-                <label id="price">{{products.packages.price | currency}}</label>
+                <label id="price">{{products.price | currency}}</label>
               </p>
-              <p class="card-text"><strong>Stock: </strong>{{products.packages.available_qty}}</p>
+              <p class="card-text"><strong>Stock: </strong>{{products.available_qty}}</p>
 
               <label class="card-text">
                 <strong>Quantity: </strong>
@@ -23,16 +23,16 @@
                        name="count"
                        required
                        min="1"
-                       [max]=products.packages.available_qty
+                       [max]=products.available_qty
                 >
               </label>
 
 
               <p class="card-text"><strong>Subtotal: </strong>
-                <label id="subtotal">{{count * products.packages.price | currency}}</label>
+                <label id="subtotal">{{count * products.price | currency}}</label>
               </p>
             </div>
-            <button type="submit" [disabled]="!form.form.valid" *ngIf="products.packages.available_qty > 0; else offBlock"
+            <button type="submit" [disabled]="!form.form.valid" *ngIf="products.available_qty > 0; else offBlock"
                     class="btn btn-primary btn-lg"
             >Add to Cart
             </button>

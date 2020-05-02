@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-import { User } from '../models/user';
+import {AuthResponse, User} from '../models/user';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -11,13 +12,23 @@ import { User } from '../models/user';
 export class HomeComponent implements OnInit {
 
   user: User;
+  currentUserSubscription: Subscription;
+  currentUser: AuthResponse;
 
   constructor(private router: Router, private authService: AuthService) {
     this.user = new User();
     this.user.active = false;
   }
 
-  ngOnInit(): void {
+  ngOnInit()  {
+
+    this.currentUserSubscription = this.authService.currentUser.subscribe(user => {
+            this.currentUser = user;
+        });
+    if (this.currentUser) {
+      this.router.navigate(['/product']);
+    }
+
   }
 
   onLogin(){

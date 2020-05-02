@@ -38,9 +38,9 @@ export class DetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.advertiseService.getDetail(id).subscribe(
         prod => {
+          console.log("get by product is " + JSON.stringify(prod));
           this.products = prod;
-          console.log(this.products.packages);
-          console.log(prod.packages);
+          console.log(this.products);
         },
         _ => console.log('Get Cart Failed')
     );
@@ -53,13 +53,14 @@ export class DetailComponent implements OnInit {
             res => {
               if (!res) {
                 console.log('Add Cart failed' + res);
-                throw new Error();
+                //throw new Error();
               }
-              //this.router.navigateByUrl('/cart');
-              console.log('Add Cart Success')
+              this.router.navigateByUrl('/cart');
+              console.log('Add Cart ' + res.status)
             },
             _ => console.log('Add Cart Failed')
         );
+    //this.router.navigateByUrl('/cart');
   }
 
   // validateCount() {

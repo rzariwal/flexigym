@@ -10,8 +10,8 @@ metadata:
   name: flexigym-subscribe-api
 spec:
   ports:
-  - name: "6100"
-    port: 6100
+  - name: "6200"
+    port: 6200
     targetPort: 5000
   type: LoadBalancer
   loadBalancerIP: 35.198.220.113
