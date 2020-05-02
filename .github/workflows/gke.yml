@@ -26,6 +26,7 @@ env:
   IMAGEPaymentAPI: payment-service
   IMAGEAdvertiseAPI: advertise-service
   IMAGESubscribeAPI: subscribe-service
+  IMAGEAngularAPP: angular-app
 
 jobs:
   setup-build-publish-deploy:
@@ -211,7 +212,7 @@ jobs:
         cd subscribe-service
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-      # Deploy the Authentication API Docker image to the GKE cluster
+      # Deploy the subscribe API Docker image to the GKE cluster
     - name: Deploy subscribe-service
       if: "contains(github.event.head_commit.message, 'subsc')"
       run: |
@@ -223,4 +224,34 @@ jobs:
         kubectl rollout status deployment/flexigym-subscribe-api-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-subscribe-api -n flask-jwt-auth-web
 
+      # Build the angular-app Docker image
+    - name: Build angular-app
+      if: "contains(github.event.head_commit.message, 'angular')"
+      run: |
+        cd web-front
+        docker build -f Dockerfile -t asia.gcr.io/$GKE_PROJECT/$IMAGEAngularAPP:${{ github.sha }} .
+      # Push the angular-app Docker image to Google Container Registry
+    - name: Publish angular-app
+      if: "contains(github.event.head_commit.message, 'angular')"
+      run: |
+        cd web-front
+        docker push asia.gcr.io/$GKE_PROJECT/$IMAGEAngularAPP:${{ github.sha }}
+      # Set up kustomize for angular-app
+    - name: Set up Kustomize angular-app
+      if: "contains(github.event.head_commit.message, 'angular')"
+      run: |
+        cd web-front
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+      # Deploy the angular-app Docker image to the GKE cluster
+    - name: Deploy angular-app
+      if: "contains(github.event.head_commit.message, 'angular')"
+      run: |
+        cd web-front
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAngularAPP:${{ github.sha }}
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/flexigym-subscribe-api-db -n flask-jwt-auth-web
+        kubectl rollout status deployment/flexigym-subscribe-api -n flask-jwt-auth-web
 
