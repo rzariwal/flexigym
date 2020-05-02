@@ -14,7 +14,7 @@ import {catchError, tap} from 'rxjs/operators';
 })
 export class AuthService {
 
-  private authApiUrl = 'http://web:6000/auth';
+  private authApiUrl = 'http://web:5000/auth';
   private currentUserSubject: BehaviorSubject<AuthResponse>;
   public currentUser: Observable<AuthResponse>;
   public nameTerms = new Subject<string>();
