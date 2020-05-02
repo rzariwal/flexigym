@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class NotificationService {
+  private notifUrl = 'http://flexigym-notification-api:5000/auth';
 
   constructor() { }
 }

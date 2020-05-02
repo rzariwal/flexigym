@@ -13,8 +13,8 @@ spec:
   - name: "6000"
     port: 6000
     targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 35.198.220.113
+  #type: LoadBalancer
+  #loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: web
 status:

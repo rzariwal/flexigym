@@ -11,7 +11,7 @@ import {catchError, map} from 'rxjs/operators';
 })
 export class AdvertiseService {
 
-  private advertiseUrl = "http://35.198.220.113:9100/"
+  private advertiseUrl = "http://flexigym-advertise-service2:9100/"
 
   constructor(private http: HttpClient) {
 
