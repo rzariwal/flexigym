@@ -9,8 +9,8 @@ metadata:
     io.kompose.service: payment-api
   name: payment-api
 spec:
-  ports:
   type: NodePort
+  ports:
   - name: "8000"
     port: 8000
     targetPort: 8000
