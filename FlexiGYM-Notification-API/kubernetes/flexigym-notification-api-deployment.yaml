@@ -29,6 +29,11 @@ spec:
         name: flexigym-notification-api
         ports:
         - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /api/docs/index.html
+            port: 5000
+          timeoutSeconds: 2
         resources: {}
       restartPolicy: Always
       serviceAccountName: ""
