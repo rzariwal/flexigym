@@ -35,7 +35,7 @@ session = Session()
 '''
 
 
-@subscribe_api_blueprint.route("/add", methods=['POST', "GET"])
+@subscribe_api_blueprint.route("/subscribe/add", methods=['POST', "GET"])
 def addToCart():
     try:
         # parse request
@@ -122,7 +122,7 @@ def addToCart():
 
 
 # delete an item from cart
-@subscribe_api_blueprint.route("/delete", methods=['POST', 'GET'])
+@subscribe_api_blueprint.route("/subscribe/delete", methods=['POST', 'GET'])
 def deleteFromCart():
     try:
         # parse request -> get cart_id, package_id and quantity to be deleted.
@@ -171,7 +171,7 @@ example
 '''
 
 
-@subscribe_api_blueprint.route("/get", methods=['GET', "POST"])
+@subscribe_api_blueprint.route("/subscribe/get", methods=['GET', "POST"])
 def getCartItems():
     try:
         # get cart_Id and return all items in cart!
@@ -233,7 +233,7 @@ def notify():
 
 
 # get cart id and proceed to call payment service
-@subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
+@subscribe_api_blueprint.route('/subscribe/checkout', methods=['GET', 'POST'])
 def checkout():
     try:
         cart_id = request.json['cart_id']
@@ -256,7 +256,7 @@ def checkout():
         return make_response(jsonify(responseObject)), 500
 
 # update a cart Item; expect cartId, itemId, Qty.
-@subscribe_api_blueprint.route('/update', methods=['GET', 'POST'])
+@subscribe_api_blueprint.route('/subscribe/update', methods=['GET', 'POST'])
 def updateItem():
     try:
         cart_id = request.json['cart_id']
