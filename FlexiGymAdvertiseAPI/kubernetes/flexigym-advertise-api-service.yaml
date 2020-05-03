@@ -9,13 +9,10 @@ metadata:
     io.kompose.service: flexigym-advertise-service2
   name: flexigym-advertise-service2
 spec:
+  type: NodePort
   ports:
   - name: "9100"
     port: 9100
     targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: flexigym-advertise-service2
-status:
-  loadBalancer: {}
