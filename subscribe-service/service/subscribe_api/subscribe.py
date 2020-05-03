@@ -5,7 +5,6 @@ from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
-
 # service-endpoint
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
@@ -188,6 +187,7 @@ def getCartItems():
             userCartObject.append(v.to_json())
         # print(userCartObject)
         # return cartId if add to cart is success.
+        cart.total = cart.get_total()
         responseObject = {
             'status': 'success',
             'cartInfo': cart.to_json(),
@@ -281,7 +281,7 @@ def updateItem():
             for k, v in cart.content.items():
                 print(k, '->', v.to_json())
                 whole_cart.append(v.to_json())
-
+            cart.total = cart.get_total()
             response_object = {
                 'status': 'success',
                 'cartInfo': cart.to_json(),
