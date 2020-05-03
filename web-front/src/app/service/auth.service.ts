@@ -14,7 +14,7 @@ import {catchError, tap} from 'rxjs/operators';
 })
 export class AuthService {
   //auth IP within cluster now.
-  private authApiUrl = 'http://web:5000/auth';
+  private authApiUrl = 'http://34.107.247.50/auth';
   private currentUserSubject: BehaviorSubject<AuthResponse>;
   public currentUser: Observable<AuthResponse>;
   public nameTerms = new Subject<string>();
