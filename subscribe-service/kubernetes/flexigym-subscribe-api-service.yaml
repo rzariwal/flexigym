@@ -9,12 +9,11 @@ metadata:
     io.kompose.service: flexigym-subscribe-api
   name: flexigym-subscribe-api
 spec:
+  type: NodePort
   ports:
   - name: "6200"
     port: 6200
     targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: flexigym-subscribe-api
 status:
