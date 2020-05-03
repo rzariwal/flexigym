@@ -5,13 +5,13 @@
 
 
 
-# microservices architecture based application.
-## user management service (jwt-auth)
-## advertise service
-## subscription service
-## payment service
-## notification service
-## front-end angular web app
+## microservices architecture based application.
+### user management service (jwt-auth)
+### advertise service
+### subscription service
+### payment service
+### notification service
+### front-end angular web app
 
 
 
