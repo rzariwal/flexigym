@@ -77,10 +77,7 @@ class ShoppingCart(db.Model):
 # represent each item -> should aligned with advertise-service
 class Item(db.Model):
     __tablename__ = 'item'
-    # item_id = Column(Integer, primary_key=True, autoincrement=True)
-    # cart_id = Column(Integer, nullable=False)
     cart_id = Column(Integer, primary_key=True)
-    # package_id = Column(Integer, nullable=False)
     package_id = Column(Integer, primary_key=True)
     qty = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)

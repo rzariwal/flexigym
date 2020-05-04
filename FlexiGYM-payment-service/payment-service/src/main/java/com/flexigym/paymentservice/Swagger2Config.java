@@ -21,7 +21,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
         	.select()
             .apis(RequestHandlerSelectors.basePackage("com.flexigym.paymentservice"))
-            .paths(PathSelectors.ant("/api/*"))
+            .paths(PathSelectors.ant("/payment/*"))
             .build().apiInfo(apiEndPointsInfo());
     }
     

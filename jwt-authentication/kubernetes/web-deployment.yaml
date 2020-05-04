@@ -84,6 +84,11 @@ spec:
               secretKeyRef:
                 name: cloudsql-db-credentials
                 key: dbname
+          readinessProbe:
+            httpGet:
+              path: /swagger/index.html
+              port: 5000
+            timeoutSeconds: 2
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",

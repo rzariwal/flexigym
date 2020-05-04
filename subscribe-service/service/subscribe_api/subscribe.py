@@ -5,9 +5,8 @@ from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
-
 # service-endpoint
-ADVERTISE_API_OK = True
+ADVERTISE_API_OK = False
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
 ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
@@ -19,6 +18,8 @@ USER_API_OK = True
 # USER_URL = "http://35.198.220.113:7000/packagesApi"
 USER_URL = "http://web:5000/packagesApi"
 
+PAYMENT_API_OK = True
+PAYMENT_URL = "http://34.107.247.50/payment"
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -35,7 +36,7 @@ session = Session()
 '''
 
 
-@subscribe_api_blueprint.route("/add", methods=['POST', "GET"])
+@subscribe_api_blueprint.route("/subscribe/add", methods=['POST', "GET"])
 def addToCart():
     try:
         # parse request
@@ -54,8 +55,8 @@ def addToCart():
             response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
             r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
             print(r.to_json())
-        # else:
-        #    r = Product(1, "p1", 100, 100)
+        else:
+            r = Product(package_id, "p1", 100, 100)
 
         if count > int(r.qty):
             responseObject = {
@@ -122,7 +123,7 @@ def addToCart():
 
 
 # delete an item from cart
-@subscribe_api_blueprint.route("/delete", methods=['POST', 'GET'])
+@subscribe_api_blueprint.route("/subscribe/delete", methods=['POST', 'GET'])
 def deleteFromCart():
     try:
         # parse request -> get cart_id, package_id and quantity to be deleted.
@@ -171,7 +172,7 @@ example
 '''
 
 
-@subscribe_api_blueprint.route("/get", methods=['GET', "POST"])
+@subscribe_api_blueprint.route("/subscribe/get", methods=['GET', "POST"])
 def getCartItems():
     try:
         # get cart_Id and return all items in cart!
@@ -188,6 +189,7 @@ def getCartItems():
             userCartObject.append(v.to_json())
         # print(userCartObject)
         # return cartId if add to cart is success.
+        cart.total = cart.get_total()
         responseObject = {
             'status': 'success',
             'cartInfo': cart.to_json(),
@@ -233,17 +235,19 @@ def notify():
 
 
 # get cart id and proceed to call payment service
-@subscribe_api_blueprint.route('/checkout', methods=['GET', 'POST'])
+@subscribe_api_blueprint.route('/subscribe/checkout', methods=['GET', 'POST'])
 def checkout():
     try:
         cart_id = request.json['cart_id']
-        #get user id
+        #get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-        notify()
+        payment_info = {"amount":cart.total,"user_token":cart.user_id}
+        if PAYMENT_API_OK:
+            response = requests.post(url=PAYMENT_URL + "/", json=payment_info)
+        #notify()
         responseObject = {
-            'status': 'success',
-            'user_id': cart.user_id,
-            'total_amount': cart.total
+            "cart_id":cart_id,
+            "response":response
         }
         return make_response(jsonify(responseObject)), 200
 
@@ -256,7 +260,7 @@ def checkout():
         return make_response(jsonify(responseObject)), 500
 
 # update a cart Item; expect cartId, itemId, Qty.
-@subscribe_api_blueprint.route('/update', methods=['GET', 'POST'])
+@subscribe_api_blueprint.route('/subscribe/update', methods=['GET', 'POST'])
 def updateItem():
     try:
         cart_id = request.json['cart_id']
@@ -281,7 +285,7 @@ def updateItem():
             for k, v in cart.content.items():
                 print(k, '->', v.to_json())
                 whole_cart.append(v.to_json())
-
+            cart.total = cart.get_total()
             response_object = {
                 'status': 'success',
                 'cartInfo': cart.to_json(),

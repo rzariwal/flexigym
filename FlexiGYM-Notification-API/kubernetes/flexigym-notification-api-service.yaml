@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: flexigym-notification-api
   name: flexigym-notification-api
 spec:
+  type: NodePort
   ports:
   - name: "7000"
     port: 7000
@@ -17,5 +18,3 @@ spec:
   #loadBalancerIP: 35.198.220.113
   selector:
     io.kompose.service: flexigym-notification-api
-status:
-  loadBalancer: {}
