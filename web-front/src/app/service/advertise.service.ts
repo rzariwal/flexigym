@@ -33,7 +33,7 @@ export class AdvertiseService {
   }
 
   getDetail(id: String): Observable<any> {
-    const url = `${this.advertiseUrl}/packagesApi/${id}`;
+    const url = `${this.advertiseUrl}/${id}`;
 
     // @ts-ignore
     return this.http.get<any>(url).pipe(
