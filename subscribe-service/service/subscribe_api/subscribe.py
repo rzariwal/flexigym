@@ -6,7 +6,7 @@ from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
 # service-endpoint
-ADVERTISE_API_OK = True
+ADVERTISE_API_OK = False
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
 ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
@@ -18,6 +18,8 @@ USER_API_OK = True
 # USER_URL = "http://35.198.220.113:7000/packagesApi"
 USER_URL = "http://web:5000/packagesApi"
 
+PAYMENT_API_OK = True
+PAYMENT_URL = "http://34.107.247.50/payment"
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -53,8 +55,8 @@ def addToCart():
             response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
             r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
             print(r.to_json())
-        # else:
-        #    r = Product(1, "p1", 100, 100)
+        else:
+            r = Product(package_id, "p1", 100, 100)
 
         if count > int(r.qty):
             responseObject = {
@@ -237,13 +239,15 @@ def notify():
 def checkout():
     try:
         cart_id = request.json['cart_id']
-        #get user id
+        #get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-        notify()
+        payment_info = {"amount":cart.total,"user_token":cart.user_id}
+        if PAYMENT_API_OK:
+            response = requests.post(url=PAYMENT_URL + "/", json=payment_info)
+        #notify()
         responseObject = {
-            'status': 'success',
-            'user_id': cart.user_id,
-            'total_amount': cart.total
+            "cart_id":cart_id,
+            "response":response
         }
         return make_response(jsonify(responseObject)), 200
 
