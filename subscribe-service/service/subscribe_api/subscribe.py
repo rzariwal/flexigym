@@ -6,7 +6,7 @@ from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
 # service-endpoint
-ADVERTISE_API_OK = False
+ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
 ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
@@ -97,7 +97,7 @@ def addToCart():
                     cart.total = cart.get_total()
                     cart.updated_time = datetime.now()
                     cart.payment_status = False
-                    cart.cart_status = 'OPEN'
+                    cart.cart_status = "OPEN"
                     db.session.add(cart)
                     db.session.commit()
 
