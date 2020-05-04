@@ -20,7 +20,7 @@ export class AdvertiseService {
 
   getAllPackages(user: User): Observable<any> {
     console.log("this.advertiseUrl " + JSON.stringify(this.advertiseUrl) );
-    let url = this.advertiseUrl + "/packagesApi"
+    let url = this.advertiseUrl + "/all"
     let body = JSON.stringify({"email": user.email, "password": user.password, "mobile": user.mobile});
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
