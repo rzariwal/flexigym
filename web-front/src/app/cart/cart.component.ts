@@ -1,7 +1,7 @@
 import {AfterContentChecked, Component, OnDestroy, OnInit} from '@angular/core';
 import {User,AuthResponse} from '../models/user';
 import {Product} from '../models/product';
-import {ProductInOrder} from '../models/productInOrder';
+import {ProductInOrder} from '../models/ProductInOrder';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';

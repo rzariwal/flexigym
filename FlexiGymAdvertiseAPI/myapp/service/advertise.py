@@ -106,8 +106,8 @@ def deletePackage(id):
         return make_response(jsonify(responseObject)), 500
 
 
-@advertise_api_blueprint.route('/')
-@advertise_api_blueprint.route('/packagesApi', methods=['GET', 'POST'])
+# @advertise_api_blueprint.route('/')
+@advertise_api_blueprint.route('/packagesApi/all', methods=['GET', 'POST'])
 def gymPackagesFunction():
     if request.method == 'GET':
         return getPackages()
