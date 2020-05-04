@@ -16,4 +16,5 @@ export interface AuthResponse {
   status: string;
   auth_token: string;
   message: string;
+  user_id: number;
 }

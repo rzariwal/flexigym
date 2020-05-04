@@ -47,7 +47,7 @@ export class CartComponent implements OnInit {
   ngOnInit() {
     this.subscribeService.getCart().subscribe(prods => {
       this.productInOrders = prods;
-      console.log('Products in cards: ' + prods);
+      console.log('Products in cards: ' + JSON.stringify(prods));
     });
 
     this.sub = this.updateTerms.pipe(

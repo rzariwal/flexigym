@@ -33,15 +33,28 @@ export class HomeComponent implements OnInit {
 
   onLogin(){
     //this.userService.register(this.user).subscribe(res => console.log('Done'));
+
     this.authService.login(this.user).
-        subscribe(
-          response => {
-            console.log(response.message);
-            this.router.navigate(['/product']);
-          },
-          e => {
-            console.log("error");
-          }
-        )
+      subscribe(
+        response => {
+          console.log("Login response.message : " + response.message);
+
+          this.authService.getStatus(response.auth_token).
+            subscribe(
+              response => {
+                console.log("getStatus : " + response.status);
+                this.router.navigate(['/product']);
+              },
+              e => {
+                console.log("error");
+              }
+            );
+          //this.router.navigate(['/product']);
+        },
+        e => {
+          console.log("error");
+        }
+      );
+
   }
 }

@@ -4,7 +4,7 @@ import { HttpClientModule, HttpClient, HttpRequest, HttpHeaders, HttpEventType, 
 import {CookieService} from 'ngx-cookie-service';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-
+import {authApi} from '../../environments/environment';
 
 
 
@@ -14,7 +14,8 @@ import {catchError, tap} from 'rxjs/operators';
 })
 export class AuthService {
   //auth IP within cluster now.
-  private authApiUrl = 'http://web:5000/auth';
+  //private authApiUrl = 'http://web:5000/auth';
+  private authApiUrl =`${authApi}`;
   private currentUserSubject: BehaviorSubject<AuthResponse>;
   public currentUser: Observable<AuthResponse>;
   public nameTerms = new Subject<string>();
@@ -68,11 +69,33 @@ export class AuthService {
         this.currentUserSubject.next(null);
         localStorage.removeItem('currentUser');
         this.cookieService.delete('currentUser');
+        this.cookieService.delete('cart_id');
     }
 
   getStatus(authtoken: string){
 
-    console.log("Done");
+    let url = this.authApiUrl+ '/status'
+    let body = "";
+    const options = {
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+        .append("Authorization","authtoken " + authtoken)
+    };
+
+    return this.http.get<any>(url,options).pipe(
+            tap(resp => {
+                if (resp && resp.status=="success") {
+                    this.cookieService.set('currentUser', JSON.stringify(resp.data));
+                    // if (loginForm.remembered) {
+                        localStorage.setItem('currentUser', JSON.stringify(resp.data));
+                    // }
+                    console.log("user.email " + resp.data.email);
+                    this.nameTerms.next(resp.data.email);
+                    this.currentUserSubject.next(resp);
+                    return resp;
+                }
+            }),
+            //catchError(this.handleError('Login Failed', null))
+        );
 
   }
 }

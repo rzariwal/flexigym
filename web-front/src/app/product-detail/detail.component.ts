@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { AdvertiseService } from '../service/advertise.service';
 import { SubscribeService } from '../service/subscribe.service';
-import { User } from '../models/user';
+import {AuthResponse, User} from '../models/user';
 import { Product } from '../models/product';
 import { ProductInOrder } from '../models/ProductInOrder';
+import {AuthService} from "../service/auth.service";
 //import {CookieService} from 'ngx-cookie-service';
 
 
@@ -19,14 +20,20 @@ export class DetailComponent implements OnInit {
   products: Product;
   title: string;
   count: number;
+  currentUser: AuthResponse;
 
   constructor(
     private router: Router,
     private advertiseService: AdvertiseService,
     private subscribeService: SubscribeService,
     //private cookieService: CookieService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {
+
+  }
+
+
 
   ngOnInit() {
     this.getProduct();
@@ -47,7 +54,13 @@ export class DetailComponent implements OnInit {
   }
 
   addToCart() {
-    this.subscribeService
+    // if (!this.currentUser) {
+    //       this.router.navigate(['/'], {queryParams: {returnUrl: this.router.url}});
+    //   // } else if (this.currentUser.role !== Role.Customer) {
+    //   //     this.router.navigate(['/seller']);
+    // } else {
+      console.log('Add Cart ');
+      this.subscribeService
         .addItem(new ProductInOrder(this.products, this.count))
         .subscribe(
             res => {
@@ -56,10 +69,14 @@ export class DetailComponent implements OnInit {
                 //throw new Error();
               }
               this.router.navigateByUrl('/cart');
-              console.log('Add Cart ' + res.status)
+
+              console.log('Add Cart ' + res.status);
+              console.log('Add Cart details : cart_id' + res.cart_Info.cart_id);
+
             },
             _ => console.log('Add Cart Failed')
-        );
+      );
+    // }
     //this.router.navigateByUrl('/cart');
   }
 

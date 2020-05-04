@@ -2,6 +2,7 @@ import {Product} from "./product";
 
 export class ProductInOrder {
     cart_Items: [];
+    cart_id: number;
     package_id: number;
     qty: number;
     price: number;
@@ -13,6 +14,7 @@ export class ProductInOrder {
     count: number;
 
     constructor(product:Product, quantity = 1){
+        //this.cart_id = cart_id;
         this.package_id = product.id;
         this.qty = quantity;
         this.price = product.price;

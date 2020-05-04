@@ -4,20 +4,22 @@ import {User} from '../models/user';
 import {Product} from '../models/product';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-
+import {advertiseApi} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdvertiseService {
 
-  private advertiseUrl = "http://flexigym-advertise-service2:9100/"
+  //private advertiseUrl = "http://flexigym-advertise-service2:9100/"
+  private advertiseUrl = `${advertiseApi}`;
 
   constructor(private http: HttpClient) {
 
   }
 
   getAllPackages(user: User): Observable<any> {
+    console.log("this.advertiseUrl " + JSON.stringify(this.advertiseUrl) );
     let url = this.advertiseUrl + "/packagesApi"
     let body = JSON.stringify({"email": user.email, "password": user.password, "mobile": user.mobile});
     const options = {
