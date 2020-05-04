@@ -186,7 +186,14 @@ def getCartItems():
             user_id = request.json['user_id']
             # cart = (ShoppingCart.query.filter_by(user_id=user_id)).filter_by(cart_status="OPEN").first()
             cart = (ShoppingCart.query.filter_by(user_id=user_id, cart_status="OPEN")).first()
-            cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
+            if(cart is not None):
+                cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'No OPEN cart found for this user'
+                }
+                return make_response(jsonify(responseObject)), 404
 
         userCartObject = []
         for each in cartItems:
