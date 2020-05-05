@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: "Always"
         name: flexigym-angular-app
         ports:
-        - containerPort: 4200
+        - containerPort: 80
         resources: {}
       restartPolicy: Always
       serviceAccountName: ""
