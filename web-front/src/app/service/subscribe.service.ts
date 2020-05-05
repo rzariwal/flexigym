@@ -44,7 +44,7 @@ export class SubscribeService {
   }
 
   //ProductInOrder[]
-  getCart(userId: number): Observable<any> {
+  getCart(): Observable<any> {
         const localCart = this.getLocalCart();
         let url = `${this.subscribeUrl}/get`;
         let options = {
@@ -70,7 +70,7 @@ export class SubscribeService {
               );
             } else {
               console.log("Cart from server : " );
-                let body = JSON.stringify({ "user_id": userId });
+                let body = JSON.stringify({ "user_id": this.currentUser.user_id });
                 return this.http.post<any>(url,body,options).pipe(
                     map(cart => cart.cart_Items),
                     catchError(_ => of([]))
