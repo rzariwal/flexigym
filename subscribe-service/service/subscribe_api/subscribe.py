@@ -6,7 +6,7 @@ from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
 # service-endpoint
-ADVERTISE_API_OK = False
+ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
 ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
@@ -97,7 +97,7 @@ def addToCart():
                     cart.total = cart.get_total()
                     cart.updated_time = datetime.now()
                     cart.payment_status = False
-                    cart.cart_status = 'OPEN'
+                    cart.cart_status = "OPEN"
                     db.session.add(cart)
                     db.session.commit()
 
@@ -163,23 +163,38 @@ def deleteFromCart():
     return make_response(jsonify(response_object)), 500
 
 
-# get cart content
+# get cart content with either cart_id or user_id
 '''
 example
 {
    "cart_id": 1
+   "user_id": "sandeep"
 }
 '''
-
 
 @subscribe_api_blueprint.route("/subscribe/get", methods=['GET', "POST"])
 def getCartItems():
     try:
-        # get cart_Id and return all items in cart!
-        cart_id = request.json['cart_id']
-        # get cartItems from Item table.
-        cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-        cartItems = Item.query.filter_by(cart_id=cart_id).all()
+        try:
+            # get cart_Id and return all items in cart!
+            cart_id = request.json['cart_id']
+            # get cartItems from Item table.
+            cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
+            cartItems = Item.query.filter_by(cart_id=cart_id).all()
+        except Exception as e:
+            # get user_id and return all items in an OPEN cart!
+            user_id = request.json['user_id']
+            # cart = (ShoppingCart.query.filter_by(user_id=user_id)).filter_by(cart_status="OPEN").first()
+            cart = (ShoppingCart.query.filter_by(user_id=user_id, cart_status="OPEN")).first()
+            if(cart is not None):
+                cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'No OPEN cart found for this user'
+                }
+                return make_response(jsonify(responseObject)), 404
+
         userCartObject = []
         for each in cartItems:
             i = Item(each.package_id, each.price, each.qty)
@@ -187,7 +202,6 @@ def getCartItems():
         for k, v in cart.content.items():
             print(k, '->', v.to_json())
             userCartObject.append(v.to_json())
-        # print(userCartObject)
         # return cartId if add to cart is success.
         cart.total = cart.get_total()
         responseObject = {
@@ -239,12 +253,18 @@ def notify():
 def checkout():
     try:
         cart_id = request.json['cart_id']
+        response = "*"
         #get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
         payment_info = {"amount":cart.total,"user_token":cart.user_id}
         if PAYMENT_API_OK:
             response = requests.post(url=PAYMENT_URL + "/", json=payment_info)
         #notify()
+        cart.cart_status = "CLOSED"
+        cart.updated_time = datetime.now()
+        db.session.add(cart)
+        db.session.commit()
+
         responseObject = {
             "cart_id":cart_id,
             "response":response

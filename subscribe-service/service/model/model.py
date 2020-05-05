@@ -23,7 +23,7 @@ def create_tables(app):
 class ShoppingCart(db.Model):
     __tablename__ = 'shopping-cart'
     cart_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(db.String(30), nullable=False)
+    user_id = Column(Integer, nullable=False)
     cart_status = Column(db.String(20))  # OPEN --> CLOSED
     created_time = Column(DateTime(timezone=True), server_default=func.now())
     updated_time = Column(DateTime(timezone=True), server_default=func.now())

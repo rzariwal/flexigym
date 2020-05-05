@@ -67,10 +67,11 @@ export class SubscribeService {
                   }),
                   map(cart => cart.cart_Items),
                   catchError(_ => of([]))
+
               );
             } else {
               console.log("Cart from server : " );
-                let body = JSON.stringify({ "cart_id":cart_id });
+                let body = JSON.stringify({ "user_id": this.currentUser.user_id });
                 return this.http.post<any>(url,body,options).pipe(
                     map(cart => cart.cart_Items),
                     catchError(_ => of([]))
