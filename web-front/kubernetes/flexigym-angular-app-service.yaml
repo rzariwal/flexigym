@@ -12,7 +12,7 @@ spec:
   ports:
   - name: "8080"
     port: 8080
-    targetPort: 4200
+    targetPort: 80
   type: LoadBalancer
   loadBalancerIP: 35.198.220.113
   selector:
