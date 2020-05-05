@@ -75,7 +75,6 @@ export class AuthService {
   getStatus(authtoken: string){
 
     let url = this.authApiUrl+ '/status'
-    let body = "";
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
         .append("Authorization","authtoken " + authtoken)
@@ -88,6 +87,7 @@ export class AuthService {
                     // if (loginForm.remembered) {
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
                     // }
+                    //this.currentUser = resp.data;
                     console.log("user.email " + resp.data.email);
                     this.nameTerms.next(resp.data.email);
                     this.currentUserSubject.next(resp);

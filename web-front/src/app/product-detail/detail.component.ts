@@ -54,30 +54,20 @@ export class DetailComponent implements OnInit {
   }
 
   addToCart() {
-    // if (!this.currentUser) {
-    //       this.router.navigate(['/'], {queryParams: {returnUrl: this.router.url}});
-    //   // } else if (this.currentUser.role !== Role.Customer) {
-    //   //     this.router.navigate(['/seller']);
-    // } else {
-      console.log('Add Cart  ');
-      this.subscribeService
-        .addItem(new ProductInOrder(this.products, this.count))
-        .subscribe(
-            res => {
-              if (!res) {
-                console.log('Add Cart failed' + res);
-                //throw new Error();
-              }
-              this.router.navigateByUrl('/cart');
-
-              console.log('Add Cart ' + res.status);
-              console.log('Add Cart details : cart_id' + res.cart_Info.cart_id);
-
-            },
-            _ => console.log('Add Cart Failed')
-      );
-    // }
-    //this.router.navigateByUrl('/cart');
+        this.subscribeService
+          .addItem(new ProductInOrder(this.products, this.count))
+          .subscribe(
+              res => {
+                if (!res) {
+                  console.log('Add Cart failed' + res);
+                  //throw new Error();
+                }
+                this.router.navigateByUrl('/cart');
+                console.log('addToCart() Status :  ' + res.status);
+                console.log('addToCart() cart_id : ' + res.cart_Info.cart_id);
+              },
+              _ => console.log('Add Cart Failed')
+        );
   }
 
   // validateCount() {

@@ -105,7 +105,13 @@ export class CartComponent implements OnInit {
              this.productInOrders = this.productInOrders.filter(e => e.productId !== productInOrder.productId);
               console.log('Cart: ' + this.productInOrders);
           },
-          _ => console.log('Remove Cart Failed'));
+          _ => console.log('Remove Cart Failed')
+      );
+
+      this.subscribeService.getCart().subscribe(prods => {
+        this.productInOrders = prods;
+        console.log('Products in cards: ' + JSON.stringify(prods));
+      });
   }
 
   checkout() {

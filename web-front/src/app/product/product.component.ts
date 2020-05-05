@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdvertiseService } from '../service/advertise.service';
+import { SubscribeService } from '../service/subscribe.service';
 import { User } from '../models/user';
 import { Product } from '../models/product';
 
@@ -13,7 +14,9 @@ export class ProductComponent implements OnInit {
   user: User;
   products: Product;
 
-  constructor(private router: Router, private advertiseService: AdvertiseService) { }
+  constructor(private router: Router,
+              private advertiseService: AdvertiseService,
+              private subscribeService: SubscribeService) { }
 
   ngOnInit(): void {
     this.user = new User();
