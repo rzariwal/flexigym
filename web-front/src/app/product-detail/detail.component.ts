@@ -59,7 +59,7 @@ export class DetailComponent implements OnInit {
     //   // } else if (this.currentUser.role !== Role.Customer) {
     //   //     this.router.navigate(['/seller']);
     // } else {
-      console.log('Add Cart ');
+      console.log('Add Cart  ');
       this.subscribeService
         .addItem(new ProductInOrder(this.products, this.count))
         .subscribe(
