@@ -6,13 +6,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,16 +18,22 @@ import java.util.Map;
 @RestController
 @EnableAutoConfiguration
 public class PaymentServiceController {
-	
+
+	@Value("${service.url}")
+	String service_url;
+
+
 	PayPalClient payPalClient = new PayPalClient();
     	
-	@RequestMapping(value = "/payment/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/payment/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
-	Map<String, Object> createPayment(@RequestParam("amount") String amount) {
-		
+	Map<String, Object> createPayment(@RequestBody Map<String, String> amount) {
 		//return a redirect URL
-		return payPalClient.createPayment(amount);
+		System.out.println(service_url);
+		System.out.println(amount.get("amount"));
+		String sum = amount.get("amount");
+		return payPalClient.createPayment(sum, service_url);
 	}
 	
 	@RequestMapping(value = "/payment/complete", method = RequestMethod.GET)
