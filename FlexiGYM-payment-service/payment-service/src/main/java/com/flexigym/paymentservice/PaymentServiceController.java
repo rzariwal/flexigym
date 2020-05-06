@@ -25,42 +25,10 @@ public class PaymentServiceController {
 	
 	PayPalClient payPalClient = new PayPalClient();
     	
-	@PostMapping("/payment/create")
+	@RequestMapping(value = "/payment/create", method = RequestMethod.POST)
 	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
-	Map<String, Object> createPayment(@RequestParam("amount") String amount, @RequestParam("user_token") String token) {
-		//for test purpose - sign in first -> to generate a token
-		//actual case -> the caller of this service has to pass the user_token
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_JSON);	    
-	        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-	        // request body parameters
-		Map<String, Object> map = new HashMap<>();
-		map.put("email", "danyjacob45@gmail.com");
-		map.put("password", "password");
-	
-		// build the request
-		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
-		
-		
-		System.out.println("\nDebug..");
-		System.out.println(entity.toString());
-		// send POST request
-		final String auth_login = "http://34.87.6.16:5000/auth/login";
-		ResponseEntity<String> status = restTemplate.postForEntity(auth_login, entity, String.class);
-		System.out.println(restTemplate.toString());
-		//check token is valid and alive
-		System.out.println(status);
-		
-		//final String auth_status = "http://34.87.6.16:5000/auth/status";
-		//UserBillInfo userInfo = restTemplate.getForObject(auth_status, UserBillInfo.class);
-	     
-	        //System.out.println(userInfo.toString());
-
-		
-		//if valid, proceed to payment using PayPal
+	Map<String, Object> createPayment(@RequestParam("amount") String amount) {
 		
 		//return a redirect URL
 		return payPalClient.createPayment(amount);
@@ -91,7 +59,7 @@ public class PaymentServiceController {
 	}
 	
 	@PostMapping("/payment/cancel")
-	@RequestMapping(value = "/api/cancel", method = RequestMethod.GET)
+	@RequestMapping(value = "/payment/cancel", method = RequestMethod.GET)
 	@ApiOperation(value = "cancel payment called by PayPal")
 	@ResponseBody
 	String cancel() {
