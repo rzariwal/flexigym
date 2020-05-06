@@ -241,11 +241,10 @@ def notify():
     try:
         user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
         if NOTIFICATION_API_OK:
-            response = requests.post(url=NOTIFICATION_URL + "/", json=user_detail)
-            response = requests.post(url=NOTIFICATION_URL + "/", json=user_detail)
+            response = requests.post(url=NOTIFICATION_URL, json=user_detail)
             return jsonify(message=response.status_code)
-        #if response.status_code == 200:
-            #return jsonify(message="SMS Sent.")
+        # if response.status_code == 200:
+            # return jsonify(message="SMS Sent.")
 
     except Exception as e:
         print(e)
