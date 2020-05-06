@@ -14,7 +14,7 @@ ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
 NOTIFICATION_API_OK = True
 # NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
-NOTIFICATION_URL = "http://flexigym-notification-api:7000/api/sms/send_sms"
+NOTIFICATION_URL = "http://34.107.247.50/api/sms/send_sms"
 
 USER_API_OK = True
 # USER_URL = "http://35.198.220.113:7000/packagesApi"
@@ -262,22 +262,23 @@ def checkout():
         print("cart is ok...")
         payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
-            response = requests.post(url=PAYMENT_URL + "/notify", json=payment_info)
-        notify()
-        if response.status_code == 200:
-            cart.cart_status = "CLOSED"
-            cart.updated_time = datetime.now()
-            db.session.add(cart)
-            db.session.commit()
-            resp_json = json.loads(response.text)
-            resp_json["cart_id"]=cart_id
-            return make_response(jsonify(resp_json)), 200
+            response_payment = requests.post(url=PAYMENT_URL + "/create", json=payment_info)
+            notify()
+            if response_payment.status_code == 200:
+                cart.cart_status = "CLOSED"
+                cart.updated_time = datetime.now()
+                db.session.add(cart)
+                db.session.commit()
+                resp_json = json.loads(response_payment.text)
+                resp_json["cart_id"]=cart_id
+                return make_response(jsonify(resp_json)), 200
+            else:
+                responseObject = {
+                    "status":"fail",
+                    "message":"payment creation status is not 200 OK"
+                }
         else:
-            responseObject = {
-                "status":"fail",
-                "message":"payment creation status is not 200 OK"
-            }
-            return make_response(jsonify(responseObject)), 400
+            return make_response(jsonify("PAYMENT_API not Ok")), 400
 
     except Exception as e:
         print(e)
