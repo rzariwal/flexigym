@@ -29,11 +29,20 @@ public class PaymentServiceController {
 	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
 	Map<String, Object> createPayment(@RequestBody Map<String, String> amount) {
+		Map<String, Object> response = new HashMap<String, Object>();
+
 		//return a redirect URL
-		System.out.println(service_url);
-		System.out.println(amount.get("amount"));
-		String sum = amount.get("amount");
-		return payPalClient.createPayment(sum, service_url);
+		try{
+			System.out.println(service_url);
+			System.out.println(amount.get("amount"));
+			String sum = amount.get("amount");
+			return payPalClient.createPayment(sum, service_url);
+		}
+		catch (Exception e){
+			response.put("status", "failed");
+			return response;
+		}
+
 	}
 	
 	@RequestMapping(value = "/payment/complete", method = RequestMethod.GET)

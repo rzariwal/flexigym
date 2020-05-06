@@ -39,8 +39,8 @@ public class PayPalClient {
 	    payment.setTransactions(transactions);
 
 	    RedirectUrls redirectUrls = new RedirectUrls();
-	    redirectUrls.setCancelUrl(serviceUrl+"/payment/cancel");
-	    redirectUrls.setReturnUrl(serviceUrl+"/payment/complete");
+	    redirectUrls.setCancelUrl(serviceUrl+"/cancel");
+	    redirectUrls.setReturnUrl(serviceUrl+"/complete");
 	    payment.setRedirectUrls(redirectUrls);
 	    Payment createdPayment;
 	    try {
