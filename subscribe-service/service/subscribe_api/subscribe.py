@@ -227,7 +227,6 @@ def hello_world():
     return 'test!'
 
 @subscribe_api_blueprint.route('/subscribe/notify', methods=['GET', 'POST'])
-# def notify(cart_id, user_id):
 def notify():
     '''
     s = requests.Session()
@@ -239,9 +238,12 @@ def notify():
     :return:
     '''
     try:
-        user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
+        # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
+        user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."}
         if NOTIFICATION_API_OK:
+            print("calling notification url"+NOTIFICATION_URL)
             response = requests.post(url=NOTIFICATION_URL, json=user_detail)
+            print("after calling notification url")
             return jsonify(message=response.status_code)
         # if response.status_code == 200:
             # return jsonify(message="SMS Sent.")
