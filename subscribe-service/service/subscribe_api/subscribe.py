@@ -1,10 +1,12 @@
 from datetime import datetime
+
 from flask import request, jsonify, make_response
 from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
+import json
 # service-endpoint
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
@@ -260,17 +262,21 @@ def checkout():
         payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
             response = requests.post(url=PAYMENT_URL + "/payment/create", json=payment_info)
-        #notify()
-        cart.cart_status = "CLOSED"
-        cart.updated_time = datetime.now()
-        db.session.add(cart)
-        db.session.commit()
-
-        responseObject = {
-            "cart_id":cart_id,
-            "response":response
-        }
-        return make_response(jsonify(responseObject)), 200
+        notify()
+        if response.status_code == 200:
+            cart.cart_status = "CLOSED"
+            cart.updated_time = datetime.now()
+            db.session.add(cart)
+            db.session.commit()
+            resp_json = json.loads(response.text)
+            resp_json["cart_id"]=cart_id
+            return make_response(jsonify(resp_json)), 200
+        else:
+            responseObject = {
+                "status":"fail",
+                "message":"payment creation status is not 200 OK"
+            }
+            return make_response(jsonify(responseObject)), 400
 
     except Exception as e:
         print(e)
