@@ -222,7 +222,7 @@ def getCartItems():
         return make_response(jsonify(responseObject)), 500
 
 
-@subscribe_api_blueprint.route('/test')
+@subscribe_api_blueprint.route('/subscribe/test')
 def hello_world():
     return 'test!'
 
