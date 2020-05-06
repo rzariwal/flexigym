@@ -226,7 +226,7 @@ def getCartItems():
 def hello_world():
     return 'test!'
 
-
+@subscribe_api_blueprint.route('/subscribe/notify', methods=['GET', 'POST'])
 # def notify(cart_id, user_id):
 def notify():
     '''
