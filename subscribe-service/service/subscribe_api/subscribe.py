@@ -21,7 +21,7 @@ USER_API_OK = True
 USER_URL = "http://web:5000/packagesApi"
 
 PAYMENT_API_OK = True
-PAYMENT_URL = "http://payment-api:8000/payment"
+PAYMENT_URL = "http://34.107.247.50/payment"
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -259,6 +259,7 @@ def checkout():
         #get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
         #payment_info = {"amount":str(cart.total)}
+        print("cart is ok...")
         payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
             response = requests.post(url=PAYMENT_URL + "/notify", json=payment_info)
