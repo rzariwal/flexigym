@@ -227,7 +227,7 @@ def hello_world():
     return 'test!'
 
 @subscribe_api_blueprint.route('/subscribe/notify', methods=['GET', 'POST'])
-def notify():
+def notify(to_number, content):
     '''
     s = requests.Session()
     s.auth = ('user', 'pass')
@@ -239,7 +239,9 @@ def notify():
     '''
     try:
         # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
-        user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."}
+        # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."}
+        user_detail = {"to_number": to_number,
+                       "content": content }
         if NOTIFICATION_API_OK:
             print("calling notification url"+NOTIFICATION_URL)
             response = requests.post(url=NOTIFICATION_URL, json=user_detail)
@@ -266,7 +268,9 @@ def checkout():
         payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
             response_payment = requests.post(url=PAYMENT_URL + "/create", json=payment_info)
-            notify()
+            to_number = "+6594300664"
+            content = "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."
+            notify(to_number, content)
             if response_payment.status_code == 200:
                 cart.cart_status = "CLOSED"
                 cart.updated_time = datetime.now()
