@@ -21,7 +21,7 @@ USER_API_OK = True
 USER_URL = "http://web:5000/packagesApi"
 
 PAYMENT_API_OK = True
-PAYMENT_URL = "http://35.198.220.113:8000"
+PAYMENT_URL = "http://34.107.247.50"
 
 Session = sessionmaker(bind=engine)
 session = Session()
