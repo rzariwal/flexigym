@@ -21,7 +21,7 @@ USER_API_OK = True
 USER_URL = "http://web:5000/packagesApi"
 
 PAYMENT_API_OK = True
-PAYMENT_URL = "http://34.107.247.50"
+PAYMENT_URL = "http://34.107.247.50/payment"
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -261,7 +261,7 @@ def checkout():
         #payment_info = {"amount":str(cart.total)}
         payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
-            response = requests.post(url=PAYMENT_URL + "/payment/create", json=payment_info)
+            response = requests.post(url=PAYMENT_URL + "/notify", json=payment_info)
         notify()
         if response.status_code == 200:
             cart.cart_status = "CLOSED"
