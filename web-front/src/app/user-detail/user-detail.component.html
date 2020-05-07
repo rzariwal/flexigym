@@ -1,0 +1,43 @@
+<h1 align="center" class="display-4 mb-5">My Profile</h1>
+<div style="width:40%; margin: 25px auto">
+  <form #form="ngForm">
+
+    <div class="form-group">
+      <label><b>User ID</b></label>
+      <input readonly [value]=currentUser.user_id type="email" class="form-control form-control-lg " disabled id="email"
+             name="email" placeholder="Enter email">
+    </div>
+
+
+    <div class="form-group">
+      <label><b>Email address</b></label>
+      <input readonly [value]=currentUser.email type="email" class="form-control form-control-lg " disabled id="email"
+             name="email" placeholder="Enter email">
+    </div>
+
+    <div class="form-group">
+      <label><b>Phone</b></label>
+      <input readonly [value]=currentUser.mobile type="email" class="form-control form-control-lg " disabled id="email"
+             name="email" placeholder="Enter email">
+    </div>
+
+    <div class="form-group">
+      <label><b>Admin Role</b></label>
+      <input readonly [value]=currentUser.admin type="email" class="form-control form-control-lg " disabled id="email"
+             name="email" placeholder="Enter email">
+    </div>
+
+
+    <!--    <div class="form-group">-->
+    <!--      <label><b>Phone</b></label>-->
+    <!--      <input [(ngModel)]="currentUser.phone" type="text" class="form-control form-control-lg" id="phone" name="phone" placeholder="Phone" required #phone="ngModel" >-->
+    <!--      <div  *ngIf="phone.invalid && (phone.dirty ||phone.touched)">-->
+    <!--        <div *ngIf="phone.errors.required">-->
+    <!--          Phone is required.-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+  </form>
+</div>
+
