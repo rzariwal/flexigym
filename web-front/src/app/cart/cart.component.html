@@ -45,7 +45,7 @@
 </table>
 
 <div *ngIf="productInOrders?.length > 0; else empty">
-    <h5 style="display: inline;">Total: {{total | currency}}</h5>
+    <h5 style="display: inline;">Total: {{total | currency}} {{this.totalAmount.toString()}}</h5>
     <button (click)="checkout()" class="btn btn-warning float-right">Checkout</button>
 </div>
 <ng-template #empty>

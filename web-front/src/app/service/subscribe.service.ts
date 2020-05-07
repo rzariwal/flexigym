@@ -45,7 +45,6 @@ export class SubscribeService {
 
   //ProductInOrder[]
   getCart(): Observable<any> {
-        //const localCart = this.getLocalCart();
         let url = `${this.subscribeUrl}/get`;
         let options = {
           headers: new HttpHeaders().append('Content-Type', 'application/json')
@@ -56,29 +55,12 @@ export class SubscribeService {
           cart_id = JSON.parse(this.cookieService.get('cart_id'));
         }
         console.log("cart_id in getCart() : " + cart_id);
-        //if (this.currentUser) {
-        //console.log("User in getCart() : " + JSON.stringify(this.currentUser));
-            // if (cart_id > 0) {
+
         let body1 = JSON.stringify({ "cart_id":cart_id });
         return this.http.post<any>(url,body1,options).pipe(
-            tap(_ => {
-                //this.clearLocalCart();
-            }),
-            map(cart => cart.cart_Items),
             catchError(_ => of([]))
         );
-            // } else {
-            //   console.log("Cart from server : " );
-            //     let body = JSON.stringify({ "user_id": this.currentUser.user_id });
-            //     return this.http.post<any>(url,body,options).pipe(
-            //         map(cart => cart.cart_Items),
-            //         catchError(_ => of([]))
-            //     );
-            // }
-        // } else {
-        //     console.log("local cart : " );
-        //     //return of(localCart);
-        // }
+
     }
 
   getCartByUser(user_id : string){
@@ -146,12 +128,29 @@ export class SubscribeService {
     // }
   }
 
-  update(productInOrder): Observable<ProductInOrder> {
-
+  update(productInOrder): Observable<any> {
     // if (this.currentUser) {
-      const url = `${this.subscribeUrl}/${productInOrder.productId}`;
-      return this.http.put<ProductInOrder>(url, productInOrder.count);
     // }
+    let url = `${this.subscribeUrl}/update`;
+
+    let cart_id = 0;
+    if (this.cookieService.check('cart_id')) {
+        cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    }
+
+    let body = JSON.stringify({  "cart_id": cart_id,"package_id": productInOrder.package_id, "quantity": productInOrder.qty});
+      console.log("body in update method : " + body);
+    let options = {
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+      .append('Access-Control-Allow-Origin', '*')
+    }
+
+    return this.http.post<any>(url,body,options).pipe(
+         tap(resp => {
+            console.log('cart_id'+ JSON.stringify(resp) );
+        }),
+        catchError(_ => of([]))
+    );
   }
 
 
@@ -160,8 +159,8 @@ export class SubscribeService {
     let cart_id = 0;
     if (this.cookieService.check('cart_id')) {
           cart_id = JSON.parse(this.cookieService.get('cart_id'));
-          console.log("cart_id in delete method : " + cart_id);
     }
+    console.log("cart_id in delete method : " + cart_id);
 
     let url = `${this.subscribeUrl}/delete`;
     let body = JSON.stringify({  "package_id": productInOrder.package_id, "cart_id": cart_id});
