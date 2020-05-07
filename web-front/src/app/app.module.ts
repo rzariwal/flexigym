@@ -14,8 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { ProductComponent } from './product/product.component';
 import { DetailComponent } from "./product-detail/detail.component";
 import { CartComponent } from "./cart/cart.component";
-// import {JwtInterceptor} from "../../../frontend/src/app/_interceptors/jwt-interceptor.service";
-// import {ErrorInterceptor} from "../../../frontend/src/app/_interceptors/error-interceptor.service";
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { ProductEditComponent } from './product-edit/product-edit.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,9 @@ import { CartComponent } from "./cart/cart.component";
     HomeComponent,
     ProductComponent,
     DetailComponent,
-    CartComponent
+    CartComponent,
+    UserDetailComponent,
+    ProductEditComponent
   ],
   imports: [
     BrowserModule,

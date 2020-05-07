@@ -24,7 +24,6 @@ export class ProductComponent implements OnInit {
       resp => {
         this.products = resp;
         console.log(this.products.packages);
-        console.log(resp);
       }
     );
   }

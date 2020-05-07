@@ -4,7 +4,7 @@ import {Product} from '../models/product';
 import {ProductInOrder} from '../models/ProductInOrder';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {AdvertiseService} from "../service/advertise.service";
 import {SubscribeService} from '../service/subscribe.service';
 import {AuthService} from '../service/auth.service';
@@ -35,13 +35,14 @@ export class CartComponent implements OnInit {
   sub: Subscription;
 
   static validateCount(productInOrder) {
-    const max = productInOrder.productStock;
-    if (productInOrder.count > max) {
-      productInOrder.count = max;
-    } else if (productInOrder.count < 1) {
-      productInOrder.count = 1;
+    const max = productInOrder.available_qty;
+    console.log("available_qty " + JSON.stringify(productInOrder) );
+    if (productInOrder.qty > max) {
+      productInOrder.qty = max;
+    } else if (productInOrder.qty < 1) {
+      productInOrder.qty = 1;
     }
-    console.log(productInOrder.count);
+    console.log("validateCount " + productInOrder.qty);
   }
 
   ngOnInit() {
@@ -78,17 +79,17 @@ export class CartComponent implements OnInit {
 
   ngAfterContentChecked() {
       this.total = this.productInOrders.reduce(
-          (prev, cur) => prev + cur.count * cur.productPrice, 0);
+          (prev, cur) => prev + cur.qty * cur.productPrice, 0);
   }
 
   addOne(productInOrder) {
-      productInOrder.count++;
+      productInOrder.qty++;
       CartComponent.validateCount(productInOrder);
       if (this.currentUser) { this.updateTerms.next(productInOrder); }
   }
 
   minusOne(productInOrder) {
-      productInOrder.count--;
+      productInOrder.qty--;
       CartComponent.validateCount(productInOrder);
       if (this.currentUser) { this.updateTerms.next(productInOrder); }
   }
@@ -102,7 +103,7 @@ export class CartComponent implements OnInit {
   remove(productInOrder: ProductInOrder) {
       this.subscribeService.remove(productInOrder).subscribe(
           success => {
-             this.productInOrders = this.productInOrders.filter(e => e.productId !== productInOrder.productId);
+             //this.productInOrders = this.productInOrders.filter(e => e.productId !== productInOrder.productId);
               console.log('Cart: ' + this.productInOrders);
           },
           _ => console.log('Remove Cart Failed')
@@ -121,8 +122,30 @@ export class CartComponent implements OnInit {
       //     this.router.navigate(['/seller']);
       } else {
           this.subscribeService.checkout().subscribe(
-              _ => {
+              resp => {
                   this.productInOrders = [];
+                  console.log(JSON.stringify(resp));
+                  if (resp.status="success")
+                  {
+                    console.log(resp.redirect_url);
+                    //his.router.navigate(resp.redirect_url, {queryParams: {returnUrl: this.router.url}});
+                    window.open(resp.redirect_url, '_blank');
+                    this.router.events.subscribe(event => {
+                      if (event instanceof NavigationEnd) {
+                        console.log(event.url);
+                        //if (event.url.includes('faq')) {
+                          // open in the same tab:
+                          window.location.href = resp.redirect_url;
+
+                          // open a new tab:
+                          // window.open('https://faq.website.com', '_blank');
+
+                          // and redirect the current page:
+                          // this.router.navigate(['/']);
+                        //}
+                      }
+                    });
+                  }
               },
               error1 => {
                   console.log('Checkout Cart Failed');
