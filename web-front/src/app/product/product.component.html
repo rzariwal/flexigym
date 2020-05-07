@@ -1,4 +1,10 @@
 <h1 align="center" class="display-4 ">Packages</h1>
+
+<a *ngIf="user?.admin == true" style="color: inherit"
+   routerLink="/admin/product/0/new" ><i class="fas fa-plus fa-2x">Add New Package </i>
+</a>
+<br/>
+
 <div class="list-items">
   <div class="list-item" *ngFor="let item of products.packages">
     <li class="list-group-item {{item}}">
@@ -6,9 +12,21 @@
       {{item.package_name}} <br>
       {{item.package_description}} <br>
       S$ {{item.price}}
-      <a  style="color: inherit" routerLink="/product/{{item.id}}" class="float-right mb-3">
-        <i class="fas fa-plus fa-2x">Detail</i>
+      <a  *ngIf="user?.admin == false" style="color: inherit"
+          routerLink="/product/{{item.id}}" class="float-right mb-3">
+        <i class="fas fa-plus fa-2x">Detail &nbsp;</i>
       </a>
+      <a *ngIf="user?.admin == true" style="display: block"
+         routerLink="/admin/product/{{item.id}}/edit" class="float-right mb-3">
+                Edit
+      </a>
+      <div class="float-right mb-3"> </div>
+      <a *ngIf="user?.admin == true" style="display: block"
+               (click)="remove(item)"
+         routerLink="./" class="float-right mb-3">
+                Remove &nbsp;
+      </a>
+
     </li>
   </div>
 </div>
