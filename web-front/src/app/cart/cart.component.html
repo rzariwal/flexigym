@@ -18,7 +18,7 @@
     <tr *ngFor="let productInOrder of productInOrders">
 
         <td class="align-middle"><a
-                routerLink="/product/{{productInOrder.package_id}}">{{productInOrder.productName}}</a></td>
+                routerLink="/product/{{productInOrder.package_id}}">{{productInOrder.package_name}}</a></td>
         <td class="align-middle">{{productInOrder.price | currency}}</td>
 
         <td class="align-middle">
