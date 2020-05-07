@@ -66,7 +66,6 @@ export class CartComponent implements OnInit {
     (response => {
         if (response) {
           console.log('Total :' + response.cartInfo.total);
-          this.total = response.cartInfo.total;
           this.totalAmount = response.cartInfo.total;
         }
       },
