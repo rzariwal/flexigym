@@ -55,20 +55,21 @@ def createNewGymPackage(package_name, package_description, price, available_qty,
 def updatePackage(id, package_name, package_description, price, available_qty, valid_from, valid_to, updated_by):
     try:
         updatedPackage = GymPackageModel.query.filter_by(id=id).one()
-        if not package_name:
-            updatedPackage.package_name = package_name
-        if not package_description:
-            updatedPackage.package_description = package_description
-        if not price:
-            updatedPackage.genre = price
-        if not available_qty:
-            updatedPackage.available_qty = available_qty
-        if not updated_by:
-            updatedPackage.updated_by = updated_by
 
-        updatedPackage.valid_from = valid_from
-        updatedPackage.valid_to = valid_to
+        updatedPackage.package_name = package_name
+        updatedPackage.package_description = package_description
+        updatedPackage.genre = price
+        updatedPackage.available_qty = available_qty
+        updatedPackage.updated_by = updated_by
+
+        # valid_from = datetime.strptime(valid_from, '%Y-%m-%d  %H:%M:%S')
+        # valid_to = datetime.strptime(valid_to, '%Y-%m-%d  %H:%M:%S')
+        # updatedPackage.valid_from = valid_from
+        # updatedPackage.valid_to = valid_to
         updatedPackage.updated_date = datetime.now()
+
+        print(updatedPackage.to_json)
+
         db.session.add(updatedPackage)
         db.session.commit()
         # return 'Updated a Package with id %s' % id
@@ -136,7 +137,9 @@ def gymPackagesFunctionId(id):
         available_qty = request.args.get('available_qty', '')
         valid_from = request.args.get('valid_from', '')
         valid_to = request.args.get('valid_to', '')
-        return updatePackage(id, package_name, package_description, price, available_qty, valid_from, valid_to)
+        updated_by = request.args.get('updated_by', '')
+
+        return updatePackage(id, package_name, package_description, price, available_qty, valid_from, valid_to, updated_by)
 
     elif request.method == 'DELETE':
         return deletePackage(id)
