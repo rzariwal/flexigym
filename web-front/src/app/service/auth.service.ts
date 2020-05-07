@@ -16,8 +16,9 @@ export class AuthService {
   //auth IP within cluster now.
   //private authApiUrl = 'http://web:5000/auth';
   private authApiUrl =`${authApi}`;
-  private currentUserSubject: BehaviorSubject<AuthResponse>;
-  public currentUser: Observable<AuthResponse>;
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
+
   public nameTerms = new Subject<string>();
   public name$ = this.nameTerms.asObservable();
 
@@ -90,7 +91,7 @@ export class AuthService {
                     //this.currentUser = resp.data;
                     console.log("user.email " + resp.data.email);
                     this.nameTerms.next(resp.data.email);
-                    this.currentUserSubject.next(resp);
+                    this.currentUserSubject.next(resp.data);
                     return resp;
                 }
             }),

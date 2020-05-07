@@ -4,6 +4,7 @@ export class User {
   mobile: string;
   token: string;
   active: boolean;
+  admin: boolean;
 
   constructor(){
     this.token = " ";
