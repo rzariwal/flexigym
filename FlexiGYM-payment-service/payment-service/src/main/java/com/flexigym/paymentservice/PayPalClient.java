@@ -3,6 +3,7 @@ package com.flexigym.paymentservice;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,10 @@ public class PayPalClient {
 
 	//String clientSecret = "EOkqwmJcSx5HHhZnHmiNtm8ZK_CO6y3NVotWbCOB2Sa5RFolYehmEZYSikrEowYv4aV6ZqEBZo9AEtoL";
 	String clientSecret = "EHU1IKl6kqQdrFivDxsTeValURdA-cZtelehTbsnifb6UDkUJNApYPlA4zOp_RnNB3qfszOsPW39rhuu";
-	public Map<String, Object> createPayment(String sum){
+
+	public Map<String, Object> createPayment(String sum, String url){
+
+		String serviceUrl=url;
 	    Map<String, Object> response = new HashMap<String, Object>();
 	    Amount amount = new Amount();
 	    amount.setCurrency("SGD");
@@ -35,8 +39,8 @@ public class PayPalClient {
 	    payment.setTransactions(transactions);
 
 	    RedirectUrls redirectUrls = new RedirectUrls();
-	    redirectUrls.setCancelUrl("http://34.87.6.16:8000/api/cancel");
-	    redirectUrls.setReturnUrl("http://34.87.6.16:8000/api/complete");
+	    redirectUrls.setCancelUrl(serviceUrl+"/cancel");
+	    redirectUrls.setReturnUrl(serviceUrl+"/complete");
 	    payment.setRedirectUrls(redirectUrls);
 	    Payment createdPayment;
 	    try {

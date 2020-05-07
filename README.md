@@ -12,7 +12,3 @@
   * payment service
   * notification service
   * front-end angular web app
-  
-
-
-

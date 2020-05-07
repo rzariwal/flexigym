@@ -1,10 +1,12 @@
 from datetime import datetime
+
 from flask import request, jsonify, make_response
 from sqlalchemy import engine, and_
 from sqlalchemy.orm import sessionmaker
 from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
+import json
 # service-endpoint
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
@@ -12,7 +14,7 @@ ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
 
 NOTIFICATION_API_OK = True
 # NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
-NOTIFICATION_URL = "http://flexigym-notification-api:7000/api/sms/send_sms"
+NOTIFICATION_URL = "http://34.107.247.50/api/sms/send_sms"
 
 USER_API_OK = True
 # USER_URL = "http://35.198.220.113:7000/packagesApi"
@@ -220,13 +222,12 @@ def getCartItems():
         return make_response(jsonify(responseObject)), 500
 
 
-@subscribe_api_blueprint.route('/test')
+@subscribe_api_blueprint.route('/subscribe/test')
 def hello_world():
     return 'test!'
 
-
-# def notify(cart_id, user_id):
-def notify():
+@subscribe_api_blueprint.route('/subscribe/notify', methods=['GET', 'POST'])
+def notify(to_number, content):
     '''
     s = requests.Session()
     s.auth = ('user', 'pass')
@@ -237,11 +238,17 @@ def notify():
     :return:
     '''
     try:
-        user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
+        # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
+        # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."}
+        user_detail = {"to_number": to_number,
+                       "content": content }
         if NOTIFICATION_API_OK:
-            response = requests.post(url=NOTIFICATION_URL + "/", json=user_detail)
-        if response.status_code == 200:
-            return jsonify(message="SMS Sent.")
+            print("calling notification url"+NOTIFICATION_URL)
+            response = requests.post(url=NOTIFICATION_URL, json=user_detail)
+            print("after calling notification url")
+            return jsonify(message=response.status_code)
+        # if response.status_code == 200:
+            # return jsonify(message="SMS Sent.")
 
     except Exception as e:
         print(e)
@@ -256,20 +263,29 @@ def checkout():
         response = "*"
         #get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-        payment_info = {"amount":cart.total,"user_token":cart.user_id}
+        #payment_info = {"amount":str(cart.total)}
+        print("cart is ok...")
+        payment_info = {"amount":"1"}
         if PAYMENT_API_OK:
-            response = requests.post(url=PAYMENT_URL + "/", json=payment_info)
-        #notify()
-        cart.cart_status = "CLOSED"
-        cart.updated_time = datetime.now()
-        db.session.add(cart)
-        db.session.commit()
-
-        responseObject = {
-            "cart_id":cart_id,
-            "response":response
-        }
-        return make_response(jsonify(responseObject)), 200
+            response_payment = requests.post(url=PAYMENT_URL + "/create", json=payment_info)
+            to_number = "+6594300664"
+            content = "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."
+            notify(to_number, content)
+            if response_payment.status_code == 200:
+                cart.cart_status = "CLOSED"
+                cart.updated_time = datetime.now()
+                db.session.add(cart)
+                db.session.commit()
+                resp_json = json.loads(response_payment.text)
+                resp_json["cart_id"]=cart_id
+                return make_response(jsonify(resp_json)), 200
+            else:
+                responseObject = {
+                    "status":"fail",
+                    "message":"payment creation status is not 200 OK"
+                }
+        else:
+            return make_response(jsonify("PAYMENT_API not Ok")), 400
 
     except Exception as e:
         print(e)
