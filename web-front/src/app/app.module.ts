@@ -16,6 +16,7 @@ import { DetailComponent } from "./product-detail/detail.component";
 import { CartComponent } from "./cart/cart.component";
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ProductEditComponent } from './product-edit/product-edit.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
   providers: [
     AuthService,
     CookieService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],
   bootstrap: [AppComponent]
 })
