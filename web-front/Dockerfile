@@ -3,9 +3,9 @@ FROM node:13.3.0-alpine AS build
 WORKDIR /app
 COPY package.json ./
 RUN npm install
+RUN npm audit fix
 COPY . .
 RUN npm run build
-#RUN npm audit fix
 
 
 ### STAGE 2: Run ###
