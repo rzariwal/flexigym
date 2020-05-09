@@ -273,6 +273,7 @@ def checkout():
             # notify(to_number, content)
             if response_payment.status_code == 200:
                 cart.cart_status = "CLOSED"
+                cart.payment_status = True
                 cart.updated_time = datetime.now()
                 db.session.add(cart)
                 db.session.commit()
@@ -342,3 +343,23 @@ def updateItem():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
+
+@subscribe_api_blueprint.route('/subscribe/completeCheckout', methods=['GET', 'POST'])
+def completeCheckout():
+    try:
+        cart_id = request.json['cart_id']
+        payload=request.json['payload']
+        payload=payload.split("?")[1]
+        url = PAYMENT_URL+"/complete?"+payload
+        response = requests.request("GET", url)
+        print(response.text.encode('utf8'))
+        return make_response(response.text.encode('utf8')), 200
+    except Exception as e:
+        print(e)
+        responseObject = {
+            'status': 'fail',
+            'message': 'Something went wrong!'
+        }
+        return make_response(jsonify(responseObject)), 500
+
+
