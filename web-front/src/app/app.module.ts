@@ -16,6 +16,9 @@ import { DetailComponent } from "./product-detail/detail.component";
 import { CartComponent } from "./cart/cart.component";
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ProductEditComponent } from './product-edit/product-edit.component';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { PaymentComponent } from './payment/payment.component';
+import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
 
 @NgModule({
   declarations: [
@@ -28,13 +31,16 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
     DetailComponent,
     CartComponent,
     UserDetailComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    PaymentComponent,
+    PaymentstatusComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    NgxPayPalModule
   ],
   providers: [
     AuthService,

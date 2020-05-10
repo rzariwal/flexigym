@@ -9,6 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 import {CartComponent} from "./cart/cart.component";
 import {UserDetailComponent} from "./user-detail/user-detail.component";
 import {ProductEditComponent} from "./product-edit/product-edit.component";
+import {PaymentstatusComponent} from "./paymentstatus/paymentstatus.component";
 
 const routes: Routes = [
 
@@ -39,6 +40,7 @@ const routes: Routes = [
       //data: {roles: [Role.Employee]}
   },
   {path: 'profile', component: ProfileComponent},
+  {path: 'payment/:status', component: PaymentstatusComponent}
 ];
 
 @NgModule({

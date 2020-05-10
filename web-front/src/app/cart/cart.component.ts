@@ -45,7 +45,9 @@ export class CartComponent implements OnInit {
     console.log("validateCount " + productInOrder.qty);
   }
 
+
   ngOnInit() {
+
     this.subscribeService.getCart().subscribe(response => {
       console.log('Products in cards: ' + JSON.stringify(response));
       this.productInOrders = response.cart_Items;
@@ -137,23 +139,28 @@ export class CartComponent implements OnInit {
           console.log(JSON.stringify(resp));
           if (resp.status = "success") {
             console.log(resp.redirect_url);
-            //his.router.navigate(resp.redirect_url, {queryParams: {returnUrl: this.router.url}});
+
+            //this.router.navigate(['/payment'], {queryParams: {returnUrl: this.router.url}});
             window.open(resp.redirect_url, '_blank');
-            this.router.events.subscribe(event => {
-              if (event instanceof NavigationEnd) {
-                console.log(event.url);
-                //if (event.url.includes('faq')) {
-                // open in the same tab:
-                window.location.href = resp.redirect_url;
+            //window.open(resp.redirect_url, 'popup', 'width=500,height=600,');
 
-                // open a new tab:
-                // window.open('https://faq.website.com', '_blank');
+            //this.subscribeService.clearCart();
 
-                // and redirect the current page:
-                // this.router.navigate(['/']);
-                //}
-              }
-            });
+            // this.router.events.subscribe(event => {
+            //   if (event instanceof NavigationEnd) {
+            //     console.log(event.url);
+            //     //if (event.url.includes('faq')) {
+            //     // open in the same tab:
+            //     window.location.href = resp.redirect_url;
+            //
+            //     // open a new tab:
+            //     // window.open('https://faq.website.com', '_blank');
+            //
+            //     // and redirect the current page:
+            //     // this.router.navigate(['/']);
+            //     //}
+            //   }
+            // });
           }
         },
         error1 => {

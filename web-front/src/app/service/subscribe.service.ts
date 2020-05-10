@@ -208,4 +208,10 @@ export class SubscribeService {
     this.localMap = {};
   }
 
+  clearCart() {
+    console.log('clear cart');
+    this.cookieService.delete('cart_id');
+
+  }
+
 }

@@ -1,11 +1,22 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {paymentApi} from "../../environments/environment";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable, of} from "rxjs";
+import {catchError} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
+  private paymentApiUrl = `${paymentApi}`;
 
-  private notifUrl = 'http://payment-api:5000/auth';
+  constructor(private http: HttpClient) {
+  }
 
-  constructor() { }
+  getCompleteStatus(param: string): Observable<any> {
+    let url = `${this.paymentApiUrl}/complete?` + param ;
+    return this.http.get<any>(url).pipe(
+      catchError(_ => of([]))
+    );
+  }
 }
