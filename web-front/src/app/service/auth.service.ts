@@ -34,7 +34,7 @@ export class AuthService {
 
   register(user: User): Observable<AuthResponse>{
     let url = this.authApiUrl+ '/register'
-    let body = JSON.stringify({ "email":user.email,"password":user.password, "mobile":user.mobile });
+    let body = JSON.stringify({ "email":user.email,"password":user.password, "mobile":user.mobile, "admin": user.admin });
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
     }

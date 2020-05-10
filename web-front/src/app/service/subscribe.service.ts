@@ -214,4 +214,24 @@ export class SubscribeService {
 
   }
 
+
+  getCompleteStatus(param: string): Observable<any> {
+    let cart_id = 0;
+    if (this.cookieService.check('cart_id')) {
+        cart_id = JSON.parse(this.cookieService.get('cart_id'));
+        console.log("cart_id in add method : " + cart_id);
+    }
+    let url = `${this.subscribeUrl}/completeCheckout` ;
+    console.log("param " + param);
+    let body = JSON.stringify({ "cart_id":cart_id, "payload" : "?" + param});
+    console.log("param " + JSON.stringify(body));
+    let options = {
+                  headers: new HttpHeaders().append('Content-Type', 'application/json')
+                  .append('Access-Control-Allow-Origin', '*')
+                }
+    return this.http.post<any>(url,body,options).pipe(
+      catchError(_ => of([]))
+    );
+  }
+
 }

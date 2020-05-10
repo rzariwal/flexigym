@@ -29,7 +29,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.name$ = this.authService.name$.subscribe(aName => this.name = aName);
      this.currentUserSubscription = this.authService.currentUser.subscribe(user => {
             this.currentUser = user;
-            console.log("user is " + JSON.stringify(user) );
+            console.log("user is in Navigation : " + JSON.stringify(user) );
             // if (!user || user.role == Role.Customer) {
             //     this.root = '/';
             // } else {

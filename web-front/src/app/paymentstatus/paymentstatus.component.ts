@@ -35,11 +35,22 @@ export class PaymentstatusComponent implements OnInit {
         paramValue = completeUrl.split('?')[1];
         console.log("param " + paramValue);
       }
-      this.paymentService.getCompleteStatus(paramValue).subscribe(
+      // this.paymentService.getCompleteStatus(paramValue).subscribe(
+      //   response => {
+      //     console.log('Payments datail:  ' + JSON.stringify(response));
+      //   }
+      // )
+
+      this.subscribeService.getCompleteStatus(paramValue).subscribe(
         response => {
           console.log('Payments datail:  ' + JSON.stringify(response));
         }
       )
+
+
+
+
+
 
       this.subscribeService.clearCart();
     } else {
