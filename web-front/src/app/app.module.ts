@@ -42,7 +42,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
   providers: [
     AuthService,
     CookieService,
-    //{provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],
   bootstrap: [AppComponent]
 })
