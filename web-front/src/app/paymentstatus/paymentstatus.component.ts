@@ -26,23 +26,22 @@ export class PaymentstatusComponent implements OnInit {
 
     if (status == "complete") {
       this.status = "Payment is successfully completed.";
-      console.log("this url " + this.router.url);
 
       let completeUrl: string = this.router.url;
+      console.log("this url " + completeUrl);
+
       let paramValue;
       if (completeUrl.includes('?')) {
         paramValue = completeUrl.split('?')[1];
         console.log("param " + paramValue);
       }
-
-
       this.paymentService.getCompleteStatus(paramValue).subscribe(
         response => {
           console.log('Payments datail:  ' + JSON.stringify(response));
         }
       )
 
-      //this.subscribeService.clearCart();
+      this.subscribeService.clearCart();
     } else {
       this.status = "Payment is cancelled.";
     }

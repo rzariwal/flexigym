@@ -40,7 +40,7 @@ const routes: Routes = [
       //data: {roles: [Role.Employee]}
   },
   {path: 'profile', component: ProfileComponent},
-  {path: 'payment/:status', component: PaymentstatusComponent}
+  {path: 'cart/:status', component: PaymentstatusComponent}
 ];
 
 @NgModule({
