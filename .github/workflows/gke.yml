@@ -8,7 +8,7 @@
 # 
 # 3. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, REGISTRY_HOSTNAME and DEPLOYMENT_NAME environment variables (below).
 # comment
-name: Build, Deploy to GKE and TEST.
+name: Build,Scan,Publish,Deploy to GKE and TEST.
 
 on:
   push:
@@ -95,7 +95,7 @@ jobs:
 
       # TEST Authentication
     - name: Test Authentication API
-      if: "contains(github.event.head_commit.message, 'auth-test')"
+      if: "contains(github.event.head_commit.message, 'auth')"
       run: |
         POD=$(kubectl get pod -n flask-jwt-auth-web -l io.kompose.service=web -o jsonpath="{.items[0].metadata.name}")
         kubectl exec -it $POD -n flask-jwt-auth-web -- python3.6 manage.py test
