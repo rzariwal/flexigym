@@ -40,7 +40,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
    logout() {
         this.authService.logout();
-        // this.router.navigate(['/login'], {queryParams: {logout: 'true'}} );
+         this.router.navigate(['/'], {queryParams: {logout: 'true'}} );
     }
 
 }
