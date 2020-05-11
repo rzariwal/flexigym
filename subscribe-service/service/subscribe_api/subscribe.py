@@ -269,7 +269,8 @@ def checkout():
         if PAYMENT_API_OK:
             response_payment = requests.post(url=PAYMENT_URL + "/create", json=payment_info)
             to_number = "+6594300664"
-            content = "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."
+            #content = "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."
+            content = "You have paid SGD " + str(cart.total) + " for cart id:" + str(cart_id) + " in FlexiGYM Portal."
             # notify(to_number, content)
             if response_payment.status_code == 200:
                 cart.cart_status = "CLOSED"
