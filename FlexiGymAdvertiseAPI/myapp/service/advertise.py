@@ -58,7 +58,7 @@ def updatePackage(id, package_name, package_description, price, available_qty, v
 
         updatedPackage.package_name = package_name
         updatedPackage.package_description = package_description
-        updatedPackage.genre = price
+        updatedPackage.price = price
         updatedPackage.available_qty = available_qty
         updatedPackage.updated_by = updated_by
 
