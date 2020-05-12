@@ -7,10 +7,12 @@ from model.model import ShoppingCart, Item, Product, db
 from . import subscribe_api_blueprint
 import requests
 import json
+from urllib.parse import urlparse, parse_qs
+
 # service-endpoint
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi"
+ADVERTISE_URL = "http://34.107.247.50/packagesApi"
 
 NOTIFICATION_API_OK = True
 # NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
@@ -170,7 +172,7 @@ def deleteFromCart():
 example
 {
    "cart_id": 1
-   "user_id": "sandeep"
+   "user_id": 1
 }
 '''
 
@@ -350,11 +352,20 @@ def completeCheckout():
     try:
         cart_id = request.json['cart_id']
         payload=request.json['payload']
-        payload=payload.split("?")[1]
-        url = PAYMENT_URL+"/complete?"+payload
-        response = requests.request("GET", url)
-        print(response.text.encode('utf8'))
-        return make_response(response.text.encode('utf8')), 200
+        parsed_params = parse_qs(urlparse(payload).query)
+        response_payment = requests.get(PAYMENT_URL+"/complete", params = parsed_params)
+        cart_items = Item.query.filter_by(cart_id=cart_id).all()
+        #update all quantities
+        for item in cart_items:
+            if ADVERTISE_API_OK:
+                response = requests.get(url=ADVERTISE_URL + "/" + str(item.package_id))
+                if response.status_code == 200:
+                    package_dict = response.json()['packages']
+                    available_qty = response.json()['packages']["available_qty"]
+                    package_dict["available_qty"]=available_qty-item.qty
+                    response = requests.put(url=ADVERTISE_URL + "/" + str(item.package_id), params = package_dict)
+
+        return make_response(response_payment.text.encode('utf8')), 200
     except Exception as e:
         print(e)
         responseObject = {
