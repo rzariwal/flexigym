@@ -70,8 +70,8 @@ def addToCart():
             return jsonify(responseObject), 201
         else:
             # create the item object to be added to cart
-            item = Item(package_id, r.price, count)
-            itemToCommit = Item(package_id, r.price, count)
+            item = Item(package_id, r.price, count, r.name)
+            itemToCommit = Item(package_id, r.price, count, r.name)
 
             if cart_id == -1:
                 # create a new cart
@@ -94,7 +94,7 @@ def addToCart():
                     # get cartItems from Item table.
                     cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
                     for each in cartItems:
-                        i = Item(each.package_id, each.price, each.qty)
+                        i = Item(each.package_id, each.price, each.qty, each.package_name)
                         cart.update(i)
                     # calculate cart total
                     cart.update(itemToCommit)
@@ -145,7 +145,7 @@ def deleteFromCart():
             cart_items = Item.query.filter_by(cart_id=cart_id).all()
             whole_cart = []
             for item in cart_items:
-                i = Item(item.package_id, item.price, item.qty)
+                i = Item(item.package_id, item.price, item.qty, item.package_name)
                 cart.update(i)
             for k, v in cart.content.items():
                 print(k, '->', v.to_json())
@@ -201,7 +201,7 @@ def getCartItems():
 
         userCartObject = []
         for each in cartItems:
-            i = Item(each.package_id, each.price, each.qty)
+            i = Item(each.package_id, each.price, each.qty, each.package_name)
             cart.update(i)
         for k, v in cart.content.items():
             print(k, '->', v.to_json())
@@ -320,7 +320,7 @@ def updateItem():
             cart_items = Item.query.filter_by(cart_id=cart_id).all()
             whole_cart = []
             for item in cart_items:
-                i = Item(item.package_id, item.price, item.qty)
+                i = Item(item.package_id, item.price, item.qty, item.package_name)
                 cart.update(i)
             for k, v in cart.content.items():
                 print(k, '->', v.to_json())
