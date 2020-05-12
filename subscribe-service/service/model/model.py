@@ -79,7 +79,7 @@ class Item(db.Model):
     __tablename__ = 'item'
     cart_id = Column(Integer, primary_key=True)
     package_id = Column(Integer, primary_key=True)
-    package_name = (db.String(100))
+    package_name = Column(db.String(100))
     qty = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)
 
@@ -96,7 +96,7 @@ class Item(db.Model):
         return {
             # 'cart_id': self.cart_id,
             'package_id': self.package_id,
-            'package_name':self.package_name,
+            'package_name': self.package_name,
             'qty': self.qty,
             'price': self.price
         }
