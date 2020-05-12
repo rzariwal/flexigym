@@ -192,7 +192,7 @@ jobs:
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-advertise-service2-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-advertise-service2 -n flask-jwt-auth-web
-        kubectl delete pvc flexigym-subscribe-api-db-data
+        kubectl delete pvc deployment/flexigym-subscribe-api-db-data
 
       # Build the subscribe-service API Docker image
     - name: Build subscribe-service
@@ -254,4 +254,5 @@ jobs:
         ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$GKE_PROJECT/$IMAGEAngularAPP:${{ github.sha }}
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-angular-app -n flask-jwt-auth-web
+        kubectl get services -o wide -n flask-jwt-auth-web
 
