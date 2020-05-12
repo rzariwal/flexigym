@@ -355,7 +355,7 @@ def completeCheckout():
         parsed_params = parse_qs(urlparse(payload).query)
         response_payment = requests.get(PAYMENT_URL+"/complete", params = parsed_params)
         cart_items = Item.query.filter_by(cart_id=cart_id).all()
-        #update all quantities
+
         for item in cart_items:
             if ADVERTISE_API_OK:
                 response = requests.get(url=ADVERTISE_URL + "/" + str(item.package_id))
