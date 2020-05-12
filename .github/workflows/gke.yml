@@ -192,6 +192,7 @@ jobs:
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/flexigym-advertise-service2-db -n flask-jwt-auth-web
         kubectl rollout status deployment/flexigym-advertise-service2 -n flask-jwt-auth-web
+        kubectl delete pvc flexigym-subscribe-api-db-data
 
       # Build the subscribe-service API Docker image
     - name: Build subscribe-service
