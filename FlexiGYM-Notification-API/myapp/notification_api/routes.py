@@ -8,15 +8,15 @@ import requests
 from smtplib import SMTPException
 
 ADVERTISE_API_OK = True
-# ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+# ADVERTISE_URL = "http://34.87.167.97:9100/packagesApi"
 ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/"
 
 NOTIFICATION_API_OK = True
-# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+# NOTIFICATION_URL = "http://34.87.167.97:7000/api/sms/send_sms"
 NOTIFICATION_URL = "http://flexigym-notification-api:7000/api/sms/send_sms"
 
 SUBSCRIBE_API_OK = True
-# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
+# NOTIFICATION_URL = "http://34.87.167.97:7000/api/sms/send_sms"
 SUBSCRIBE_URL = "http://flexigym-subscribe-api:6200/"
 
 
@@ -145,7 +145,7 @@ def list_email(email: str):
 @notification_api_blueprint.route('/testProductList', methods=['GET', 'POST'])
 def testProductList():
     ADVERTISE_API_OK = True
-    # ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
+    # ADVERTISE_URL = "http://34.87.167.97:9100/packagesApi"
     ADVERTISE_URL = "http://flexigym-advertise-service2:9100/packagesApi/"
     if ADVERTISE_API_OK:
         response = requests.get(url=ADVERTISE_URL + "/" + str(1))

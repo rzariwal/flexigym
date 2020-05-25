@@ -11,19 +11,19 @@ from urllib.parse import urlparse, parse_qs
 
 # service-endpoint
 ADVERTISE_API_OK = True
-# ADVERTISE_URL = "http://35.198.220.113:9100/packagesApi"
-ADVERTISE_URL = "http://34.107.247.50/packagesApi"
+# ADVERTISE_URL = "http://34.87.167.97:9100/packagesApi"
+ADVERTISE_URL = "http://34.69.67.237/packagesApi"
 
 NOTIFICATION_API_OK = True
-# NOTIFICATION_URL = "http://35.198.220.113:7000/api/sms/send_sms"
-NOTIFICATION_URL = "http://34.107.247.50/api/sms/send_sms"
+# NOTIFICATION_URL = "http://34.87.167.97:7000/api/sms/send_sms"
+NOTIFICATION_URL = "http://34.69.67.237/api/sms/send_sms"
 
 USER_API_OK = True
-# USER_URL = "http://35.198.220.113:7000/packagesApi"
+# USER_URL = "http://34.87.167.97:7000/packagesApi"
 USER_URL = "http://web:5000/packagesApi"
 
 PAYMENT_API_OK = True
-PAYMENT_URL = "http://34.107.247.50/payment"
+PAYMENT_URL = "http://34.69.67.237/payment"
 
 Session = sessionmaker(bind=engine)
 session = Session()

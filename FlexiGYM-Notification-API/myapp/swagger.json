@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://34.87.6.16:7000/api",
+      "url": "http://34.69.67.237:7000/api",
       "description": "Kubernetes-FlexiGYM Notification API"
     }
   ],

@@ -1,1 +1,1 @@
-[test endpoint](http://34.87.6.16:9000/test)
+[test endpoint](http://34.69.67.237:9000/test)

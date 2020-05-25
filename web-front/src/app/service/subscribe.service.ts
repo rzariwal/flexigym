@@ -17,9 +17,9 @@ import {subscribeApi} from '../../environments/environment';
 })
 export class SubscribeService {
 
-  //private subscribeUrl = "http://35.198.220.113:9100/"
+  //private subscribeUrl = "http://34.87.167.97:9100/"
   //private subscribeUrl = "http://flexigym-subscribe-api:5000";
-  //private authApiUrl = 'http://35.198.220.113:5000/auth';
+  //private authApiUrl = 'http://34.87.167.97:5000/auth';
 
   private subscribeUrl = `${subscribeApi}`;
   private authApiUrl = `${authApi}`;

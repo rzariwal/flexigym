@@ -9,15 +9,15 @@ info:
     name: Authentication-api
   version: 1.0.0
 servers:
-  - url: 'http://34.69.67.237'
+  - url: 'http://34.87.167.97'
     description: Authentication JSON Web Token
-  - url: 'http://34.69.67.237'
+  - url: 'http://34.87.167.97'
 tags:
   - name: Authentication JSON Web Token
     description: Everything about authentication
     externalDocs:
       description: Find out more
-      url: 'http://34.69.67.237/swagger'
+      url: 'http://34.87.167.97/swagger'
   - name: Registration
     description: User registration
 paths:

@@ -13,10 +13,10 @@ export const environment = {
 
 
 export const authApi = 'http://34.69.67.237/auth';
-export const advertiseApi = 'http://34.107.247.50/packagesApi';
+export const advertiseApi = 'http://34.69.67.237/packagesApi';
 export const subscribeApi = 'http://34.69.67.237/subscribe';
-export const paymentApi = 'http://34.107.247.50/payment';
-//export const paymentApi = 'http://34.107.247.50/payment/complete?paymentId=PAYID-L23V6BI6D575912N0249433H&token=EC-95P44507TV103620X&PayerID=DTZN8J2TMGQ3W';
+export const paymentApi = 'http://34.69.67.237/payment';
+//export const paymentApi = 'http://34.69.67.237/payment/complete?paymentId=PAYID-L23V6BI6D575912N0249433H&token=EC-95P44507TV103620X&PayerID=DTZN8J2TMGQ3W';
 
 
 
