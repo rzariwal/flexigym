@@ -92,7 +92,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
-                    "-instances=flexigym-274610:asia-southeast1:postgres-authentication=tcp:5432",
+                    "-instances=flexigym-278301:asia-southeast1:postgres-authentication=tcp:5432",
                     "-credential_file=/secrets/cloudsql/credentials.json"]
           volumeMounts:
             - name: my-secrets-volume
