@@ -17,7 +17,7 @@ services:
     build:
       context: .
     ports:
-      - 80:5000
+      - 85:5000
     links:
       - flexigym-notification-api-db
     depends_on:
