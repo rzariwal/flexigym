@@ -5,8 +5,13 @@ from flask.views import MethodView
 from project.server.models import User, BlacklistToken
 from project.server import bcrypt, db
 from project.server.models import User
+from project.server.models import Tokenize
+# import pyffx
 
 auth_blueprint = Blueprint('auth', __name__)
+# encr_key=b'ab3ea3cf7bddf9a71c28f3bb42f3e24f'
+
+tokenize = Tokenize()
 
 class RegisterAPI(MethodView):
     """
@@ -19,14 +24,24 @@ class RegisterAPI(MethodView):
         print("checking data")
         print(post_data)
         # check if user already exists
-        user = User.query.filter_by(email=post_data.get('email')).first()
+        # email = post_data.get('email')
+        # ffx = pyffx.String(encr_key, alphabet='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&*+-/=?^_`{|}~.(),:;<>@[\]', length=len(post_data.get('email')))
+        # email_tok = ffx.encrypt(post_data.get('email'))
+        email_tok = tokenize.tokenize_email(post_data.get('email'))
+        # user = User.query.filter_by(email=post_data.get('email')).first()
+        user = User.query.filter_by(email=email_tok).first()
         if not user:
             try:
+                #ffx = pyffx.String(encr_key, alphabet='+01234567890', length=len(post_data.get('mobile')))
+                #mobile_tok = ffx.encrypt(post_data.get('mobile'))
+                mobile_tok = tokenize.tokenize_mobile(post_data.get('mobile'))
                 user = User(
-                    email=post_data.get('email'),
+                    # email=post_data.get('email'),
+                    email=email_tok,
                     password=post_data.get('password'),
                     admin=post_data.get('admin'),
-                    mobile=post_data.get('mobile')
+                    # mobile=post_data.get('mobile')
+                    mobile=mobile_tok
                 )
                 # insert the user
                 db.session.add(user)
@@ -59,11 +74,13 @@ class LoginAPI(MethodView):
     def post(self):
         # get the post data
         post_data = request.get_json()
+        print(post_data)
         try:
             # fetch the user data
             user = User.query.filter_by(
-                email=post_data.get('email')
+                email=tokenize.tokenize_email(post_data.get('email'))
             ).first()
+            print(user)
             if user and bcrypt.check_password_hash(
                     user.password, post_data.get('password')
             ):

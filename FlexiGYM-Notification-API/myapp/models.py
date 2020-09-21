@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, DateTime, func
 
 from sqlalchemy import create_engine
+import pyffx
 
 db = SQLAlchemy()
 
@@ -16,6 +17,79 @@ def create_tables(app):
     engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
     db.metadata.create_all(engine)
     return engine
+
+encr_key = b'ab3ea3cf7bddf9a71c28f3bb42f3e24f'
+mobile_chars = '01234567890'
+email_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-'
+
+
+def detokenize_mobile(db_mobile):
+    #if db_mobile == "+6594300664":
+    #    return db_mobile
+    #else:
+        ffx = pyffx.String(encr_key, alphabet=mobile_chars, length=len(db_mobile[1:]))
+        output_mobile = "+" + ffx.decrypt(db_mobile[1:])
+        return output_mobile
+
+
+def detokenize_email(db_email):
+    db_email = db_email.split('@')
+    db_email_local = db_email[0]
+    db_email_domain = db_email[1]
+    db_email_domain = db_email_domain.split('.')
+    db_email_domain_server = db_email_domain[0]
+    db_email_domain_topleveldomain = db_email_domain[1]
+
+    ffx = pyffx.String(encr_key,
+                       alphabet=email_chars,
+                       length=len(db_email_local))
+    output_email_local = ffx.decrypt(db_email_local)
+
+    ffx = pyffx.String(encr_key,
+                       alphabet=email_chars,
+                       length=len(db_email_domain_server))
+    output_email_domain_server = ffx.decrypt(db_email_domain_server)
+
+    ffx = pyffx.String(encr_key,
+                       alphabet=email_chars,
+                       length=len(db_email_domain_topleveldomain))
+    output_email_domain_topleveldomain = ffx.decrypt(db_email_domain_topleveldomain)
+
+    output_email = output_email_local + "@" + output_email_domain_server + "." + output_email_domain_topleveldomain
+    return output_email
+
+
+def tokenize_mobile(input_mobile):
+    ffx = pyffx.String(encr_key, alphabet=mobile_chars, length=len(input_mobile[1:]))
+    db_mobile = "+" + ffx.encrypt(input_mobile[1:])
+    return db_mobile
+
+
+def tokenize_email(input_email):
+    input_email = input_email.split('@')
+    input_email_local = input_email[0]
+    input_email_domain = input_email[1]
+    input_email_domain = input_email_domain.split('.')
+    input_email_domain_server = input_email_domain[0]
+    input_email_domain_topleveldomain = input_email_domain[1]
+    ffx = pyffx.String(encr_key,
+                         alphabet=email_chars,
+                         length=len(input_email_local))
+    db_email_local = ffx.encrypt(input_email_local)
+
+    ffx = pyffx.String(encr_key,
+                         alphabet=email_chars,
+                         length=len(input_email_domain_server))
+    db_email_domain_server = ffx.encrypt(input_email_domain_server)
+
+    ffx = pyffx.String(encr_key,
+                         alphabet=email_chars,
+                         length=len(input_email_domain_topleveldomain))
+    db_email_domain_topleveldomain = ffx.encrypt(input_email_domain_topleveldomain)
+
+    db_email = db_email_local + "@" + db_email_domain_server + "." + db_email_domain_topleveldomain
+    return db_email
+
 
 # Database Models
 class SMSRequest(db.Model):

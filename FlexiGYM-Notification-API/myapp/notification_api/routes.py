@@ -1,11 +1,12 @@
 from flask import json, jsonify, request
 from . import notification_api_blueprint
-from models import db, SMSRequest, EmailRequest
+from models import db, SMSRequest, EmailRequest, detokenize_mobile, detokenize_email, tokenize_mobile, tokenize_email
 import logging
 from twilio_client import TwilioClient, from_number
 from gmail_client import GmailClient, sender_email
 import requests
 from smtplib import SMTPException
+
 
 ADVERTISE_API_OK = True
 # ADVERTISE_URL = "http://34.87.167.97:9100/packagesApi"
@@ -30,8 +31,11 @@ def swagger_api_docs_yml():
 
 @notification_api_blueprint.route('/api/sms/send_sms', methods=['POST'])
 def send_sms():
+    print(request.json)
     to_number = request.json['to_number']
     content = request.json['content']
+
+    to_number = detokenize_mobile(to_number)
 
     twilio_client = TwilioClient()
     message_sid = None
@@ -50,26 +54,27 @@ def send_sms():
         http_status_code = 400
         pass
     finally:
-        sms_message_model_object = SMSRequest(from_number=from_number,
-                                              to_number=to_number,
-                                              sms_message=content,
-                                              status=message_status,
-                                              message_sid=message_sid,
-                                              requestor_service="test",
-                                              requestor_service_event="test-event",
-                                              error_message=error_message)
+        sms_message_model_object = SMSRequest(from_number=tokenize_mobile(from_number),
+                                          to_number=tokenize_mobile(to_number),
+                                          sms_message=content,
+                                          status=message_status,
+                                          message_sid=message_sid,
+                                          requestor_service="test",
+                                          requestor_service_event="test-event",
+                                          error_message=error_message)
 
-        db.session.add(sms_message_model_object)
-        db.session.commit()
-        logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
-    return jsonify(message_sid=message_sid, message_status=message_status,
-                   error_message=error_message), http_status_code
+    db.session.add(sms_message_model_object)
+    db.session.commit()
+    logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
+    return jsonify(message_sid=message_sid, message_status=message_status,error_message=error_message), http_status_code
 
 
 @notification_api_blueprint.route('/api/sms/list_sms/<string:to_number>', methods=['GET'])
 def list_sms(to_number: str):
     # to_number = request.json['to_number']
 
+    print("mobile_number: " + to_number)
+    # to_number = detokenize_mobile(to_number)
     record = SMSRequest.query.filter_by(to_number=to_number).first()
 
     if record:
@@ -78,7 +83,7 @@ def list_sms(to_number: str):
             records.append(record.to_json())
 
         response = jsonify({
-            'results': records
+        'results': records
         })
 
         return response, 200
@@ -88,9 +93,12 @@ def list_sms(to_number: str):
 
 @notification_api_blueprint.route('/api/email/send_email', methods=['POST'])
 def send_email():
+    print(request.json)
     to_email = request.json['to_email']
     email_subject = request.json['email_subject']
     email_content = request.json['email_content']
+
+    to_email = detokenize_email(to_email)
 
     email_text = 'Subject: {}\n\n{}'.format(email_subject, email_content)
     http_status_code = 200
@@ -110,22 +118,24 @@ def send_email():
         else:
             message = "Error in Sending Email."
 
-        email_message_model_object = EmailRequest(to_email=to_email,
-                                                  from_email=sender_email,
-                                                  email_body=email_content,
-                                                  email_subject=email_subject,
-                                                  status=message,
-                                                  error_message=error_message)
+        email_message_model_object = EmailRequest(to_email=tokenize_email(to_email),
+                                              from_email=tokenize_email(sender_email),
+                                              email_body=email_content,
+                                              email_subject=email_subject,
+                                              status=message,
+                                              error_message=error_message)
 
         db.session.add(email_message_model_object)
         db.session.commit()
-        # logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
+         # logging.info('SID: {}, Status: {}'.format(message_sid, message_status))
 
-    return jsonify(message=message), http_status_code
+        return jsonify(message=message), http_status_code
 
 
 @notification_api_blueprint.route('/api/email/list_email/<string:email>', methods=['GET'])
 def list_email(email: str):
+    print("email: " + email)
+    # email = detokenize_email(email)
     record = EmailRequest.query.filter_by(to_email=email).first()
 
     if record:
@@ -134,7 +144,7 @@ def list_email(email: str):
             records.append(record.to_json())
 
         response = jsonify({
-            'results': records
+        'results': records
         })
 
         return response, 200
@@ -154,27 +164,30 @@ def testProductList():
 
 @notification_api_blueprint.route('/testAdd', methods=['GET', 'POST'])
 def testAdd():
-   response = None
-   try:
+    response = None
+    try:
         cart = {"user_id": 1, "package_id": 1, "qty": 20}
         if SUBSCRIBE_API_OK:
             response = requests.post(url=SUBSCRIBE_URL + "checkout", json=cart)
         if response.status_code == 200:
             return jsonify(message=response.json)
-   except Exception as e:
-       print(e)
-       return jsonify(message=response.json)
+    except Exception as e:
+        print(e)
+        return jsonify(message=response.json)
 
 
 @notification_api_blueprint.route('/testCheckout', methods=['GET', 'POST'])
 def testCheckout():
-   response = None
-   try:
+    response = None
+    try:
         cart = {"cart_id": "1"}
         if SUBSCRIBE_API_OK:
             response = requests.post(url=SUBSCRIBE_URL + "checkout", json=cart)
         if response.status_code == 200:
             return jsonify(message=response.json)
-   except Exception as e:
-       print(e)
-       return jsonify(message=response.json)
+    except Exception as e:
+        print(e)
+        return jsonify(message=response.json)
+
+
+
