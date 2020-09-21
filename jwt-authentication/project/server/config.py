@@ -2,10 +2,11 @@
 
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-# postgres_local_base = 'postgresql://postgres:@localhost/'
-# database_name = 'flask_jwt_auth'
-postgres_local_base = 'postgresql+pg8000://{}:{}@localhost:5432/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'))
-database_name = 'postgres-authentication'
+#for development work with docker in local laptop
+postgres_local_base = 'postgresql+pg8000://hello_flask:hello_flask@db:5432/'
+database_name = 'hello_flask_dev'
+# postgres_local_base = 'postgresql+pg8000://{}:{}@localhost:5432/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'))
+# database_name = 'postgres-authentication'
 SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
 
 class BaseConfig:
@@ -37,3 +38,4 @@ class ProductionConfig(BaseConfig):
     SECRET_KEY = 'my_precious'
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name
+
