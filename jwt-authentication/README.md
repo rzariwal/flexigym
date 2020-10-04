@@ -48,7 +48,7 @@ $ python manage.py db migrate
 $ python manage.py runserver
 ```
 
-So access the application at the address [http://localhost:5000/](http://localhost:5000/)
+So Access the application at the address [http://localhost:5000/](http://localhost:5000/)
 
 > Want to specify a different port?
 
