@@ -4,12 +4,13 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.prod.yml
     kompose.version: 1.21.0 ()
+    cloud.google.com/load-balancer-type: "Internal"
   creationTimestamp: null
   labels:
     io.kompose.service: web
   name: web
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: "5000"
     port: 5000
