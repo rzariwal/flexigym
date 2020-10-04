@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: flask-jwt-auth-web
 resources:
 #- kubernetes/postgres-data-persistentvolumeclaim.yaml
-- kubernetes/env-prod-db-configmap.yaml
+#- kubernetes/env-prod-db-configmap.yaml
 - kubernetes/env-prod-configmap.yaml
 #- kubernetes/db-deployment.yaml
 - kubernetes/web-deployment.yaml
