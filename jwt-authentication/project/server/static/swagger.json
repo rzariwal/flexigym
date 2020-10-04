@@ -9,15 +9,15 @@ info:
     name: Authentication-api
   version: 1.0.0
 servers:
-  - url: 'http://flexigym.rohitzariwal.co.in'
+  - url: 'https://flexigym.rohitzariwal.co.in'
     description: Authentication JSON Web Token
-  - url: 'http://flexigym.rohitzariwal.co.in'
+  - url: 'https://flexigym.rohitzariwal.co.in'
 tags:
   - name: Authentication JSON Web Token
     description: Everything about authentication
     externalDocs:
       description: Find out more
-      url: 'http://flexigym.rohitzariwal.co.in/swagger'
+      url: 'https://flexigym.rohitzariwal.co.in/swagger'
   - name: Registration
     description: User registration
 paths:
