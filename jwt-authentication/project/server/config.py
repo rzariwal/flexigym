@@ -3,10 +3,10 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 #for development work with docker in local laptop
-postgres_local_base = 'postgresql+pg8000://hello_flask:hello_flask@db:5432/'
-database_name = 'hello_flask_dev'
-# postgres_local_base = 'postgresql+pg8000://{}:{}@localhost:5432/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'))
-# database_name = 'postgres-authentication'
+#postgres_local_base = 'postgresql+pg8000://hello_flask:hello_flask@db:5432/'
+#database_name = 'hello_flask_dev'
+postgres_local_base = 'postgresql+pg8000://{}:{}@localhost:5432/'.format(os.getenv('DB_USER'), os.getenv('DB_PASS'))
+database_name = 'postgres-authentication'
 SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious')
 
 class BaseConfig:
