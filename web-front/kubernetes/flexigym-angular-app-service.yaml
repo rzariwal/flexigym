@@ -15,8 +15,6 @@ spec:
     port: 8080
     targetPort: 80
   type: LoadBalancer
-  loadBalancerIP: 10.148.0.6
+  loadBalancerIP: 10.148.0.7
   selector:
     io.kompose.service: flexigym-angular-app
-status:
-  loadBalancer: {}
