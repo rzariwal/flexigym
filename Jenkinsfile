@@ -2,6 +2,7 @@
 Jenkins hosted in Azure VM.
 http://13.76.221.196:7777/job/flexigym_security_scan/
 admin:flexigym123$
+spin up sonarqube serve by : docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
 sonarqube dashboard --> http://13.76.221.196:9000/dashboard?id=spring-payment
 */
 
