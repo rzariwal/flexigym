@@ -9,7 +9,8 @@ metadata:
     io.kompose.service: payment-api
   name: payment-api
 spec:
-  type: NodePort
+  type: LoadBalancer
+  loadBalancerIP: 10.148.0.9
   ports:
   - name: "8000"
     port: 8000
