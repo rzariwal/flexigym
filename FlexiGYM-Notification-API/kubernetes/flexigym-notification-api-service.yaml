@@ -4,6 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.21.0 ()
+    cloud.google.com/load-balancer-type: "Internal"
   creationTimestamp: null
   labels:
     io.kompose.service: flexigym-notification-api
