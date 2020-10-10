@@ -1,7 +1,7 @@
 export const environment = {
   production: true
 };
-export const authApi = 'http://34.69.67.237/auth';
-export const advertiseApi = 'http://34.69.67.237/packagesApi';
-export const subscribeApi = 'http://34.69.67.237/subscribe';
-export const paymentApi = 'http://34.69.67.237/payment';
+export const authApi = 'https://10.148.0.7/auth';
+export const advertiseApi = 'https://10.148.0.7/packagesApi';
+export const subscribeApi = 'https://10.148.0.7/subscribe';
+export const paymentApi = 'https://10.148.0.7/payment';
