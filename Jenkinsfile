@@ -72,7 +72,7 @@ pipeline {
 						chmod 777 $PWD/out
 
 						test -d ${PWD}/out \\
-						  && docker run -v $(pwd)/out:/zap/wrk/:rw -t owasp/zap2docker-stable zap-api-scan.py -t \"https://https://flexigym.rohitzariwal.co.in/#/\" -f openapi -d -r zap_scan_report.html
+						  && docker run -v $(pwd)/out:/zap/wrk/:rw -t owasp/zap2docker-stable zap-api-scan.py -t \"https://flexigym.rohitzariwal.co.in/#/\" -f openapi -d -r zap_scan_report.html
 
 						echo DEBUG - Finding all files in workspace
 						find $PWD
