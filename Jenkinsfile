@@ -20,7 +20,23 @@ pipeline {
                   userRemoteConfigs: [[credentialsId: 'git2', url: 'https://github.com/zariwal/flexigym.git']]])
            }
         }
-        
+        stage ("OWASP Dependency Check") {
+            steps {
+                dependencyCheck additionalArguments: '--scan "./frontend" --format XML', odcInstallation: 'OWASP-Dependency-Check'
+                dependencyCheckPublisher pattern: ''
+            }
+        }
+        stage('pyLint scan') { 
+            steps {
+                echo "analysis using pyLint"
+                sh ("pylint --rcfile=./.pylintrc subscribe-service/service || true")
+                sh ("pylint --rcfile=./.pylintrc FlexiGYM-Notification-API/myapp || true")
+                sh ("pylint --rcfile=./.pylintrc FlexiGymAdvertiseAPI/myapp || true")
+                sh ("pylint --rcfile=./.pylintrc jwt-authentication/project || true")
+                recordIssues(tools: [pyLint()])
+                //recordIssues(tools: [pyLint(pattern: 'results.xml')])
+            }
+        }
         stage ("bandit scan") {
             steps {
                 echo "analysis using pyLint"
