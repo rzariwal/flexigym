@@ -44,7 +44,7 @@ pipeline {
                 sh ('cd FlexiGYM-payment-service/payment-service && mvn clean install && mvn sonar:sonar \
                    -Dsonar.projectKey=spring-payment \
                    -Dsonar.host.url=http://13.76.221.196:9000 \
-                   -Dsonar.login=c372ba55157171dd16369a63f16c8f750162a200')
+                   -Dsonar.login=e3838aeb45b8cfb1dcc5df766b107a51705aeac3')
 
             }
         }
