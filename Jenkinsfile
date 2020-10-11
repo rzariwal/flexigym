@@ -22,7 +22,7 @@ pipeline {
         }
         stage ("OWASP Dependency Check") {
             steps {
-                dependencyCheck additionalArguments: '--scan "./frontend" --format XML', odcInstallation: 'OWASP-Dependency-Check'
+                dependencyCheck additionalArguments: '--scan "./web-front" --format XML', odcInstallation: 'OWASP-Dependency-Check'
                 dependencyCheckPublisher pattern: ''
             }
         }
