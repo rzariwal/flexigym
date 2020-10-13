@@ -4,14 +4,14 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.21.0 ()
-    cloud.google.com/load-balancer-type: "Internal"
+    #cloud.google.com/load-balancer-type: "Internal"
   creationTimestamp: null
   labels:
     io.kompose.service: flexigym-advertise-service2
   name: flexigym-advertise-service2
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 10.148.0.8
+  type: ClusterIP
+  #loadBalancerIP: 10.148.0.8
   ports:
   - name: "9100"
     port: 9100
