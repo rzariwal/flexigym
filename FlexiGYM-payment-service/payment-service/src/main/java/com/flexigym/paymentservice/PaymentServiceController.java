@@ -65,7 +65,7 @@ public class PaymentServiceController {
 	@RequestMapping(value = "/",method = RequestMethod.GET)
 	@ApiOperation(value = "home")
 	@ResponseBody
-	String home() {
+	public String home() {
 		return "Payment Service Home\nPlease try \n /api/create\n /api/complete\n /api/cancel\n /api/notify";					 
 	}
 	
@@ -73,14 +73,14 @@ public class PaymentServiceController {
 	@RequestMapping(value = "/payment/cancel", method = RequestMethod.GET)
 	@ApiOperation(value = "cancel payment called by PayPal")
 	@ResponseBody
-	String cancel() {
+	public String cancel() {
 		return "cancel Payment";
 	}
 	
 	@PostMapping("/payment/notify")
 	@ApiOperation(value = "call notify api")
 	@ResponseBody
-	String notification() {
+	public String notification() {
 		return "notify";
 	}
 
