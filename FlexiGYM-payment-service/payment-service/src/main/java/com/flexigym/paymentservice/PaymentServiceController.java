@@ -28,7 +28,7 @@ public class PaymentServiceController {
 	@RequestMapping(value = "/payment/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "create payment via PayPal will return a sandbox redirect URL where user have to login:password (danyjacob45@icloud.com:flexigym) and make payment")
 	@ResponseBody
-	Map<String, Object> createPayment(@RequestBody Map<String, String> amount) {
+	public Map<String, Object> createPayment(@RequestBody Map<String, String> amount) {
 		Map<String, Object> response = new HashMap<String, Object>();
 
 		//return a redirect URL
