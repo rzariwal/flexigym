@@ -11,7 +11,7 @@ metadata:
   name: web
 spec:
   type: LoadBalancer
-  loadBalancerIP: 10.148.0.6
+  loadBalancerIP: 10.148.0.8
   ports:
   - name: "5000"
     port: 5000
