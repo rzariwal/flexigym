@@ -12,7 +12,7 @@ export const environment = {
 // export const subscribeApi = 'http://192.168.99.100:6100';
 
 
-export const authApi = 'http://34.69.67.237/auth';
+export const authApi = 'https://flexigym.rohitzariwal.co.in/auth';
 export const advertiseApi = 'http://34.69.67.237/packagesApi';
 export const subscribeApi = 'http://34.69.67.237/subscribe';
 export const paymentApi = 'http://34.69.67.237/payment';
