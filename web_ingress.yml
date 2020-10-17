@@ -12,7 +12,3 @@ spec:
         backend:
           serviceName: web
           servicePort: 5000
-      - path: /
-        backend:
-          serviceName: flexigym-angular-app
-          servicePort: 8080
