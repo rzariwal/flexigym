@@ -14,7 +14,7 @@ spec:
   - name: "8080"
     port: 8080
     targetPort: 80
-  type: ClusterIP
+  type: NodePort
 #  loadBalancerIP: 10.148.0.8
   selector:
     io.kompose.service: flexigym-angular-app

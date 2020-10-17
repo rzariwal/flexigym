@@ -10,7 +10,7 @@ metadata:
     io.kompose.service: web
   name: web
 spec:
-  type: ClusterIP
+  type: NodePort
 #  loadBalancerIP: 10.148.0.8
   ports:
   - name: "5000"

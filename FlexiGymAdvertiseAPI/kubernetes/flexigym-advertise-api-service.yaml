@@ -10,7 +10,7 @@ metadata:
     io.kompose.service: flexigym-advertise-service2
   name: flexigym-advertise-service2
 spec:
-  type: ClusterIP
+  type: NodePort
   #loadBalancerIP: 10.148.0.8
   ports:
   - name: "9100"

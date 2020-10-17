@@ -10,7 +10,7 @@ metadata:
     io.kompose.service: payment-api
   name: payment-api
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - name: "8000"
     port: 8000
