@@ -12,10 +12,7 @@ import java.util.Map;
 
 public class PayPalClient {
 	
-	//String clientId = "Ad2B9OIlW4CcxQDBChki_fxyL_674wRQ02BKZexs808ZewMbZVSEh8Y1QTgx7E8iiNQULzNTAW-7MKe2";
 	String clientId = "AS7GA_K71C4Uht_6wSXvzfAyp0c0TihSy_cHU_XFhROlxvNHDZbDuTpyIVp5-la9_A26bq7hUMM9q8xd";
-
-	//String clientSecret = "EOkqwmJcSx5HHhZnHmiNtm8ZK_CO6y3NVotWbCOB2Sa5RFolYehmEZYSikrEowYv4aV6ZqEBZo9AEtoL";
 	String clientSecret = "EHU1IKl6kqQdrFivDxsTeValURdA-cZtelehTbsnifb6UDkUJNApYPlA4zOp_RnNB3qfszOsPW39rhuu";
 
 	public Map<String, Object> createPayment(String sum, String url){

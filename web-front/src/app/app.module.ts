@@ -9,7 +9,8 @@ import { RegisterComponent } from './register/register.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './service/auth.service';
-import {CookieService} from "ngx-cookie-service";
+import { TokenInterceptorService } from './service/token-interceptor.service';
+import { CookieService } from "ngx-cookie-service";
 import { HomeComponent } from './home/home.component';
 import { ProductComponent } from './product/product.component';
 import { DetailComponent } from "./product-detail/detail.component";
@@ -18,6 +19,7 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ProductEditComponent } from './product-edit/product-edit.component';
 import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     AuthService,
     CookieService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: HTTP_INTERCEPTORS, useClass:TokenInterceptorService, multi:true},
   ],
   bootstrap: [AppComponent]
 })

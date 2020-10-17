@@ -18,6 +18,7 @@ export class AuthService {
   private authApiUrl =`${authApi}`;
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
+  public userInfo: User;
 
   public nameTerms = new Subject<string>();
   public name$ = this.nameTerms.asObservable();
@@ -51,6 +52,7 @@ export class AuthService {
     console.log("Done");
     return this.http.post<AuthResponse>(url,body,options).pipe(
             tap(resp => {
+                this.userInfo.token = resp.auth_token;
                 if (resp && resp.auth_token) {
                     this.cookieService.set('currentUser', JSON.stringify(user));
                     // if (loginForm.remembered) {
@@ -98,5 +100,9 @@ export class AuthService {
             //catchError(this.handleError('Login Failed', null))
         );
 
+  }
+
+  getJWTToken() {
+    return this.userInfo.token;
   }
 }
