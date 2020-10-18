@@ -4,14 +4,13 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.prod.yml
     kompose.version: 1.21.0 ()
-    cloud.google.com/load-balancer-type: "Internal"
+#    cloud.google.com/load-balancer-type: "Internal"
   creationTimestamp: null
   labels:
     io.kompose.service: payment-api
   name: payment-api
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 10.148.0.9
+  type: NodePort
   ports:
   - name: "8000"
     port: 8000

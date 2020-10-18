@@ -4,7 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.21.0 ()
-    cloud.google.com/load-balancer-type: "Internal"
+#    cloud.google.com/load-balancer-type: "Internal"
   creationTimestamp: null
   labels:
     io.kompose.service: flexigym-angular-app
@@ -14,7 +14,7 @@ spec:
   - name: "8080"
     port: 8080
     targetPort: 80
-  type: LoadBalancer
-  loadBalancerIP: 10.148.0.7
+  type: NodePort
+#  loadBalancerIP: 10.148.0.8
   selector:
     io.kompose.service: flexigym-angular-app
