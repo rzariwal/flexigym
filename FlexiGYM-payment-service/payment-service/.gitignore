@@ -6,3 +6,5 @@
 **/.iml/
 **/.jar/
 **/*.class
+/target
+/out
