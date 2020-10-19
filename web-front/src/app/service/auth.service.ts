@@ -52,7 +52,8 @@ export class AuthService {
     console.log("Done");
     return this.http.post<AuthResponse>(url,body,options).pipe(
             tap(resp => {
-                this.userInfo.token = resp.auth_token;
+                localStorage.setItem('id_token', resp.auth_token);
+                //this.userInfo.token = resp.auth_token;
                 if (resp && resp.auth_token) {
                     this.cookieService.set('currentUser', JSON.stringify(user));
                     // if (loginForm.remembered) {
@@ -71,6 +72,7 @@ export class AuthService {
   logout() {
         this.currentUserSubject.next(null);
         localStorage.removeItem('currentUser');
+        localStorage.removeItem("id_token");
         this.cookieService.delete('currentUser');
         this.cookieService.delete('cart_id');
     }
