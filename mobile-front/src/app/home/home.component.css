@@ -1,0 +1,45 @@
+FlexboxLayout {
+    justify-content: center;
+    align-items: center;
+    background-size: cover;    
+  }
+  StackLayout {
+    width: 300;
+    padding: 10 16;
+    background-color: #f0f0f0;
+  }
+  Image {
+    margin-bottom: 20;
+    height: 70;
+  }
+  Button, TextField {
+    margin-bottom: 10;
+  }
+  .btn-primary {
+    background-color: #CB1D00;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  TextField {
+    placeholder-color: #C4AFB4;
+    color: black;
+  }
+  .dark {
+    background-color: #301217;
+  }
+  .dark TextField {
+    color:  #C4AFB4;
+  }
+  .logo {
+    margin-bottom: 12;
+    height: 90;
+    font-weight: bold;
+  }
+  .header {
+    horizontal-align: center;
+    font-size: 25;
+    font-weight: 600;
+    margin-bottom: 70;
+    text-align: center;
+    color: #D51A1A;
+  }
