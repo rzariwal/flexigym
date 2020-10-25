@@ -73,8 +73,8 @@ export class AuthService {
         this.currentUserSubject.next(null);
         localStorage.removeItem('currentUser');
         localStorage.removeItem("id_token");
-        this.cookieService.delete('currentUser');
-        this.cookieService.delete('cart_id');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('cart_id');
     }
 
   getStatus(authtoken: string){
