@@ -1,0 +1,70 @@
+<!-- <h1 align="center" class="display-4 ">Packages</h1>
+
+<a *ngIf="user?.admin == true" style="color: inherit"
+   routerLink="/admin/product/0/new" ><i class="fas fa-plus fa-2x">Add New Package </i>
+</a>
+<br/>
+
+<div class="list-items">
+  <div class="list-item" *ngFor="let item of products.packages">
+    <li class="list-group-item {{item}}">
+      {{item.id}}
+      {{item.package_name}} <br>
+      {{item.package_description}} <br>
+      S$ {{item.price}}
+      <a  *ngIf="user?.admin == false" style="color: inherit"
+          routerLink="/product/{{item.id}}" class="float-right mb-3">
+        <i class="fas fa-plus fa-2x">Detail &nbsp;</i>
+      </a>
+      <a *ngIf="user?.admin == true" style="display: block"
+         routerLink="/admin/product/{{item.id}}/edit" class="float-right mb-3">
+                Edit
+      </a>
+      <div class="float-right mb-3"> </div>
+      <a *ngIf="user?.admin == true" style="display: block"
+               (click)="remove(item)"
+         routerLink="./" class="float-right mb-3">
+                Remove &nbsp;
+      </a>
+
+    </li>
+  </div>
+</div> -->
+
+<ActionBar title="Products" class="action-bar">
+  <!-- 
+  Use the NavigationButton as a side-drawer button in Android
+  because ActionItems are shown on the right side of the ActionBar
+  -->
+  
+  <!-- <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton> -->
+  <!-- 
+  Use the ActionItem for IOS with position set to left. Using the
+  NavigationButton as a side-drawer button in iOS is not possible,
+  because its function is to always navigate back in the application.
+  -->
+  <!-- <ActionItem icon="res://menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
+      ios.position="left">
+  </ActionItem> -->
+  <!-- <Label text="Home"></Label> -->
+  <navigationButton text="Log Out" ios:visibility="collapsed" (tap)="logout()"></navigationButton>
+  <!-- <actionItem text="Log Out" android:visibility="collapsed" (tap)="logout()"></actionItem> -->
+
+  <!-- <ActionItem icon="font://&#xf013;" class="fas" ios.position="right" (tap)="logout()"></ActionItem> -->
+  <ActionItem text="My Cart" class="fas" ios.position="right" (tap)="mycart()"></ActionItem>
+  <ActionItem text="Log Out" class="fas" ios.position="right" (tap)="logout()"></ActionItem>
+
+</ActionBar>
+
+<GridLayout>
+  <ListView [items]="products.packages">
+      <ng-template let-item="item">
+          <StackLayout>
+              <Label class="h2" [nsRouterLink]="['/product', item.id]" [text]="item.package_name"></Label>   
+              <Label [text]="item.package_description"></Label>                            
+          </StackLayout>
+      </ng-template>
+  </ListView>
+   
+</GridLayout>
+
