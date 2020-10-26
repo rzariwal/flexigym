@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { User, AuthResponse } from '../models/user';
 import { HttpClientModule, HttpClient, HttpRequest, HttpHeaders, HttpEventType, HttpResponse} from '@angular/common/http';
-import {CookieService} from 'ngx-cookie-service';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+//import {CookieService} from 'ngx-cookie-service';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {authApi} from '../../environments/environment';
+
+import { SecureStorage } from 'nativescript-secure-storage';
 
 
 
@@ -18,19 +20,20 @@ export class AuthService {
   private authApiUrl =`${authApi}`;
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
-  public userInfo: User;
+  secureStorage: SecureStorage;
 
   public nameTerms = new Subject<string>();
   public name$ = this.nameTerms.asObservable();
 
-  constructor(private http: HttpClient,
-              private cookieService: CookieService) {
-        const memo = localStorage.getItem('currentUser');
-        this.currentUserSubject = new BehaviorSubject<AuthResponse>(JSON.parse(memo));
-        this.currentUser = this.currentUserSubject.asObservable();
-        cookieService.set('currentUser', memo);
+  constructor(private http: HttpClient) {
+        //const memo = localStorage.getItem('currentUser');
+        //this.currentUserSubject = new BehaviorSubject<AuthResponse>(JSON.parse(memo));
+        //this.currentUser = this.currentUserSubject.asObservable();
+        //cookieService.set('currentUser', memo);
 
-        console.log('currentUser is '+ memo);
+        this.secureStorage = new SecureStorage();
+
+        //console.log('currentUser is '+ memo);
   }
 
   register(user: User): Observable<AuthResponse>{
@@ -44,24 +47,31 @@ export class AuthService {
   }
 
   login(user: User): Observable<AuthResponse>{
+    if (!user.email || !user.password) {
+        console.log("email or password is blank ");
+        return throwError("Please provide both an email address and password.");
+    }
+
     let url = this.authApiUrl+ '/login'
     let body = JSON.stringify({ "email":user.email,"password":user.password });
     const options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
-    }
-    console.log("Done");
+    }    
     return this.http.post<AuthResponse>(url,body,options).pipe(
             tap(resp => {
-                localStorage.setItem('id_token', resp.auth_token);
-                //this.userInfo.token = resp.auth_token;
                 if (resp && resp.auth_token) {
-                    this.cookieService.set('currentUser', JSON.stringify(user));
+                    //this.cookieService.set('currentUser', JSON.stringify(user));
                     // if (loginForm.remembered) {
-                        localStorage.setItem('currentUser', JSON.stringify(user));
+                      //  localStorage.setItem('currentUser', JSON.stringify(user));
                     // }
-                    console.log("user.email " + user.email);
-                    this.nameTerms.next(user.email);
-                    this.currentUserSubject.next(resp);
+                    user.token= resp.auth_token;
+                    const success = this.secureStorage.setSync({
+                      key: "user",
+                      value: JSON.stringify(user)
+                    });
+                    console.log("user.email " + user.email + resp.auth_token);
+                    //this.nameTerms.next(user.email);
+                    //this.currentUserSubject.next(resp);
                     return resp;
                 }
             }),
@@ -71,10 +81,9 @@ export class AuthService {
 
   logout() {
         this.currentUserSubject.next(null);
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem("id_token");
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('cart_id');
+        //localStorage.removeItem('currentUser');
+        //this.cookieService.delete('currentUser');
+        //this.cookieService.delete('cart_id');
     }
 
   getStatus(authtoken: string){
@@ -88,23 +97,24 @@ export class AuthService {
     return this.http.get<any>(url,options).pipe(
             tap(resp => {
                 if (resp && resp.status=="success") {
-                    this.cookieService.set('currentUser', JSON.stringify(resp.data));
+                   // this.cookieService.set('currentUser', JSON.stringify(resp.data));
                     // if (loginForm.remembered) {
-                        localStorage.setItem('currentUser', JSON.stringify(resp.data));
+                       // localStorage.setItem('currentUser', JSON.stringify(resp.data));
                     // }
                     //this.currentUser = resp.data;
-                    console.log("user.email " + resp.data.email);
-                    this.nameTerms.next(resp.data.email);
-                    this.currentUserSubject.next(resp.data);
+
+                    const success = this.secureStorage.setSync({
+                      key: "userStatus",
+                      value: JSON.stringify(resp.data)
+                    });
+                    console.log("user : " + JSON.stringify(resp.data));
+                    //this.nameTerms.next(resp.data.email);
+                    //this.currentUserSubject.next(resp.data);
                     return resp;
                 }
             }),
             //catchError(this.handleError('Login Failed', null))
         );
 
-  }
-
-  getJWTToken() {
-    return this.userInfo.token;
   }
 }

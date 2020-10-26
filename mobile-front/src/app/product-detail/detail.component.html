@@ -1,0 +1,10 @@
+<ActionBar title="Details"></ActionBar>
+
+<FlexboxLayout flexDirection="column">
+    <FlexboxLayout class="m-15">
+        <Label class="h2" [text]="products.id + '. '"></Label>
+        <Label class="h2" [text]="products.package_name"></Label>
+    </FlexboxLayout>
+    <Label class="h4 m-15" [text]="products.package_description"></Label>
+    <Button [text]="'Add to cart'" class="btn btn-primary" (tap)="addToCart()"></Button>
+</FlexboxLayout>
