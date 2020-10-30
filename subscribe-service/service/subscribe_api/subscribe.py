@@ -44,11 +44,13 @@ session = Session()
 def addToCart():
     try:
         # parse request
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
         post_data = request.get_json()
         user = request.json['user_id']
         package_id = request.json['package_id']
         count = request.json['qty']
-        #r = None
         # try to get cart_id from request -> decides later to create a new cart or not.
         try:
             cart_id = request.json['cart_id']
@@ -56,8 +58,12 @@ def addToCart():
             cart_id = -1
         # get all information about the item
         if ADVERTISE_API_OK:
-            response = requests.get(url=ADVERTISE_URL + "/" + str(package_id))
-            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"], response.json()['packages']["price"], response.json()['packages']["available_qty"])
+            headers = {'Authorization': 'Bearer ' + auth_token,
+                       'Content-Type': 'application/json'
+                       }
+            response = requests.get(url=ADVERTISE_URL + "/" + str(package_id), headers=headers)
+            r = Product(response.json()['packages']["id"], response.json()['packages']["package_name"],
+                        response.json()['packages']["price"], response.json()['packages']["available_qty"])
             print(r.to_json())
         else:
             r = Product(package_id, "p1", 100, 100)
@@ -176,6 +182,7 @@ example
 }
 '''
 
+
 @subscribe_api_blueprint.route("/subscribe/get", methods=['GET', "POST"])
 def getCartItems():
     try:
@@ -190,7 +197,7 @@ def getCartItems():
             user_id = request.json['user_id']
             # cart = (ShoppingCart.query.filter_by(user_id=user_id)).filter_by(cart_status="OPEN").first()
             cart = (ShoppingCart.query.filter_by(user_id=user_id, cart_status="OPEN")).first()
-            if(cart is not None):
+            if (cart is not None):
                 cartItems = Item.query.filter_by(cart_id=cart.cart_id).all()
             else:
                 responseObject = {
@@ -228,6 +235,7 @@ def getCartItems():
 def hello_world():
     return 'test!'
 
+
 @subscribe_api_blueprint.route('/subscribe/notify', methods=['GET', 'POST'])
 def notify(to_number, content):
     '''
@@ -243,14 +251,14 @@ def notify(to_number, content):
         # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal.", "requestor_service": "subscribe", "requestor_service_event": "payment-made"}
         # user_detail = {"to_number": "+6594300664", "content": "You have paid SGD X for cart id:cart_id in FlexiGYM Portal."}
         user_detail = {"to_number": to_number,
-                       "content": content }
+                       "content": content}
         if NOTIFICATION_API_OK:
-            print("calling notification url"+NOTIFICATION_URL)
+            print("calling notification url" + NOTIFICATION_URL)
             response = requests.post(url=NOTIFICATION_URL, json=user_detail)
             print("after calling notification url")
             return jsonify(message=response.status_code)
         # if response.status_code == 200:
-            # return jsonify(message="SMS Sent.")
+        # return jsonify(message="SMS Sent.")
 
     except Exception as e:
         print(e)
@@ -263,11 +271,11 @@ def checkout():
     try:
         cart_id = request.json['cart_id']
         response = "*"
-        #get cart info
+        # get cart info
         cart = (ShoppingCart.query.filter_by(cart_id=cart_id)).first()
-        #payment_info = {"amount":str(cart.total)}
+        # payment_info = {"amount":str(cart.total)}
         print("cart is ok...")
-        payment_info = {"amount":"1"}
+        payment_info = {"amount": "1"}
         if PAYMENT_API_OK:
             response_payment = requests.post(url=PAYMENT_URL + "/create", json=payment_info)
             to_number = "+6594300664"
@@ -281,12 +289,12 @@ def checkout():
                 db.session.add(cart)
                 db.session.commit()
                 resp_json = json.loads(response_payment.text)
-                resp_json["cart_id"]=cart_id
+                resp_json["cart_id"] = cart_id
                 return make_response(jsonify(resp_json)), 200
             else:
                 responseObject = {
-                    "status":"fail",
-                    "message":"payment creation status is not 200 OK"
+                    "status": "fail",
+                    "message": "payment creation status is not 200 OK"
                 }
         else:
             return make_response(jsonify("PAYMENT_API not Ok")), 400
@@ -298,6 +306,7 @@ def checkout():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
+
 
 # update a cart Item; expect cartId, itemId, Qty.
 @subscribe_api_blueprint.route('/subscribe/update', methods=['GET', 'POST'])
@@ -347,23 +356,30 @@ def updateItem():
         }
         return make_response(jsonify(responseObject)), 500
 
+
 @subscribe_api_blueprint.route('/subscribe/completeCheckout', methods=['GET', 'POST'])
 def completeCheckout():
     try:
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
         cart_id = request.json['cart_id']
-        payload=request.json['payload']
+        payload = request.json['payload']
         parsed_params = parse_qs(urlparse(payload).query)
-        response_payment = requests.get(PAYMENT_URL+"/complete", params = parsed_params)
+        response_payment = requests.get(PAYMENT_URL + "/complete", params=parsed_params)
         cart_items = Item.query.filter_by(cart_id=cart_id).all()
 
         for item in cart_items:
             if ADVERTISE_API_OK:
-                response = requests.get(url=ADVERTISE_URL + "/" + str(item.package_id))
+                headers = {'Authorization': 'Bearer ' + auth_token,
+                           'Content-Type': 'application/json'
+                           }
+                response = requests.get(url=ADVERTISE_URL + "/" + str(item.package_id), headers=headers)
                 if response.status_code == 200:
                     package_dict = response.json()['packages']
                     available_qty = response.json()['packages']["available_qty"]
-                    package_dict["available_qty"]=available_qty-item.qty
-                    response = requests.put(url=ADVERTISE_URL + "/" + str(item.package_id), params = package_dict)
+                    package_dict["available_qty"] = available_qty - item.qty
+                    response = requests.put(url=ADVERTISE_URL + "/" + str(item.package_id), params=package_dict)
 
         return make_response(response_payment.text.encode('utf8')), 200
     except Exception as e:
@@ -373,5 +389,3 @@ def completeCheckout():
             'message': 'Something went wrong!'
         }
         return make_response(jsonify(responseObject)), 500
-
-

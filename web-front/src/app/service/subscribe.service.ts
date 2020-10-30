@@ -17,18 +17,10 @@ import {subscribeApi} from '../../environments/environment';
 })
 export class SubscribeService {
 
-  //private subscribeUrl = "http://34.87.167.97:9100/"
-  //private subscribeUrl = "http://flexigym-subscribe-api:5000";
-  //private authApiUrl = 'http://34.87.167.97:5000/auth';
-
   private subscribeUrl = `${subscribeApi}`;
   private authApiUrl = `${authApi}`;
 
   localMap = {};
-  // private itemsSubject: BehaviorSubject<Item[]>;
-  // private totalSubject: BehaviorSubject<number>;
-  // public items: Observable<Item[]>;
-  // public total: Observable<number>;
   private currentUser: AuthResponse;
 
   constructor(
@@ -36,10 +28,6 @@ export class SubscribeService {
     private cookieService: CookieService,
     private authService: AuthService
   ) {
-    // this.itemsSubject = new BehaviorSubject<Item[]>(null);
-    // this.items = this.itemsSubject.asObservable();
-    // this.totalSubject = new BehaviorSubject<number>(null);
-    // this.total = this.totalSubject.asObservable();
     this.authService.currentUser.subscribe(user => this.currentUser = user);
   }
 
@@ -51,8 +39,8 @@ export class SubscribeService {
           .append('Access-Control-Allow-Origin', '*')
         };
         let cart_id = 0;
-        if (this.cookieService.check('cart_id')) {
-          cart_id = JSON.parse(this.cookieService.get('cart_id'));
+        if (localStorage.getItem('cart_id')) {
+          cart_id = JSON.parse(localStorage.getItem('cart_id'));
         }
         console.log("cart_id in getCart() : " + cart_id);
 
@@ -74,7 +62,7 @@ export class SubscribeService {
     return this.http.post<any>(url,body,options).pipe(
        tap(resp => {
           console.log("cart_id : " + resp.cartInfo.cart_id);
-          this.cookieService.set('cart_id', resp.cartInfo.cart_id);
+          localStorage.setItem('cart_id', resp.cartInfo.cart_id);
           return resp;
         }),
         catchError(_ => of([]))
@@ -82,8 +70,8 @@ export class SubscribeService {
   }
 
   private getLocalCart(): ProductInOrder[] {
-    if (this.cookieService.check('cart')) {
-      this.localMap = JSON.parse(this.cookieService.get('cart'));
+    if (localStorage.getItem('cart')) {
+      this.localMap = JSON.parse(localStorage.getItem('cart'));
       return Object.values(this.localMap);
     } else {
       this.localMap = {};
@@ -93,14 +81,10 @@ export class SubscribeService {
 
   addItem(productInOrder): Observable<any> {
     let thisUser= 0 ;
-    if (this.cookieService.check('currentUser')) {
-       let userObj = JSON.parse(this.cookieService.get('currentUser'));
+    if (localStorage.getItem('currentUser')) {
+       let userObj = JSON.parse(localStorage.getItem('currentUser'));
        thisUser = userObj.user_id;
     }
-    // if (thisUser== 0) {
-    //   this.router.navigate(['/']);
-    // }
-
     console.log("user_id in add method : " + thisUser);
 
     let url = `${this.subscribeUrl}/add`;
@@ -111,8 +95,8 @@ export class SubscribeService {
     }
 
     let cart_id = 0;
-    if (this.cookieService.check('cart_id')) {
-          cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    if (localStorage.getItem('cart_id')) {
+          cart_id = JSON.parse(localStorage.getItem('cart_id'));
           body = JSON.stringify({  "qty": productInOrder.qty,"package_id": productInOrder.package_id, "user_id": thisUser, "cart_id": cart_id});
     }
     console.log("cart_id in add method : " + cart_id);
@@ -121,7 +105,7 @@ export class SubscribeService {
     console.log("body in add method : " + body);
     return this.http.post<any>(url,body,options).pipe(
        tap(resp => {
-            this.cookieService.set('cart_id', resp.cart_Info.cart_id);
+        localStorage.getItem('cart_id');
         }),
         catchError(_ => of([]))
     );
@@ -134,8 +118,8 @@ export class SubscribeService {
     let url = `${this.subscribeUrl}/update`;
 
     let cart_id = 0;
-    if (this.cookieService.check('cart_id')) {
-        cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    if (localStorage.getItem('cart_id')) {
+        cart_id = JSON.parse(localStorage.getItem('cart_id'));
     }
 
     let body = JSON.stringify({  "cart_id": cart_id,"package_id": productInOrder.package_id, "quantity": productInOrder.qty});
@@ -157,8 +141,8 @@ export class SubscribeService {
   remove(productInOrder) {
 
     let cart_id = 0;
-    if (this.cookieService.check('cart_id')) {
-          cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    if (localStorage.getItem('cart_id')) {
+          cart_id = JSON.parse(localStorage.getItem('cart_id'));
     }
     console.log("cart_id in delete method : " + cart_id);
 
@@ -185,8 +169,8 @@ export class SubscribeService {
 
   checkout(): Observable<any> {
     let cart_id = 0;
-    if (this.cookieService.check('cart_id')) {
-        cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    if (localStorage.getItem('cart_id')) {
+        cart_id = JSON.parse(localStorage.getItem('cart_id'));
         console.log("cart_id in add method : " + cart_id);
     }
     let url = `${this.subscribeUrl}/checkout`;
@@ -199,26 +183,26 @@ export class SubscribeService {
   }
 
   storeLocalCart() {
-    this.cookieService.set('cart', JSON.stringify(this.localMap));
+    localStorage.setItem('cart', JSON.stringify(this.localMap));
   }
 
   clearLocalCart() {
     console.log('clear local cart');
-    this.cookieService.delete('cart');
+    localStorage.removeItem('cart');
     this.localMap = {};
   }
 
   clearCart() {
     console.log('clear cart');
-    this.cookieService.delete('cart_id');
+    localStorage.removeItem('cart_id');
 
   }
 
 
   getCompleteStatus(param: string): Observable<any> {
     let cart_id = 0;
-    if (this.cookieService.check('cart_id')) {
-        cart_id = JSON.parse(this.cookieService.get('cart_id'));
+    if (localStorage.check('cart_id')) {
+        cart_id = JSON.parse(localStorage.get('cart_id'));
         console.log("cart_id in add method : " + cart_id);
     }
     let url = `${this.subscribeUrl}/completeCheckout` ;

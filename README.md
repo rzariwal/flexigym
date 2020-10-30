@@ -11,5 +11,5 @@
   * subscription service
   * payment service
   * notification service
-  * front-end angular web app.
+  * front-end angular web app
 

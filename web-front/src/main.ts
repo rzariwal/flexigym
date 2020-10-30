@@ -7,6 +7,13 @@ import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
+
+  if(window){
+    window.console.log = window.console.warn = window.console.info = function(){
+      // Don't log anything. to prevent logging in production
+    };
+  }
+
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
