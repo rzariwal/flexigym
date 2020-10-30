@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
       key: "user"     
     });
     if (user) {
-        this.router.navigate(['/product']);
+        this.router.navigate(['/product', { clearHistory: true }]);
     }
 
 
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
               //   );
 
            
-              this.router.navigate(['/product']);
+              this.router.navigate(['/product', { clearHistory: true }]);
             },
             e => {
               console.log("error");

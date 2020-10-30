@@ -5,13 +5,14 @@
             <StackLayout>
                 <Label class="h2" [nsRouterLink]="['/product', item.package_id]" [text]="item.package_name"></Label>    
                 
-                <Label class="h2" [text]="'Qty : ' + item.qty"></Label>  
-                <Label class="h2" [text]="'Price : ' + item.price"></Label>                           
+                <Label class="h4" [text]="'Qty : ' + item.qty"></Label>  
+                <Label class="h4" [text]="'Price : ' + item.price"></Label>                           
             </StackLayout>
         </ng-template>
     </ListView>
 
 
     <!-- <Label  class="h2"  [text]="totalAmount"></Label>   -->
+    <Button [text]="'Check Out'" class="btn btn-primary" (tap)="checkout()"></Button>
 </GridLayout> 
   

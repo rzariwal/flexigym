@@ -119,11 +119,17 @@ export class SubscribeService {
     console.log("User from storage : " + user);
     console.log("userStatusObj in add method : " + userStatus);
 
+    //user.token= userObj.token;
+    console.log("user.token from storage : " + userObj.token);
+
     let url = `${this.subscribeUrl}/add`;
+
+
     let body = JSON.stringify({  "qty": productInOrder.qty,"package_id": productInOrder.package_id, "user_id": userStatusObj.user_id});
     let options = {
       headers: new HttpHeaders().append('Content-Type', 'application/json')
       .append('Access-Control-Allow-Origin', '*')
+      .append('Authorization','Bearer ' + userObj.token),
     }
 
     let cart_id = 0;
@@ -137,6 +143,7 @@ export class SubscribeService {
     // }
     console.log("cart_id in add method : " + cart_id);
     console.log("body in add method : " + body);
+
     return this.http.post<any>(url,body,options).pipe(
        tap(resp => {
             //this.cookieService.set('cart_id', resp.cart_Info.cart_id);
@@ -208,11 +215,29 @@ export class SubscribeService {
     //     cart_id = JSON.parse(this.cookieService.get('cart_id'));
     //     console.log("cart_id in add method : " + cart_id);
     // }
+  
+    var cartID= this.secureStorage.getSync({
+      key: "cart_id"
+    });
+    console.log("cartID " + cartID);
+    console.log("cart_id " + cart_id);
+    var cartIDObj = JSON.parse(cartID);
+
+    var user = this.secureStorage.getSync({
+      key: "user"
+    });
+    var userStatus = this.secureStorage.getSync({
+      key: "userStatus"
+    });
+    var userObj = JSON.parse(user);
+    var userStatusObj = JSON.parse(userStatus);
+
     let url = `${this.subscribeUrl}/checkout`;
-    let body = JSON.stringify({ "cart_id":cart_id });
+    let body = JSON.stringify({ "cart_id":cartID });
     let options = {
                   headers: new HttpHeaders().append('Content-Type', 'application/json')
                   .append('Access-Control-Allow-Origin', '*')
+                  .append('Authorization','Bearer ' + userObj.token),
                 }
     return this.http.post(url,body,options).pipe();
   }

@@ -9,6 +9,9 @@ import {AdvertiseService} from "../service/advertise.service";
 import {SubscribeService} from '../service/subscribe.service';
 import {AuthService} from '../service/auth.service';
 
+import * as utils from "tns-core-modules/utils/utils";
+//import * as utils from "utils/utils";
+
 
 @Component({
   selector: 'app-cart',
@@ -24,6 +27,7 @@ export class CartComponent implements OnInit {
   ) {
     //this.userSubscription = this.authService.currentUser.subscribe(user => this.currentUser = user);
   }
+
 
   productInOrders = [];
   total = 0;
@@ -57,11 +61,6 @@ export class CartComponent implements OnInit {
       console.log('productInOrders: ' + JSON.stringify(this.productInOrders));
       console.log('totalAmount: ' +  this.totalAmount);     
     });
-
-    var list = [{"text": "a"}, {"text": "b"}];
-    var list1 = [{"text": "c"}, {"text": "d"}];
-    this.myItems = [{"list": list}, {"list": list1}]
-
 
     // this.sub = this.updateTerms.pipe(
     //   // wait 300ms after each keystroke before considering the term
@@ -137,39 +136,20 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
-    if (!this.currentUser) {
-      this.router.navigate(['/login'], {queryParams: {returnUrl: this.router.url}});
-      // } else if (this.currentUser.role !== Role.Customer) {
-      //     this.router.navigate(['/seller']);
-    } else {
+    // if (!this.currentUser) {
+    //   this.router.navigate(['/home'], {queryParams: {returnUrl: this.router.url}});
+    //   // } else if (this.currentUser.role !== Role.Customer) {
+    //   //     this.router.navigate(['/seller']);
+    // } else {
       this.subscribeService.checkout().subscribe(
         resp => {
           this.productInOrders = [];
           console.log(JSON.stringify(resp));
           if (resp.status = "success") {
             console.log(resp.redirect_url);
-
-            //this.router.navigate(['/payment'], {queryParams: {returnUrl: this.router.url}});
-            window.open(resp.redirect_url, '_blank');
-            //window.open(resp.redirect_url, 'popup', 'width=500,height=600,');
-
-            //this.subscribeService.clearCart();
-
-            // this.router.events.subscribe(event => {
-            //   if (event instanceof NavigationEnd) {
-            //     console.log(event.url);
-            //     //if (event.url.includes('faq')) {
-            //     // open in the same tab:
-            //     window.location.href = resp.redirect_url;
-            //
-            //     // open a new tab:
-            //     // window.open('https://faq.website.com', '_blank');
-            //
-            //     // and redirect the current page:
-            //     // this.router.navigate(['/']);
-            //     //}
-            //   }
-            // });
+            utils.openUrl(resp.redirect_url);
+         
+            //this.subscribeService.clearCart();           
           }
         },
         error1 => {
@@ -178,6 +158,6 @@ export class CartComponent implements OnInit {
       // this.router.navigate(['/']);
     }
 
-  }
+  // }
 }
 
