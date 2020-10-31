@@ -17,6 +17,7 @@ FlexboxLayout {
   }
   .btn-primary {
     background-color: #CB1D00;
+    color: #f0f0f0;
     margin-left: 0;
     margin-right: 0;
   }
