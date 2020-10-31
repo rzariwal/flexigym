@@ -1,4 +1,4 @@
-<h1 align="center" class="display-4 mb-5">Register</h1>
+<!-- <h1 align="center" class="display-4 mb-5">Register</h1>
 <form class="px-4 py-3" #form="ngForm" (ngSubmit)="onRegister()">
   <div class="form-group">
     <label for="email">Email address</label>
@@ -18,4 +18,58 @@
     </div>
 
   <button type="submit" class="btn btn-primary">Register</button>
-</form>
+</form> -->
+ 
+<h1 align="center" class="display-4 mb-5">Register</h1>
+
+<form class="px-4 py-3" #form="ngForm" (ngSubmit)="onRegister()"  [formGroup]="userForm">
+  <div class="form-group">
+
+    <label for="email">Email address</label>
+    <input [(ngModel)]="user.email"  type="email" class="form-control" id="email" name = "email" placeholder="email@example.com" formControlName="email">
+    <div *ngIf="userForm.controls['email'].invalid && (userForm.controls['email'].dirty || userForm.controls['email'].touched)" class="alert alert-danger">
+      <div *ngIf="userForm.controls['email'].errors.required">
+        Email is required.
+      </div>
+      <div *ngIf="userForm.controls['email'].errors.email">
+        Invalid email address.
+      </div>
+      <div *ngIf="userForm.controls['email'].errors.minlength">
+        Email must be at least 4 characters long.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input [(ngModel)]="user.password" type="password" class="form-control" id="password" name = "password" placeholder="Password"  formControlName="password">
+    <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+      <div *ngIf="password.errors.required">
+        Password is required.
+      </div>
+      <div *ngIf="password.errors.minlength">
+        Password must be at least 8 characters long.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="mobile">Mobile</label>
+    <input [(ngModel)]="user.mobile"  type="tel" class="form-control" id="mobile" name="mobile" placeholder="+6512345678" formControlName="mobile" >
+    <div *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)" class="alert alert-danger">
+      <div *ngIf="mobile.errors.required">
+        Mobile is required.
+      </div>
+    </div>  
+  </div>
+
+  <div class="form-group">
+    <input [(ngModel)]="user.admin" type="checkbox" id="is_admin" name="is_admin" >
+    <label for="is_admin" class="inline">Admin</label>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Register</button>
+</form> 
+
+
+
