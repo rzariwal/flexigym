@@ -1,0 +1,69 @@
+{
+	"heartbeat": {
+		"interval": "1",
+		"message": "HEARTBEAT"
+	},
+	"access": {
+		"interval": {
+			"min": 1,
+			"max": 2
+		},
+		"user_id": [
+			"Frank","Addison","Alden","Baird","Bradley","Bud","Chapman","Curt","Galvin"
+		],
+		"method": [
+			"GET", "POST", "PUT", "DELETE"
+		],
+		"method_dist": [
+			0.6, 0.2, 0.1, 0.1
+		],
+		"code": [
+			"200", "301"
+		],
+		"code_dist": [
+			0.7, 0.3
+		],
+		"resource": [
+			"/image/kitty.png", "/doc/readme.txt", "/doc/charge.txt", "/app/main", "/list"
+		],
+		"version": [
+			 "HTTP/2.0"
+		]
+	},
+	"info": {
+		"interval": {
+			"normal": [[0.01, 0.1], [0.06, 0.12], [0.1, 0.15]],
+			"peak": [[0.005, 0.007], [0.008, 0.01], [0.01, 0.015], [0.05, 0.01]]
+			},
+		"message": [
+			"Kind of busy now",
+			"Just another round of Civilization!",
+			"I need to change my laptop",
+			"The cluster is not fully utilized"
+		]
+	},
+	"warn": {
+		"interval": {
+			"normal": [[0.01, 0.1], [0.06, 0.12], [0.1, 0.15]],
+			"peak": [[0.007, 0.01], [0.008, 0.01], [0.01, 0.015], [0.05, 0.01]]
+			},
+		"message": [
+			"Have no idea what the professor is talking about", 
+			"My phone is out of battery", 
+			"Forgot to bring my wallet with me", 
+			"Do not play overwatch" 
+		]
+	},
+	"error": {
+		"interval": {
+			"normal": [[1, 10], [2, 5], [5, 10]],
+			"peak": [[0.1, 1], [0.005, 0.01], [0.01, 0.02]]
+		},
+		"message": [
+			"client denied by server configuration",
+			"File does not exist",
+			"Premature end of script headers",
+			"Directory index forbidden by rule"
+		]
+	}
+}
