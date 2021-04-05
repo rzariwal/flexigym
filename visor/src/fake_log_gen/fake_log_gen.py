@@ -50,7 +50,7 @@ class fake_access_gen(fake_log_gen):
 		self.codes = self.config["access"]["code"]
 		self.codes_dist = self.config["access"]["code_dist"]
 		self.versions = self.config["access"]["version"]
-
+		self.device = self.config["access"]["device"]
 		self.topic = kafka_config["kafka"]["topic"]
 
 	def run(self):
@@ -81,7 +81,7 @@ class fake_access_gen(fake_log_gen):
 			user_identifier = '-'
 			user_id = self.user_ids[random.randint(0,len(self.user_ids)-1)]
 			t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
-
+			device = self.device[random.randint(0,len(self.device)-1)]
 			method = numpy.random.choice(self.methods, p=self.methods_dist)
 			resource = self.resources[random.randint(0, len(self.resources)-1)]
 			version = self.versions[random.randint(0, len(self.versions)-1)]
@@ -216,11 +216,18 @@ def main():
 	'''
 
 	# Load the configure json file to a dict
-	with open(os.environ['VISORHOME']+"/config/fake_log_gen.json") as config_file:
+	# with open(os.environ['VISORHOME']+"/config/fake_log_gen.json") as config_file:
+	# 	config = json.load(config_file)
+	#
+	# # Load the configure json file to a dict
+	# with open(os.environ['VISORHOME']+"/config/kafka_monitor.json") as config_file:
+	# 	kafka_config = json.load(config_file)
+
+	with open("D:\\flexigym\\visor\\config\\fake_log_gen.json") as config_file:
 		config = json.load(config_file)
-	
+
 	# Load the configure json file to a dict
-	with open(os.environ['VISORHOME']+"/config/kafka_monitor.json") as config_file:
+	with open("D:\\flexigym\\visor\\config\\kafka_monitor.json") as config_file:
 		kafka_config = json.load(config_file)
 
 	# Instantiate a fake log generator

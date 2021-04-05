@@ -22,15 +22,15 @@ class fake_access_producer(fake_log_gen.fake_access_gen):
 		self.producer = KafkaProducer(bootstrap_servers='localhost:9092')
 		super(fake_access_producer, self).run()
 
-	@coroutine
-	def heartbeat_lines(self):
-		while True:
-			t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')	
-			data = '- - - [%s] "%s" - -' % (t, self.config["heartbeat"]["message"])
-			self.log.info(data)
-			#self.client.send((data+'\n').encode())	
-			self.producer.send(self.topic, (data+'\n').encode())	
-			yield from asyncio.sleep(int(self.config["heartbeat"]["interval"]))
+	# @coroutine
+	# def heartbeat_lines(self):
+	# 	while True:
+	# 		t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
+	# 		data = '- - - [%s] "%s" - -' % (t, self.config["heartbeat"]["message"])
+	# 		self.log.info(data)
+	# 		#self.client.send((data+'\n').encode())
+	# 		self.producer.send(self.topic, (data+'\n').encode())
+	# 		yield from asyncio.sleep(int(self.config["heartbeat"]["interval"]))
 
 	@coroutine
 	def access_lines(self):
@@ -39,14 +39,14 @@ class fake_access_producer(fake_log_gen.fake_access_gen):
 			user_identifier = '-'
 			user_id = self.user_ids[random.randint(0,len(self.user_ids)-1)]
 			t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
-
+			device = self.device[random.randint(0,len(self.device)-1)]
 			method = numpy.random.choice(self.methods, p=self.methods_dist)
 			resource = self.resources[random.randint(0, len(self.resources)-1)]
 			version = self.versions[random.randint(0, len(self.versions)-1)]
 			msg = method + " " + resource + " " + version
 			code = numpy.random.choice(self.codes, p=self.codes_dist)
 			size = random.randint(1024, 10240)
-			data = '%s %s %s [%s] "%s" %s %s' % (ip, user_identifier, user_id, t, msg, code, size)
+			data = '%s %s %s [%s] "%s" %s %s %s' % (ip, user_identifier, user_id, t, msg, code, size, device)
 			self.log.info(data)
 			#self.client.send((data+'\n').encode())
 			self.producer.send(self.topic, (data+'\n').encode())
@@ -77,7 +77,8 @@ class fake_error_producer(fake_log_gen.fake_error_gen):
 			# Select ip from the initilized ip pool of size self.ip_num
 			# Apply a binomial distribution (discrete normal dist)
 			# to select ips from the pool
-			ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			#ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			ip_index = random.randint(0, 10)
 			ip = self.ips[ip_index]
 			
 			# "%a %b %d %H:%M:%S %Y"
@@ -115,7 +116,8 @@ class fake_error_producer(fake_log_gen.fake_error_gen):
 			# Select ip from the initilized ip pool of size self.ip_num
 			# Apply a binomial distribution (discrete normal dist)
 			# to select ips from the pool
-			ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			#ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			ip_index = random.randint(0, 10)
 			ip = self.ips[ip_index]
 			# "%a %b %d %H:%M:%S %Y"
 			now = time.localtime()
@@ -154,15 +156,15 @@ class fake_error_producer(fake_log_gen.fake_error_gen):
 			# Select ip from the initilized ip pool of size self.ip_num
 			# Apply a binomial distribution (discrete normal dist)
 			# to select ips from the pool
-			ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			#ip_index = numpy.random.binomial(n=self.ip_num, p=0.8, size=1)
+			ip_index = random.randint(0, 10)
 			ip = self.ips[ip_index]
-	
 			now = time.localtime()
 			asctime = '[' + time.strftime("%a %b %d %H:%M:%S %Y", now) + '] '
 			level_name = '[ERROR] '
 			msg = "[pid %s:tid %s] [client %s] %s" % (pid, tid, ip, self.errors[random.randrange(len(self.errors))])
 			data = asctime + level_name + msg
-			self.log.error(data)
+			self.log.info(data)
 			#self.client.send((data+'\n').encode())
 			self.producer.send(self.topic, (data+'\n').encode())
 
