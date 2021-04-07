@@ -4,6 +4,7 @@ import { SubscribeService } from '../service/subscribe.service';
 import { Router } from '@angular/router';
 import {AuthResponse, User} from '../models/user';
 import {Subscription} from "rxjs";
+import { FormControl, FormGroup, FormBuilder, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-home',
@@ -15,12 +16,15 @@ export class HomeComponent implements OnInit {
   user: User;
   currentUserSubscription: Subscription;
   currentUser: AuthResponse;
+  userForm: FormGroup;
 
   constructor(private router: Router,
               private authService: AuthService,
-              private subscribeService: SubscribeService) {
+              private subscribeService: SubscribeService,
+              private fb: FormBuilder) {
     this.user = new User();
     this.user.active = false;
+    this.createForm();
   }
 
   ngOnInit()  {
@@ -32,6 +36,23 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/product']);
     }
 
+  }
+
+  get email() { return this.userForm.get('email'); }
+  get password() { return this.userForm.get('password'); }
+
+  createForm() {
+    this.userForm = this.fb.group({
+      email: new FormControl(this.user.email, [
+        Validators.required,
+        Validators.email,
+        Validators.minLength(4)
+      ]),
+      password: new FormControl(this.user.password, [
+        Validators.required
+      ])
+    });
+  
   }
 
   onLogin(){
@@ -52,20 +73,22 @@ export class HomeComponent implements OnInit {
                     this.router.navigate(['/product']);
                   },
                   e => {
-                    console.log("error in getcartbyUser");
+                    console.log("error in getcartbyUser"  + JSON.stringify(e));
+                    alert("Error");
                   }
-                );
-
+                ); 
             },
             e => {
-              console.log("error");
+              console.log("error"  + JSON.stringify(e));
+              alert("Error");
             }
           );
           //this.router.navigate(['/product']);
 
         },
         e => {
-          console.log("error");
+          console.log("error" + JSON.stringify(e));
+          alert("Error : " + e.error.message);
         }
       );
 
