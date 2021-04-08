@@ -29,7 +29,7 @@
 		],
 		"country": "SG",
 		"screenResolution": "1440 x 900",
-		"action": ["load","click","hover","unload","apply","payment"],
+		"action": ["load","view","subscribe","payment"],
 		"pageUrl": [],
 		"currentPageId": [],
 		"previousPageId": [],
@@ -40,7 +40,7 @@
 		"supplier_id": [],
 		"user_agent": [],
 		"code": [
-			"200", "301"
+			"200", "301" , "501"
 		],
 		"code_dist": [
 			0.7, 0.3
