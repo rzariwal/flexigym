@@ -15,7 +15,7 @@ flask-swagger-ui==3.25.0
 Flask-Testing==0.6.1
 importlib-metadata==1.5.0
 itsdangerous==0.24
-Jinja2==2.10.1
+Jinja2==2.11.3
 jsonschema==3.2.0
 Mako==1.0.6
 MarkupSafe==0.23
