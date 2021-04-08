@@ -9,6 +9,7 @@ import asyncio
 import datetime
 from asyncio import coroutine
 import numpy
+import pytz
 
 
 class fake_log_gen(object):
@@ -55,7 +56,6 @@ class fake_access_gen(fake_log_gen):
         self.geolocation = config["access"]["geolocation"]
         self.tenant_id = config["access"]["tenant_id"]
         self.timezone = config["access"]["timezone"]
-        self.Browser = config["access"]["Browser"]
         self.country = config["access"]["country"]
         self.screenResolution = config["access"]["screenResolution"]
         self.action = config["access"]["action"]
@@ -81,8 +81,9 @@ class fake_access_gen(fake_log_gen):
     def heartbeat_lines(self):
         while True:
             # for i in range(3):
+            tms = int(datetime.datetime.now(tz=pytz.utc).timestamp() * 1000)
             t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
-            self.log.info('- - - [%s] "%s" - -', t, self.config["heartbeat"]["message"])
+            self.log.info('- - - [%s] "%s" [%s]- -', t, self.config["heartbeat"]["message"], tms)
             yield from asyncio.sleep(int(self.config["heartbeat"]["interval"]))
 
     @coroutine
@@ -97,6 +98,7 @@ class fake_access_gen(fake_log_gen):
             ip = '.'.join(str(random.randint(0, 255)) for i in range(4))
             user_identifier = '-'
             user_id = self.user_ids[random.randint(0, len(self.user_ids) - 1)]
+            tms = int(datetime.datetime.now(tz=pytz.utc).timestamp() * 1000)
             t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
             device = self.device[random.randint(0, len(self.device) - 1)]
             method = numpy.random.choice(self.methods, p=self.methods_dist)
@@ -105,7 +107,7 @@ class fake_access_gen(fake_log_gen):
             msg = method + " " + self.root_url + resource + " " + version
             code = numpy.random.choice(self.codes, p=self.codes_dist)
             size = random.randint(1024, 10240)
-            self.log.info('%s %s %s [%s] "%s" %s %s', ip, user_identifier, user_id, t, msg, code, size)
+            self.log.info('%s %s %s [%s] "%s" %s %s %s', ip, user_identifier, user_id, t, tms, msg, code, size)
             yield from asyncio.sleep(random.uniform(self.access_min, self.access_max))
 
 

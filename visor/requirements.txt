@@ -1,6 +1,10 @@
 pymongo==2.6.3
-numpy==1.8.2
+numpy~=1.19.5
 matplotlib==1.5.1
 kafka-python==1.3.2
 pytest==3.0.5
-happybase
+happybase~=1.2.0
+
+pytz~=2021.1
+Django~=3.2
+setuptools~=54.2.0

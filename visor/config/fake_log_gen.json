@@ -1,6 +1,6 @@
 {
 	"heartbeat": {
-		"interval": "5",
+		"interval": "1",
 		"message": "HEARTBEAT"
 	},
 	"access": {
@@ -30,7 +30,7 @@
 			"Iphone","Ipad", "Laptop", "Desktop", "Other Mobile"
 		],
 		"OS": ["iOS", "Android", "Win 7","Other","Windows not","MacOSX"],
-		"Browser" : ["MobileSafari","Chrome/IE","IE","MicrosoftEdge","Android","Chrome","Firefox"],
+		"browser" : ["MobileSafari","Chrome/IE","IE","MicrosoftEdge","Android","Chrome","Firefox"],
 		"method_dist": [
 			0.6, 0.2, 0.1, 0.1
 		],
