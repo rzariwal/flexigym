@@ -2,11 +2,12 @@ from pyspark import SparkContext, SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import SparkSession,SQLContext
+from datetime import datetime
 import json
+import happybase
 import os
 import smtplib
 import time
-import datetime
 import os
 os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.0 pyspark-shell'
 
@@ -55,6 +56,7 @@ class kafka_monitor(object):
 
         # # Consume Kafka streams directly, without receivers
         lines = KafkaUtils.createDirectStream(ssc, [self.topic], {"metadata.broker.list": self.addr})
+        lines.saveAsTextFiles("hdfs://localhost:9820/stream","txt")
         lines1 = lines.map(lambda x: x[1])
         lines1.cache()
         val_sum_lines = lines1.window(self.report_interval, self.batch_interval)
@@ -63,9 +65,21 @@ class kafka_monitor(object):
                             x.split(' ')[8].rstrip(' '), x.split(' ')[3].lstrip('[').rstrip(' '))) \
             .map(lambda x: (x[1], x[2], x[3], x[4]))
         val_sum_lines_top_ip.pprint()
+        # val_sum_lines_top_ip.saveAsHadoopFiles("hdfs://localhost:9820/stream","txt")
+
 
         def savetheresult(rdd):
             if not rdd.isEmpty():
+                hbase_table = 'flexigym'
+                hconn = happybase.Connection('localhost')
+                ctable = hconn.table(hbase_table)
+                hconn.open()
+
+                for row in rdd.collect():
+                    time = datetime.now()
+                    counter = str(time) + row[0]
+                    ctable.put(counter, {b'Page_Visted:': row[1], b'Response_Code:': row[2], b'Time:': row[3], b'User_Name:': row[0]})
+
                 schema = ["User_Name", "Page_Visted", "Response_Code", "Time"]
                 rdd.toDF(schema).groupBy("User_Name", "Page_Visted", "Response_Code", "Time") \
                     .count() \
