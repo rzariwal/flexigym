@@ -4,7 +4,7 @@
 	"batch_interval": 20,
 	"kafka": {
 		"addr": "localhost:9092",
-		"topic": "Logs"
+		"topic": "click"
 	},
 
 	"email": {
