@@ -38,15 +38,35 @@ class fake_access_producer(fake_log_gen.fake_access_gen):
 			ip = '.'.join(str(random.randint(0, 255)) for i in range(4))
 			user_identifier = '-'
 			user_id = self.user_ids[random.randint(0,len(self.user_ids)-1)]
+			user_name = self.user_names[random.randint(0,len(self.user_names)-1)]
+			geolocation = self.geolocations[random.randint(0,len(self.geolocations)-1)]
 			t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
 			device = self.device[random.randint(0,len(self.device)-1)]
+			tenant_id = self.tenant_ids[random.randint(0,len(self.tenant_ids)-1)]
+			timezone = self.timezones[random.randint(0,len(self.timezones)-1)]
+			OS = self.OSs[random.randint(0,len(self.OSs)-1)]
+			browser = self.browsers[random.randint(0,len(self.browsers)-1)]
+			country = self.countries[random.randint(0,len(self.countries)-1)]
+			screenResolution = self.screenResolutions[random.randint(0,len(self.screenResolutions)-1)]
+			action = self.actions[random.randint(0,len(self.actions)-1)]
+			referrer = self.referrers[random.randint(0,len(self.referrers)-1)]
 			method = numpy.random.choice(self.methods, p=self.methods_dist)
 			resource = self.resources[random.randint(0, len(self.resources)-1)]
 			version = self.versions[random.randint(0, len(self.versions)-1)]
+			timeonpage = self.timeOnPages[random.randint(0, len(self.timeOnPages)-1)]
+			supplier_id = self.supplier_ids[random.randint(0, len(self.supplier_ids)-1)]
+			product = self.products[random.randint(0, len(self.products)-1)]
 			msg = method + " " + resource + " " + version
 			code = numpy.random.choice(self.codes, p=self.codes_dist)
 			size = random.randint(1024, 10240)
-			data = '%s %s %s [%s] "%s" %s %s %s' % (ip, user_identifier, user_id, t, msg, code, size, device)
+			jsondata = {'IP': ip, 'user_identifier': user_identifier, 'user_id': user_id, 'user_name': user_name, 'time': t, 'Message': msg, 'code': code,
+					'size': size,'device': device, 'user_name': user_name, 'tenant_id': tenant_id, 'timezone': timezone, 'OS': OS, 'browser': browser,
+					'country': country, 'screenResolution': screenResolution,'action': action, 'referrer': referrer, 'timezone':timeonpage,
+					'supplier_id': supplier_id, 'product': product, 'geolocation': geolocation}
+
+			data = '%s %s %s %s [%s] "%s" %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' % (ip, user_identifier, user_id, user_name, t, msg, code, size, device,
+																tenant_id, timezone, OS, browser, country, screenResolution, action,
+																					 referrer, timeonpage, supplier_id, product, geolocation)
 			self.log.info(data)
 			#self.client.send((data+'\n').encode())
 			self.producer.send(self.topic, (data+'\n').encode())

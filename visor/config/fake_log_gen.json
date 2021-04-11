@@ -11252,21 +11252,21 @@
 				103.952118390824
 			]
 		],
-		"tenant_id": 1,
-		"timezone": "SST",
+		"tenant_id": [1,2,3,4,5],
+		"timezone": ["SGT", "IST"],
 		"device": [
 			"Iphone",
 			"Ipad",
 			"Laptop",
 			"Desktop",
-			"Other Mobile"
+			"Other-Mobile"
 		],
 		"OS": [
 			"iOS",
 			"Android",
-			"Win 7",
+			"Win7",
 			"Other",
-			"Windows not",
+			"WindowsNot",
 			"MacOSX"
 		],
 		"browser": [
@@ -11293,7 +11293,7 @@
 			"MY"
 		],
 		"screenResolution": [
-			"1440 x 900",
+			"1440x900",
 			"640x480",
 			"800x600",
 			"960x720",
@@ -11354,7 +11354,7 @@
 			0.2,
 			0.1
 		],
-		"products": [
+		"product": [
 			[
 				"1",
 				"Activator Camp"

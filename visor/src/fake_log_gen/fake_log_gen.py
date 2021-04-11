@@ -45,6 +45,7 @@ class fake_access_gen(fake_log_gen):
         self.access_min = self.config["access"]["interval"]["min"]
         self.access_max = self.config["access"]["interval"]["max"]
         self.user_ids = self.config["access"]["user_id"]
+        self.user_names = self.config["access"]["user_name"]
         self.methods = self.config["access"]["method"]
         self.methods_dist = self.config["access"]["method_dist"]
         self.resources = self.config["access"]["resource"]
@@ -52,15 +53,19 @@ class fake_access_gen(fake_log_gen):
         self.codes_dist = self.config["access"]["code_dist"]
         self.versions = self.config["access"]["version"]
         self.device = self.config["access"]["device"]
-        self.browser = config["access"]["browser"]
-        self.geolocation = config["access"]["geolocation"]
-        self.tenant_id = config["access"]["tenant_id"]
-        self.timezone = config["access"]["timezone"]
-        self.country = config["access"]["country"]
-        self.screenResolution = config["access"]["screenResolution"]
-        self.action = config["access"]["action"]
-        self.timeOnPage = config["access"]["timeOnPage"]
-        self.supplier_id = config["access"]["supplier_id"]
+        self.browsers = config["access"]["browser"]
+        self.geolocations = config["access"]["geolocation"][0]
+        self.geolocation_vals = config["access"]["geolocation_val"][0]
+        self.tenant_ids = config["access"]["tenant_id"]
+        self.timezones = config["access"]["timezone"]
+        self.OSs = config["access"]["OS"]
+        self.countries = config["access"]["country"]
+        self.screenResolutions = config["access"]["screenResolution"]
+        self.referrers = config["access"]["referrer"]
+        self.actions = config["access"]["action"]
+        self.timeOnPages = config["access"]["timeOnPage"]
+        self.supplier_ids = config["access"]["supplier_id"]
+        self.products = config["access"]["product"]
         self.topic = kafka_config["kafka"]["topic"]
 
 
@@ -101,13 +106,14 @@ class fake_access_gen(fake_log_gen):
             tms = int(datetime.datetime.now(tz=pytz.utc).timestamp() * 1000)
             t = datetime.datetime.now().strftime('%d/%b/%Y:%H:%M:%S -0700')
             device = self.device[random.randint(0, len(self.device) - 1)]
+            geolocation = self.geolocations[random.randint(0,len(self.geolocations)-1)]
             method = numpy.random.choice(self.methods, p=self.methods_dist)
             resource = self.resources[random.randint(0, len(self.resources) - 1)]
             version = self.versions[random.randint(0, len(self.versions) - 1)]
             msg = method + " " + self.root_url + resource + " " + version
             code = numpy.random.choice(self.codes, p=self.codes_dist)
             size = random.randint(1024, 10240)
-            self.log.info('%s %s %s [%s] "%s" %s %s %s', ip, user_identifier, user_id, t, tms, msg, code, size)
+            self.log.info('%s %s %s [%s] "%s" %s %s %s %s', ip, user_identifier, user_id, t, tms, msg, code, size, geolocation)
             yield from asyncio.sleep(random.uniform(self.access_min, self.access_max))
 
 
@@ -160,7 +166,7 @@ class fake_error_gen(fake_log_gen):
         loop.run_until_complete(
             asyncio.wait([
                 self.heartbeat_lines(),
-                self.info_lines(),
+#                self.info_lines(),
                 self.warn_lines(),
                 self.error_lines()]
             )
