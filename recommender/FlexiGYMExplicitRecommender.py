@@ -6,6 +6,7 @@ from pyspark.ml.recommendation import ALS
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
 
+
 sc = SparkContext
 # sc.setCheckpointDir('checkpoint')
 spark = SparkSession.builder.appName('Recommendations using explicit interests').getOrCreate()
@@ -101,7 +102,6 @@ nrecommendations = nrecommendations \
     .select('userId', col("rec_exp.packageId"), col("rec_exp.rating"))
 
 nrecommendations.limit(10).show()
-
 
 nrecommendations.join(packages, on='packageId').filter('userId = 100').show()
 ratings.join(packages, on='packageId').filter('userId = 100').sort('rating', ascending=False).limit(10).show()
