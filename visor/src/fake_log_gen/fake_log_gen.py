@@ -67,6 +67,7 @@ class fake_access_gen(fake_log_gen):
         self.supplier_ids = config["access"]["supplier_id"]
         self.products = config["access"]["product"]
         self.topic = kafka_config["kafka"]["topic"]
+        self.login_topic = "login"
 
 
     def run(self):
@@ -166,7 +167,6 @@ class fake_error_gen(fake_log_gen):
         loop.run_until_complete(
             asyncio.wait([
                 self.heartbeat_lines(),
-#                self.info_lines(),
                 self.warn_lines(),
                 self.error_lines()]
             )

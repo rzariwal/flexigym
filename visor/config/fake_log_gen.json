@@ -11306,7 +11306,8 @@
 			"load",
 			"view",
 			"subscribe",
-			"payment"
+			"payment",
+			"login"
 		],
 		"pageUrl": [],
 		"currentPageId": [],
