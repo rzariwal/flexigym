@@ -10,3 +10,4 @@ model = ALSModel.load('../models/FlexiGYMExplicitRecommender_ALSModel/bestModel'
 print(als.getMaxIter())
 print(model.userFactors.collect())
 print(model.itemFactors.collect())
+
