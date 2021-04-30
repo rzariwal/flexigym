@@ -11,18 +11,13 @@ spark = SparkSession.builder.appName('Recommendations using implicit interests')
 
 # read input data
 packages = spark.read.csv("../data/FlexiGYMPackages.csv", inferSchema=True, header=True)
-ratings = spark.read.csv("../data/FlexiGYMRatings.csv", inferSchema=True, header=True)
+ratings_orig = spark.read.csv("../data/FlexiGYMPackageViews.csv", inferSchema=True, header=True)
 
+#ratings = ratings.groupBy(['userId','packageId']).count().withColumnRenamed("count", "viewScore")
+
+ratings = ratings_orig.groupBy(['userId','packageId','event_type']).count().withColumnRenamed("count", "rating")
 ratings.show()
 ratings.printSchema()
-
-ratings = ratings. \
-    withColumn('userId', col('userId').cast('integer')). \
-    withColumn('packageId', col('packageId').cast('integer')). \
-    withColumn('rating', col('rating').cast('float')). \
-    drop('timestamp')
-
-ratings.show()
 
 # calculate data sparse
 nominator = ratings.select("rating").count()
@@ -52,8 +47,8 @@ type(als)
 # Define param_grid for Hyperparameter values to help tune the model
 param_grid = ParamGridBuilder() \
     .addGrid(als.rank, [100]) \
-    .addGrid(als.regParam, [.01, .1, 1]) \
-    .addGrid(als.maxIter, [2]) \
+    .addGrid(als.regParam, [.1]) \
+    .addGrid(als.maxIter, [1]) \
     .build()
 
 # Define evaluation metric RMSE
@@ -96,8 +91,16 @@ n_recommendations = n_recommendations \
 
 n_recommendations.limit(10).show()
 
-n_recommendations.join(packages, on='packageId').filter('userId = 100').show()
-ratings.join(packages, on='packageId').filter('userId = 100').sort('rating', ascending=False).limit(10).show()
+n_recommendations_550031373 = n_recommendations.join(packages, on='packageId').filter('userId = 550031373')
+
+print("category of recommended items for n_recommendations_550031373")
+n_recommendations_550031373.join(ratings_orig, on='packageId').filter(ratings_orig.userId == '550031373').limit(100).show()
+
+
+print("category of original score items before recommendation for 550031373")
+ratings_orig.join(packages, on='packageId').filter(ratings_orig.userId == '550031373').limit(100).show()
+
+
 
 # Save the model into cluster as files
 als.save('../models/FlexiGYMImplicitRecommender_ALS')
